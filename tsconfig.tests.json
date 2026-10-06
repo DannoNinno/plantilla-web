@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "incremental": false,
+    "isolatedModules": false,
+    "outDir": ".test-build",
+    "rootDir": ".",
+    "jsx": "react-jsx"
+  },
+  "include": ["tests/plataforma.test.ts"],
+  "exclude": ["node_modules", ".next", ".test-build"]
+}

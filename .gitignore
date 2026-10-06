@@ -15,11 +15,14 @@
 
 # next.js
 /.next/
+/.next-validation/
 /out/
 
 # production
 /build
 /db
+/data/
+/.test-build/
 # misc
 .DS_Store
 *.pem

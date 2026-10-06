@@ -1,0 +1,14 @@
+:root {
+  --dt-azul-tinta: #04182F;   /* fondos oscuros, texto sobre claro */
+  --dt-celeste: #22C3F5;      /* color de marca (la D) */
+  --dt-celeste-texto: #0B84B8;/* celeste para texto sobre fondo claro */
+  --dt-coral: #FF6B4A;        /* acento: nodos, boton principal */
+  --dt-coral-oscuro: #F04E2B; /* coral sobre fondo claro */
+  --dt-blanco: #FFFFFF;
+  --dt-fondo-claro: #F7FAFC;
+
+  /* colores del isotipo en linea (svg/dannotech-isotipo-css.svg) */
+  --dt-d: var(--dt-celeste);
+  --dt-n: var(--dt-coral);
+  --dt-t: currentColor;
+}

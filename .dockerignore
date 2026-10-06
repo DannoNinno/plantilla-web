@@ -1,0 +1,10 @@
+node_modules
+.next
+.next-validation
+.git
+data
+db
+.test-build
+.env*
+*.tsbuildinfo
+npm-debug.log*
