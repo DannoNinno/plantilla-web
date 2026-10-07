@@ -11,6 +11,6 @@
     "rootDir": ".",
     "jsx": "react-jsx"
   },
-  "include": ["tests/plataforma.test.ts"],
+  "include": ["tests/frontend.test.ts"],
   "exclude": ["node_modules", ".next", ".test-build"]
 }

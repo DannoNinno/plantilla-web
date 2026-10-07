@@ -1,8 +1,11 @@
 node_modules
 .next
 .next-validation
+out
 .git
-data
+data/*.sqlite*
+data/imagenes
+data/importaciones
 db
 .test-build
 .env*

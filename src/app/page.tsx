@@ -1,11 +1,5 @@
-import Entrada from '@/components/Portal/Entrada';
-import {SeccionesSitio} from '@/plataforma/componentes/servidor';
+import Entrada from '@/infrastructure/componentes/Entrada/Entrada';
 
 export default function InicioPage() {
-  return (
-    <>
-      <Entrada />
-      <SeccionesSitio />
-    </>
-  );
+  return <Entrada />;
 }

@@ -1,9 +1,12 @@
 import type {Metadata} from 'next';
-import '../styles/globals.css';
-import Header from '@/components/Layout/Header';
-import Footer from '@/components/Layout/Footer';
-import {sitio} from '@/configuracion/sitio';
-import type {CSSProperties} from 'react';
+import './globals.css';
+import Header from '@/infrastructure/componentes/Header/Header';
+import Footer from '@/infrastructure/componentes/Footer/Footer';
+import {getSitio} from '@/infrastructure/handlers/datos';
+import type {LayoutProps} from '@/domain/types/ui';
+import {coloresMarca} from '../../tailwind.config';
+
+const sitio = getSitio();
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
@@ -23,38 +26,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  themeColor: sitio.colores.tinta,
+  themeColor: coloresMarca.ink,
 };
 
-function rgb(hex: string) {
-  if (!/^#[a-f0-9]{6}$/i.test(hex)) throw new Error(`Color de marca invalido: ${hex}`);
-  return [1, 3, 5].map((inicio) => parseInt(hex.slice(inicio, inicio + 2), 16)).join(' ');
-}
-
-const marca = {
-  '--dt-azul-tinta': sitio.colores.tinta,
-  '--dt-celeste': sitio.colores.celeste,
-  '--dt-celeste-texto': sitio.colores.celesteTexto,
-  '--dt-coral': sitio.colores.coral,
-  '--dt-coral-oscuro': sitio.colores.coralOscuro,
-  '--dt-fondo-claro': sitio.colores.fondo,
-  '--dt-tinta-rgb': rgb(sitio.colores.tinta),
-  '--dt-celeste-rgb': rgb(sitio.colores.celeste),
-  '--dt-celeste-texto-rgb': rgb(sitio.colores.celesteTexto),
-  '--dt-coral-rgb': rgb(sitio.colores.coral),
-  '--dt-coral-oscuro-rgb': rgb(sitio.colores.coralOscuro),
-  '--dt-fondo-rgb': rgb(sitio.colores.fondo),
-} as CSSProperties;
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({children}: Readonly<LayoutProps>) {
   return (
-    <html lang="es">
-      <body style={marca} className="flex min-h-screen flex-col bg-brand-light">
-        <a href="#contenido" className="salto-contenido">
+    <html lang="es" className="scroll-smooth motion-reduce:scroll-auto">
+      <body className="flex min-h-screen flex-col bg-brand-light font-sans font-medium text-brand-ink selection:bg-brand-sky selection:text-brand-ink [&_:where(:focus-visible)]:outline [&_:where(:focus-visible)]:outline-[3px] [&_:where(:focus-visible)]:outline-offset-4 [&_:where(:focus-visible)]:outline-brand-sky-text motion-reduce:[&_*]:!animate-none motion-reduce:[&_*]:!transition-none motion-reduce:[&_*::before]:!animate-none motion-reduce:[&_*::after]:!animate-none motion-reduce:[&_*::before]:!transition-none motion-reduce:[&_*::after]:!transition-none">
+        <a
+          href="#contenido"
+          className="fixed -top-[100px] z-[60] focus:left-3 focus:top-3 focus:bg-white focus:p-3"
+        >
           Ir al contenido
         </a>
         <Header />

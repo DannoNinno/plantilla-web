@@ -1,29 +1,25 @@
 import {notFound} from 'next/navigation';
 import Link from 'next/link';
-import {getPaquete, getPaquetes} from '@/plataforma/datos/paquetes';
-import {getRegistro} from '@/plataforma/componentes/servidor';
-import Configurador from '@/plataforma/configurador/Configurador';
-import {sitio} from '@/configuracion/sitio';
-import type {ReactNode} from 'react';
+import {getComponentes, getPaquete, getPaquetes, getSitio} from '@/infrastructure/handlers/datos';
+import Configurador from '@/infrastructure/componentes/Configurador/Configurador';
+import type {ContextoPaquete} from '@/domain/types/http';
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return getPaquetes().map((paquete) => ({paquete: paquete.id}));
 }
 
-export async function generateMetadata({params}: {params: Promise<{paquete: string}>}) {
+export async function generateMetadata({params}: ContextoPaquete) {
   const paquete = getPaquete((await params).paquete);
   return {title: paquete?.nombre ?? 'Paquete no encontrado'};
 }
 
-export default async function PaquetePage({params}: {params: Promise<{paquete: string}>}) {
+export default async function PaquetePage({params}: ContextoPaquete) {
   const paquete = getPaquete((await params).paquete);
   if (!paquete) notFound();
-  const componentes = getRegistro().filter((item) => item.definicion.paquetes[paquete.id]);
-  const vistas: Record<string, ReactNode> = {};
-  for (const componente of componentes) {
-    const Publico = componente.Publico;
-    vistas[componente.definicion.id] = <Publico modo="demo" datos={componente.demo} />;
-  }
+  const sitio = getSitio();
+  const componentes = getComponentes().filter((item) => item.paquetes[paquete.id]);
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
@@ -35,8 +31,7 @@ export default async function PaquetePage({params}: {params: Promise<{paquete: s
       <p className="mt-3 text-sm text-brand-sky-text">{paquete.entrega}</p>
       <Configurador
         paquete={paquete}
-        definiciones={componentes.map((item) => item.definicion)}
-        vistas={vistas}
+        definiciones={componentes}
         whatsapp={sitio.contacto.whatsapp}
         nombreSitio={sitio.nombre}
       />

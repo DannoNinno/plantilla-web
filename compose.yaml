@@ -5,16 +5,6 @@ services:
       args:
         NEXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:3000}
     ports:
-      - '3000:3000'
-    environment:
-      ADMIN_EMAIL: ${ADMIN_EMAIL:?Configura ADMIN_EMAIL}
-      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:?Configura ADMIN_PASSWORD_HASH}
-      DATA_DIR: /data
-      SITE_URL: ${SITE_URL:-http://localhost:3000}
-    volumes:
-      - dannotech-data:/data
+      - '3000:80'
     restart: unless-stopped
     stop_grace_period: 30s
-
-volumes:
-  dannotech-data:
