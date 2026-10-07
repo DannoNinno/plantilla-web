@@ -37,11 +37,11 @@ El archivo local `.dev.vars` contiene `NEXTJS_ENV=development`; si clonas el pro
 Para Workers Builds conectado a GitHub:
 
 - Usa Node.js 24 LTS para compilar.
-- Define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl` en las variables del build; se utiliza en los metadatos.
+- El archivo versionado [.env.production](./.env.production) define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl`; Next.js lo carga en los builds de producción para resolver los metadatos. No contiene secretos; los archivos `.env.local`, `.env*.local` y `.dev.vars` siguen excluidos de Git. Evita variables del entorno de build con otro valor, ya que tienen prioridad sobre este archivo.
 - Comando de build: `npx opennextjs-cloudflare build`.
 - Comando de despliegue, ejecutado por Cloudflare: `npx opennextjs-cloudflare deploy`.
 - Usa el comando de despliegue del adaptador, no `wrangler deploy` directamente: OpenNext prepara también los assets de caché antes de publicar.
-- Asocia `dannotech.cl` como dominio personalizado del Worker desde Cloudflare.
+- [wrangler.jsonc](./wrangler.jsonc) declara `dannotech.cl` y `www.dannotech.cl` como dominios personalizados del Worker; Cloudflare los aplica en el siguiente despliegue. Mantiene `workers_dev: true` y desactiva las URL de preview con `preview_urls: false`.
 
 `npm run deploy` está disponible para construir y desplegar en un solo comando, pero no es necesario ejecutarlo localmente cuando Cloudflare publica desde GitHub. Las imágenes siguen con `unoptimized: true`; no se requiere un binding de Cloudflare Images.
 
