@@ -4,7 +4,7 @@ Frontend en desarrollo con Next.js, React, TypeScript y Tailwind. Conserva la po
 
 ## Desarrollo
 
-Requiere Node.js 20.19 o superior.
+Requiere Node.js 22 o superior para Wrangler; se recomienda Node.js 24 LTS.
 
 ```sh
 npm ci
@@ -14,9 +14,36 @@ npm run test:frontend
 npm run build
 ```
 
-La compilación exporta un sitio estático en `out`; no necesita un servidor de Next.js en producción. No hay comando `next start`: publica el contenido de `out` en un servidor de archivos estáticos o usa Docker.
+`npm run build` compila Next.js en `.next`. Ya no se usa `output: 'export'` ni se genera `out`: el despliegue está preparado para Cloudflare Workers con OpenNext.
 
-Si un servidor de desarrollo bloquea `.next` en Windows, puedes validar sin detenerlo usando `$env:NEXT_BUILD_DIR = '.next-validation'` antes de `npm run build`. Con esa variable, la exportación queda en `.next-validation` en lugar de `out`. Sin la variable, la exportación habitual queda en `out`.
+En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambiar la política de ejecución. OpenNext no garantiza soporte completo de Windows; ante problemas exclusivos de esa plataforma, usa WSL o Linux. No ejecutes builds sobre una carpeta `.next` utilizada por otro proceso.
+
+## Cloudflare Workers
+
+La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker se llama `dannotech` y sirve los archivos de `.open-next/assets`. No hay bindings de D1, KV ni R2.
+
+```sh
+npx opennextjs-cloudflare build
+npm run preview
+npm run cf-typegen
+```
+
+El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `preview` vuelve a compilar y ejecuta el sitio en el runtime local de Workers; no despliega. Los tipos generados, `.open-next`, `.wrangler` y `.dev.vars` están excluidos de Git.
+
+Las páginas prerenderizadas utilizan la caché de solo lectura de Workers Static Assets, recomendada por la [guía de OpenNext para sitios SSG](https://opennext.js.org/cloudflare/caching#ssg-site). Esto permite servir los paquetes generados con `generateStaticParams` y `dynamicParams = false` sin recursos externos. No soporta revalidación: los cambios de JSON se publican con un nuevo build y despliegue. Al incorporar datos dinámicos en el futuro, habrá que revisar esta estrategia.
+
+El archivo local `.dev.vars` contiene `NEXTJS_ENV=development`; si clonas el proyecto, créalo para que la integración local utilice el entorno de desarrollo. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
+
+Para Workers Builds conectado a GitHub:
+
+- Usa Node.js 24 LTS para compilar.
+- Define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl` en las variables del build; se utiliza en los metadatos.
+- Comando de build: `npx opennextjs-cloudflare build`.
+- Comando de despliegue, ejecutado por Cloudflare: `npx opennextjs-cloudflare deploy`.
+- Usa el comando de despliegue del adaptador, no `wrangler deploy` directamente: OpenNext prepara también los assets de caché antes de publicar.
+- Asocia `dannotech.cl` como dominio personalizado del Worker desde Cloudflare.
+
+`npm run deploy` está disponible para construir y desplegar en un solo comando, pero no es necesario ejecutarlo localmente cuando Cloudflare publica desde GitHub. Las imágenes siguen con `unoptimized: true`; no se requiere un binding de Cloudflare Images.
 
 ## Organización
 
@@ -70,14 +97,8 @@ El configurador mantiene su selección y resolución de dependencias únicamente
 
 Rutas disponibles: `/`, `/perfil/`, `/catalogo/`, `/catalogo/landing/` y `/catalogo/portal/`. Las rutas `/api` y `/admin` ya no existen. Los paquetes desconocidos no generan páginas y devuelven 404.
 
-## Docker
+## Docker anterior
 
-```sh
-docker compose up --build -d
-```
+[Dockerfile](./Dockerfile), [compose.yaml](./compose.yaml) y [nginx.conf](./nginx.conf) se conservan como configuración histórica del despliegue estático. Esperan una carpeta `out` y no son compatibles con el build actual de Workers; no los uses para este despliegue. No se han modificado como parte de la migración.
 
-La imagen construye el frontend y sirve la exportación estática con Nginx en `http://localhost:3000`, incluyendo la página 404 exportada. No necesita credenciales, volumen de datos, módulos SQLite nativos ni un proceso Node.js en producción.
-
-Opcionalmente, configura `SITE_URL` al construir con Compose para los metadatos sociales. Fuera de Docker, utiliza `NEXT_PUBLIC_SITE_URL` antes de construir.
-
-Las bases de datos o archivos persistidos de versiones anteriores no se borran automáticamente. El frontend ya no los utiliza. Docker debe validarse en un entorno con su motor disponible.
+Las bases de datos o archivos persistidos de versiones anteriores no se borran automáticamente. El frontend ya no los utiliza.
