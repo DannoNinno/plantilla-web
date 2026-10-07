@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import {ArrowDown, ArrowUpRight} from 'lucide-react';
+import {ArrowDown, ArrowUpRight, PanelsTopLeft, Sparkles, UserRound} from 'lucide-react';
 import {sitio} from '@/configuracion/sitio';
 
 export default function Entrada() {
   return (
     <>
-      <section className="intro relative flex min-h-[75svh] items-center bg-brand-ink text-white">
-        <div className="relative mx-auto w-full max-w-6xl px-6 py-16 sm:py-24">
+      <section className="intro relative flex flex-col bg-brand-ink text-white">
+        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-start justify-center px-6 py-16 sm:py-20">
           <p className="intro-line mb-6 text-sm font-medium uppercase tracking-[0.2em] text-brand-sky">
             {sitio.persona} / {sitio.nombre}
           </p>
@@ -29,26 +29,60 @@ export default function Entrada() {
           </a>
         </div>
       </section>
-      <section id="entradas" className="scroll-mt-28">
-        <div className="grid md:grid-cols-2">
-          <Link href="/catalogo" className="puerta group bg-brand-light text-brand-ink">
+      <section
+        id="entradas"
+        aria-labelledby="entradas-titulo"
+        className="entradas scroll-mt-28 border-t border-brand-ink/10 bg-brand-light"
+      >
+        <div className="flex w-full items-center justify-center gap-3 border-b border-brand-ink/10 bg-brand-sky/10 px-6 py-6 text-center text-brand-ink sm:py-8">
+          <Sparkles size={20} className="shrink-0 text-brand-sky-text" aria-hidden="true" />
+          <h2 id="entradas-titulo" className="text-lg font-semibold sm:text-xl">
+            Elige tu próximo paso.
+          </h2>
+        </div>
+        <div className="entradas-opciones grid md:grid-cols-2">
+          <Link
+            href="/catalogo"
+            className="puerta puerta--catalogo"
+            aria-describedby="catalogo-descripcion"
+          >
             <span className="etiqueta">01 / Para tu negocio</span>
-            <h2 className="mt-10 text-4xl font-bold sm:text-5xl">Catálogo</h2>
-            <p className="mt-4 max-w-sm text-lg leading-relaxed">
-              Conoce Landing y Portal. Explora lo que recibes y prepara tu cotización.
-            </p>
-            <span className="mt-10 flex items-center gap-3 font-semibold text-brand-sky-text">
-              Conocer los paquetes <ArrowUpRight aria-hidden="true" />
+            <div className="mt-10">
+              <span className="puerta-icono mb-6 inline-flex rounded-2xl p-4">
+                <PanelsTopLeft size={48} strokeWidth={1.5} aria-hidden="true" />
+              </span>
+              <h3 className="text-4xl font-bold sm:text-5xl">Catálogo</h3>
+              <p
+                id="catalogo-descripcion"
+                className="puerta-descripcion mt-4 max-w-sm text-lg leading-relaxed"
+              >
+                Conoce Landing y Portal. Explora lo que recibes y prepara tu cotización.
+              </p>
+            </div>
+            <span className="puerta-enlace mt-10 flex items-center gap-3 font-semibold">
+              Conocer los paquetes <ArrowUpRight size={20} aria-hidden="true" />
             </span>
           </Link>
-          <Link href="/perfil" className="puerta group bg-brand-ink text-white">
-            <span className="etiqueta text-brand-sky">02 / Conoce a quien lo construye</span>
-            <h2 className="mt-10 text-4xl font-bold sm:text-5xl">Perfil</h2>
-            <p className="mt-4 max-w-sm text-lg leading-relaxed text-white/75">
-              Soy {sitio.persona}. Este es el espacio para conocer mi trabajo y conversar.
-            </p>
-            <span className="mt-10 flex items-center gap-3 font-semibold text-brand-sky">
-              Conocer a Daniel <ArrowUpRight aria-hidden="true" />
+          <Link
+            href="/perfil"
+            className="puerta puerta--perfil"
+            aria-describedby="perfil-descripcion"
+          >
+            <span className="etiqueta">02 / Conoce a quien lo construye</span>
+            <div className="mt-10">
+              <span className="puerta-icono mb-6 inline-flex rounded-2xl p-4">
+                <UserRound size={48} strokeWidth={1.5} aria-hidden="true" />
+              </span>
+              <h3 className="text-4xl font-bold sm:text-5xl">Perfil</h3>
+              <p
+                id="perfil-descripcion"
+                className="puerta-descripcion mt-4 max-w-sm text-lg leading-relaxed"
+              >
+                Soy {sitio.persona}. Este es el espacio para conocer mi trabajo y conversar.
+              </p>
+            </div>
+            <span className="puerta-enlace mt-10 flex items-center gap-3 font-semibold">
+              Conocer a Daniel <ArrowUpRight size={20} aria-hidden="true" />
             </span>
           </Link>
         </div>

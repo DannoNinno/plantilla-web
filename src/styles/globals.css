@@ -4,6 +4,7 @@
 
 /* Paleta de marca Dannotech (ver public/dannotech-kit/LEEME.md) */
 :root {
+  --altura-cabecera: 4.5rem;
   --dt-azul-tinta: #04182f;
   --dt-celeste: #22c3f5;
   --dt-celeste-texto: #0b84b8;
@@ -16,6 +17,12 @@
   --dt-d: var(--dt-celeste);
   --dt-n: var(--dt-coral);
   --dt-t: currentColor;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --altura-cabecera: 5.5rem;
+  }
 }
 
 body {
@@ -53,11 +60,12 @@ html {
     @apply text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text;
   }
   .puerta {
-    @apply flex min-h-[65svh] flex-col justify-center px-6 py-16 sm:px-12 lg:px-20;
+    @apply flex min-h-[65svh] min-w-0 flex-col justify-center px-6 py-16 text-brand-ink sm:px-12 lg:px-20;
   }
 }
 
 .intro {
+  min-height: calc(100svh - var(--altura-cabecera));
   background-image: radial-gradient(
     ellipse at 85% 20%,
     rgb(var(--dt-celeste-rgb) / 0.1),
@@ -78,12 +86,163 @@ html {
 .pagina {
   animation: entrada 300ms ease-out both;
 }
-.puerta svg {
-  transition: transform 200ms ease-out;
+
+.perfil-portafolio :is(.etiqueta, .text-brand-sky-text) {
+  color: color-mix(in srgb, var(--dt-celeste-texto) 85%, var(--dt-azul-tinta));
 }
-.puerta:hover svg {
-  transform: translate(3px, -3px);
+
+.perfil-hero {
+  background-image:
+    radial-gradient(ellipse at 85% 25%, rgb(var(--dt-celeste-rgb) / 0.12), transparent 55%),
+    radial-gradient(ellipse at 5% 100%, rgb(var(--dt-coral-rgb) / 0.06), transparent 45%);
 }
+
+.perfil-stats {
+  table-layout: fixed;
+}
+
+.perfil-stats thead th:first-child {
+  width: 26%;
+}
+
+.perfil-stats thead th:nth-child(2) {
+  width: 34%;
+}
+
+@media (max-width: 767px) {
+  .perfil-stats thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .perfil-stats tbody,
+  .perfil-stats tbody tr {
+    display: block;
+  }
+
+  .perfil-stats tbody th,
+  .perfil-stats tbody td {
+    display: block;
+    width: auto;
+  }
+
+  .perfil-stats tbody td {
+    padding-top: 0;
+  }
+}
+
+.entradas-opciones {
+  isolation: isolate;
+  background-image:
+    radial-gradient(ellipse at 15% 45%, rgb(var(--dt-celeste-rgb) / 0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 55%, rgb(var(--dt-coral-rgb) / 0.06), transparent 50%);
+}
+
+.puerta {
+  --puerta-fondo-activo: color-mix(
+    in srgb,
+    rgb(var(--puerta-acento-cargado-rgb) / 0.96) 80%,
+    rgb(var(--dt-tinta-rgb) / 0.96)
+  );
+  color: var(--puerta-color, var(--dt-azul-tinta));
+  background-color: var(--puerta-fondo, rgb(255 255 255 / 0.65));
+  backdrop-filter: blur(16px);
+  transition:
+    background-color 280ms ease-out,
+    color 280ms ease-out;
+}
+
+.puerta + .puerta {
+  border-top: 1px solid rgb(var(--dt-tinta-rgb) / 0.08);
+}
+
+@media (min-width: 768px) {
+  .puerta + .puerta {
+    border-top: 0;
+    border-left: 1px solid rgb(var(--dt-tinta-rgb) / 0.08);
+  }
+}
+
+.puerta--catalogo {
+  --puerta-acento-rgb: var(--dt-celeste-rgb);
+  --puerta-acento-cargado-rgb: var(--dt-celeste-texto-rgb);
+  --puerta-icono-color: var(--dt-celeste-texto);
+  --puerta-enlace-color: var(--dt-celeste-texto);
+}
+
+.puerta--perfil {
+  --puerta-acento-rgb: var(--dt-coral-rgb);
+  --puerta-acento-cargado-rgb: var(--dt-coral-oscuro-rgb);
+  --puerta-icono-color: var(--dt-coral-oscuro);
+  --puerta-enlace-color: var(--dt-azul-tinta);
+}
+
+.puerta .etiqueta {
+  color: var(--puerta-color-acento, var(--dt-celeste-texto));
+  transition: color 280ms ease-out;
+}
+
+.puerta-enlace {
+  color: var(--puerta-color-acento, var(--puerta-enlace-color));
+  transition: color 280ms ease-out;
+}
+
+.puerta-icono {
+  color: var(--puerta-color-acento, var(--puerta-icono-color));
+  background-color: rgb(var(--puerta-acento-rgb) / 0.1);
+  transition:
+    transform 220ms ease-out,
+    background-color 280ms ease-out,
+    color 280ms ease-out;
+}
+
+.puerta-descripcion {
+  color: var(--puerta-color-secundario, rgb(var(--dt-tinta-rgb) / 0.75));
+  transition:
+    opacity 280ms ease-out,
+    color 280ms ease-out;
+}
+
+.puerta:focus-visible {
+  --puerta-fondo: var(--puerta-fondo-activo);
+  --puerta-color: var(--dt-blanco);
+  --puerta-color-secundario: var(--dt-blanco);
+  --puerta-color-acento: var(--dt-blanco);
+  outline-color: rgb(var(--puerta-acento-rgb));
+  outline-offset: -4px;
+}
+
+.puerta:focus-visible .puerta-icono {
+  transform: translateY(-8px);
+  background-color: rgb(255 255 255 / 0.12);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .puerta-descripcion {
+    opacity: 0;
+  }
+
+  .puerta:hover {
+    --puerta-fondo: var(--puerta-fondo-activo);
+    --puerta-color: var(--dt-blanco);
+    --puerta-color-secundario: var(--dt-blanco);
+    --puerta-color-acento: var(--dt-blanco);
+  }
+
+  .puerta:hover .puerta-icono {
+    transform: translateY(-8px);
+    background-color: rgb(255 255 255 / 0.12);
+  }
+
+  .puerta:hover .puerta-descripcion,
+  .puerta:focus-visible .puerta-descripcion {
+    opacity: 1;
+  }
+}
+
 .salto-contenido {
   position: fixed;
   top: -100px;
@@ -116,5 +275,8 @@ html {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+  .puerta-icono {
+    transform: none !important;
   }
 }

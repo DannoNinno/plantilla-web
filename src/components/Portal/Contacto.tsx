@@ -5,9 +5,14 @@ import {useState, type FormEvent} from 'react';
 interface Props {
   seleccion?: {paquete: string; componentes: string[]};
   resumen?: string;
+  mensajeEtiqueta?: string;
 }
 
-export default function Contacto({seleccion, resumen}: Props) {
+export default function Contacto({
+  seleccion,
+  resumen,
+  mensajeEtiqueta = 'Cuéntame sobre tu negocio',
+}: Props) {
   const [estado, setEstado] = useState<'inicial' | 'enviando' | 'enviado' | 'error'>('inicial');
   const [error, setError] = useState('');
 
@@ -65,7 +70,7 @@ export default function Contacto({seleccion, resumen}: Props) {
         </label>
       </div>
       <label className="block text-sm">
-        Cuéntame sobre tu negocio
+        {mensajeEtiqueta}
         <textarea
           name="mensaje"
           required

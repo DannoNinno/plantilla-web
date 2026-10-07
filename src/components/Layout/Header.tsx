@@ -18,19 +18,19 @@ const defaultLinks: HeaderLink[] = [
 
 const Header: React.FC<HeaderProps> = ({links = defaultLinks}) => {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-brand-ink text-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-6">
+    <header className="sticky top-0 z-40 h-[var(--altura-cabecera)] w-full border-b border-white/10 bg-brand-ink text-white">
+      <div className="mx-auto flex h-full max-w-screen-2xl items-center justify-between gap-4 px-5 sm:gap-10 sm:px-8 lg:px-12">
         <Link href="/" className="shrink-0" aria-label={`${sitio.nombre}: inicio`}>
           <Image
             src={sitio.logo}
             alt={sitio.nombre}
             width={180}
             height={49}
-            className="h-auto w-32 sm:w-44"
+            className="h-auto w-32 sm:w-48 lg:w-56"
             priority
           />
         </Link>
-        <nav aria-label="Navegación principal" className="flex items-center gap-4 sm:gap-6">
+        <nav aria-label="Navegación principal" className="flex items-center gap-4 sm:gap-8">
           {links.map((link) => (
             <Link
               key={link.href}
