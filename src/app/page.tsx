@@ -1,5 +1,6 @@
-'use client';
+import Entrada from '@/infrastructure/componentes/Entrada/Entrada';
 
+<<<<<<< HEAD
 import Image from 'next/image';
 
 import LoginComponent from '@/components/auth/LoginComponent/LoginComponent';
@@ -99,3 +100,8 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+=======
+export default function InicioPage() {
+  return <Entrada />;
+}
+>>>>>>> main

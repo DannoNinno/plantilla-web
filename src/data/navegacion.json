@@ -1,0 +1,7 @@
+{
+  "principal": [
+    {"label": "Catálogo", "href": "/catalogo"},
+    {"label": "Perfil", "href": "/perfil"}
+  ],
+  "pie": [{"label": "Contacto", "href": "/perfil#contacto"}]
+}

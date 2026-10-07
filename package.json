@@ -1,10 +1,15 @@
 {
+<<<<<<< HEAD
   "name": "plantilla-base",
+=======
+  "name": "plantilla-web",
+>>>>>>> main
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+<<<<<<< HEAD
     "start": "next start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
@@ -12,6 +17,11 @@
     "format:check": "prettier . --check",
     "typecheck": "tsc --noEmit",
     "browserslist:update": "npx update-browserslist-db@latest"
+=======
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "test:frontend": "tsc -p tsconfig.tests.json && node --test .test-build/tests/frontend.test.js"
+>>>>>>> main
   },
   "dependencies": {
     "lucide-react": "^0.577.0",
@@ -20,16 +30,28 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@eslint/eslintrc": "^3.3.1",
+=======
+>>>>>>> main
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.20",
+<<<<<<< HEAD
     "eslint": "^9",
+=======
+    "eslint": "^9.21.0",
+>>>>>>> main
     "eslint-config-next": "^15.2.1",
     "eslint-config-prettier": "^10.1.8",
     "postcss": "^8",
+<<<<<<< HEAD
     "prettier": "^3.6.2",
+=======
+    "postcss-import": "^16.1.0",
+    "prettier": "^3.4.2",
+>>>>>>> main
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

@@ -1,0 +1,10 @@
+{
+  "nombre": "dannotech",
+  "persona": "Daniel Salamanca",
+  "descripcion": "Sitios web para pymes chilenas, listos para administrar por tu cuenta.",
+  "logo": "/dannotech-kit/svg/dannotech-imagotipo-horizontal-fondo-oscuro.svg",
+  "contacto": {
+    "whatsapp": "",
+    "correo": ""
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  dannotech:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:3000}
+    ports:
+      - '3000:80'
+    restart: unless-stopped
+    stop_grace_period: 30s
