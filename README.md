@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# plantilla-web
-
-Una plantilla base para un sitio web, este tendra todos los componontes por separado lsitos para probarse.
-=======
 # dannotech
 
 Frontend en desarrollo con Next.js, React, TypeScript y Tailwind. Conserva la portada, perfil, catálogo, configurador local y estética de marca. Todo el contenido estructurado se obtiene de JSON locales; no hay API, autenticación, base de datos, administración ni procesamiento de Excel.
@@ -86,4 +81,3 @@ La imagen construye el frontend y sirve la exportación estática con Nginx en `
 Opcionalmente, configura `SITE_URL` al construir con Compose para los metadatos sociales. Fuera de Docker, utiliza `NEXT_PUBLIC_SITE_URL` antes de construir.
 
 Las bases de datos o archivos persistidos de versiones anteriores no se borran automáticamente. El frontend ya no los utiliza. Docker debe validarse en un entorno con su motor disponible.
->>>>>>> main

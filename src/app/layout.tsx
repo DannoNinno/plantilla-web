@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-import {Metadata} from 'next';
-import {Suspense} from 'react';
-import {LoadingModal} from '@/components/common/LoadingModal/LoadingModal';
-import HeaderGlobal from '@/components/layout/HeaderGlobal/HeaderGlobal';
-import {Home, User, Settings} from 'lucide-react';
-import {NavBarLink} from '@/components/layout/NavBarGlobal/NavBarGlobal';
-import '@/styles/global.css';
-=======
 import type {Metadata} from 'next';
 import './globals.css';
 import Header from '@/infrastructure/componentes/Header/Header';
@@ -16,7 +7,6 @@ import type {LayoutProps} from '@/domain/types/ui';
 import {coloresMarca} from '../../tailwind.config';
 
 const sitio = getSitio();
->>>>>>> main
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
@@ -34,23 +24,6 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
 };
-<<<<<<< HEAD
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const navLinks: NavBarLink[] = [
-    {label: 'Inicio', href: '/', icon: <Home size={18} />},
-    {label: 'Perfil', href: '/perfil', icon: <User size={18} />},
-    {label: 'Ajustes', href: '/ajustes', icon: <Settings size={18} />},
-  ];
-  return (
-    <html lang="en">
-      <body className="min-h-screen w-full bg-gradient-to-b from-sky-100 via-white to-sky-50 bg-no-repeat">
-        <HeaderGlobal hasSidebar={true} hasLogin={true} navBarOptions={navLinks} />
-        <Suspense fallback={<LoadingModal show={true} />}>{children}</Suspense>
-=======
 
 export const viewport = {
   themeColor: coloresMarca.ink,
@@ -71,7 +44,6 @@ export default function RootLayout({children}: Readonly<LayoutProps>) {
           {children}
         </main>
         <Footer />
->>>>>>> main
       </body>
     </html>
   );

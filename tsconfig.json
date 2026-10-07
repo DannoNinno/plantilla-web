@@ -18,17 +18,9 @@
         "name": "next"
       }
     ],
-<<<<<<< HEAD
-    "baseUrl": ".",
-=======
->>>>>>> main
     "typeRoots": ["node_modules/@types", "./types"],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/services/*": ["./src/services/*"],
-      "@/styles/*": ["./src/styles/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
