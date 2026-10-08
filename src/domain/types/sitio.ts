@@ -3,6 +3,8 @@ export interface ConfiguracionSitio {
   persona: string;
   descripcion: string;
   logo: string;
+  catalogoHabilitado: boolean;
+  demosHabilitadas: boolean;
 }
 
 export interface EnlaceNavegacion {

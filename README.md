@@ -67,7 +67,7 @@ Los [handlers de datos](./src/infrastructure/handlers/datos.ts) son funciones, n
 
 | Archivo | Contenido |
 | --- | --- |
-| [sitio.json](./src/data/sitio.json) | Marca, descripción y logo |
+| [sitio.json](./src/data/sitio.json) | Marca, descripción, logo y flags del catálogo y demos |
 | [perfil.json](./src/data/perfil.json) | Identidad, experiencia, capacidades, formación, idiomas y proyectos |
 | [paquetes.json](./src/data/paquetes.json) | Paquetes y sus descripciones |
 | [catalogo.json](./src/data/catalogo.json) | Filosofía de servicio, alcance, principios y costos adicionales |
@@ -80,13 +80,15 @@ La voz de dannotech es la de Daniel Salamanca, su marca personal: los textos de 
 
 Las descripciones de paquetes son contenido del catálogo, no funcionalidades implementadas. El registro de componentes permanece vacío, sin inventar demostraciones. Las futuras definiciones pueden mostrar su nombre y descripción en la vista previa; no cargan datos del servidor ni módulos administrativos.
 
-El catálogo organiza los cuatro planes de [tarifas.md](./tarifas.md), con precios desde en CLP, un resumen por opción y vistas de detalle para su alcance, reuniones, capacitación, exclusiones y consideraciones según corresponda. Los servicios y costos adicionales aparecen al final del catálogo general. Los contenidos públicos se mantienen en los JSON; al actualizar las tarifas, sincroniza esos datos con el documento. Las pruebas verifican que los precios y el detalle de cada plan coincidan con la fuente.
+El catálogo organiza los cuatro planes de [tarifas.md](./tarifas.md), con precios desde en CLP, un resumen por opción y vistas de detalle para su alcance, reuniones, capacitación, exclusiones y consideraciones según corresponda. Los servicios y costos adicionales aparecen al final del catálogo general. Los contenidos públicos se mantienen en los JSON; al actualizar las tarifas, sincroniza esos datos con el documento. Las pruebas verifican que los precios y el detalle de cada plan coincidan con la fuente. Actualmente el catálogo está desactivado: el menú y la tarjeta indican «Próximamente», y las rutas del catálogo redirigen a la portada. Para reactivarlo, cambia `catalogoHabilitado` a `true` en [sitio.json](./src/data/sitio.json) y vuelve a construir y desplegar.
 
 Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación de Clientes, respectivamente. Ambos planes tienen un plazo de hasta 5 días hábiles, con las reuniones incluidas dentro de ese período. El configurador se muestra solo si el plan tiene componentes definidos; de lo contrario, se presenta el detalle y el formulario, sin una demostración vacía ni canales de contacto adicionales dentro del plan.
 
-Los correos oficiales se centralizan en [contacto.ts](./src/domain/configuracion/contacto.ts): `CONTACT_EMAIL` para contacto general y `QUOTES_EMAIL` para cotizaciones. No se guardan direcciones en los JSON ni se repiten en componentes. El footer, el perfil y los metadatos usan esta configuración; los enlaces se construyen como `mailto:` con asuntos codificados.
+Los correos oficiales se centralizan en [contacto.ts](./src/domain/configuracion/contacto.ts): `CONTACT_EMAIL` para contacto general y `QUOTES_EMAIL` para cotizaciones. No se guardan direcciones en los JSON ni se repiten en componentes. El footer y los metadatos usan esta configuración; los enlaces se construyen como `mailto:` con asuntos codificados.
 
-El kit visual original está en [public/dannotech-kit](./public/dannotech-kit). Se conservan estilos, colores, animaciones y movimiento reducido. Poppins sigue pendiente de sus archivos locales; se usa la fuente del sistema y no se descargan fuentes externas.
+La foto del perfil se carga desde `public/perfil/daniel-salamanca.png`; si no está disponible, se muestran las iniciales. La sección Demos permanece oculta mediante `demosHabilitadas` en [sitio.json](./src/data/sitio.json), lista para ejemplos propios. El kit visual original está en [public/dannotech-kit](./public/dannotech-kit). Se conservan estilos, colores, animaciones y movimiento reducido. Poppins sigue pendiente de sus archivos locales; se usa la fuente del sistema y no se descargan fuentes externas.
+
+La portada presenta tres bloques de servicios y un cuarto de entradas, cada uno con un mínimo de 70vh y scroll libre. Las ilustraciones SVG alternan derecha/izquierda/derecha en escritorio y aparecen arriba del texto en móvil. La tarjeta del catálogo desactivado usa tonos grises, un indicador de bloqueo y la etiqueta «Próximamente», sin interacción. En el perfil, la ficha profesional permanece debajo de la foto dentro de la presentación azul; la tabla de capacidades y la trayectoria quedan más abajo, bajo «Detalle técnico». Los textos mantienen un tono cercano y directo.
 
 ## Estilos
 
@@ -96,19 +98,21 @@ Los botones comparten las variantes Tailwind de [estilos.ts](./src/infrastructur
 
 El navbar identifica la sección actual con texto celeste, un subrayado fino y `aria-current="page"`. Catálogo permanece marcado en los detalles de sus planes; los enlaces inactivos solo cambian de color al hacer hover, sin un fondo adicional.
 
-[globals.css](./src/app/globals.css) contiene solamente las tres directivas de Tailwind. Los componentes usan utilidades directamente, sin clases CSS propias, `@apply` ni hojas de estilos adicionales. La variante `fine-pointer` conserva los efectos hover solo para dispositivos con puntero preciso; las utilidades de foco y movimiento reducido mantienen la accesibilidad.
+[globals.css](./src/app/globals.css) contiene las directivas de Tailwind y las reglas de entrada por scroll. El componente [EntradaScroll](./src/infrastructure/componentes/EntradaScroll/EntradaScroll.tsx) usa IntersectionObserver y activa las clases solo después de cargar JavaScript: el contenido es visible sin JavaScript o con movimiento reducido. La entrada ocurre una sola vez al ver el 20% del bloque; si una sección supera cinco ventanas de alto, se revela al llenar la ventana para que las tablas largas no queden ocultas. El foco por teclado también revela el contenido. La transición dura 600ms, con ease-out, opacidad, desplazamiento de 24px y blur de 8px. Título, texto e ilustración se escalonan a 0/100/200ms; los pasos del proceso, cada 120ms. Perfil, catálogo y detalles de planes comparten este efecto. No hay scroll-snap ni bloqueo del scroll.
+
+El resto de los estilos utiliza utilidades Tailwind, sin `@apply` ni hojas de estilos adicionales. La variante `fine-pointer` conserva los efectos hover solo para dispositivos con puntero preciso; las utilidades de foco y movimiento reducido mantienen la accesibilidad.
 
 Las capacidades del perfil resaltan su fondo, acento lateral e icono al hacer hover. Todas comparten el mismo movimiento breve del icono, dibujo de trazos y destello. Los iconos de formación e idiomas mantienen la inclinación y elevación; el título principal tiene un desplazamiento horizontal suave que vuelve a su posición original. Los efectos no usan bucles ni JavaScript y los movimientos solo se activan con puntero preciso y cuando no se solicita movimiento reducido.
 
 ## Formularios y selección
 
-La página `/contacto/` contiene el formulario compartido, con nombre, correo, un selector de los cuatro planes y la opción Consulta, y un mensaje de hasta 200 palabras. Tiene una única acción principal y no muestra la dirección destinataria ni enlaces de correo adicionales dentro del formulario. El footer mantiene el enlace `mailto:` con el texto «Escríbeme por correo». El límite se valida por palabras (separadas por espacios, tabulaciones o saltos de línea), no por caracteres; al excederlo se informa el error y se bloquea la preparación del correo.
+La página `/contacto/` contiene el formulario compartido, con nombre, correo, un selector de los cuatro planes y la opción Consulta, y un mensaje de hasta 200 palabras. Tiene una única acción principal y no muestra la dirección destinataria ni enlaces de correo adicionales dentro del formulario. El footer mantiene el enlace `mailto:` con la dirección `contacto@dannotech.cl`. El límite se valida por palabras (separadas por espacios, tabulaciones o saltos de línea), no por caracteres; al excederlo se informa el error y se bloquea la preparación del correo.
 
 En los planes se preselecciona el plan correspondiente. Consulta prepara un `mailto:` a `CONTACT_EMAIL`; un plan prepara uno a `QUOTES_EMAIL`, con el nombre del plan en el asunto y los datos del formulario en el cuerpo. El usuario debe tener un programa de correo configurado, revisar el borrador y enviarlo desde allí. El sitio no envía ni almacena solicitudes, no muestra confirmaciones de envío y no integra SMTP ni APIs de correo. El backend y el panel administrativo para gestionar solicitudes quedan pendientes, sin diseñarlos en esta etapa.
 
 El configurador mantiene su selección y resolución de dependencias únicamente en memoria del navegador. No persiste datos al salir ni modifica el sitio.
 
-Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/`, `/catalogo/automatizacion/` y `/catalogo/comercio-electronico/`. Las rutas `/api` y `/admin` ya no existen. Los planes desconocidos no generan páginas y devuelven 404.
+Rutas disponibles: `/`, `/perfil/` y `/contacto/`. Mientras el catálogo esté desactivado, `/catalogo/` y todas sus subrutas redirigen a `/`; el contenido y las rutas de los cuatro planes permanecen listos para reactivarse con el flag. Las rutas `/api` y `/admin` ya no existen.
 
 ## Docker anterior
 

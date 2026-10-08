@@ -1,3 +1,56 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  @media (prefers-reduced-motion: no-preference) {
+    .entrada-visible,
+    .entrada-visible [data-entrada-elemento],
+    .entrada-visible [data-entrada-paso] {
+      transition-property: opacity, transform, filter;
+      transition-duration: 600ms;
+      transition-timing-function: ease-out;
+    }
+
+    .entrada-preparada:not(.entrada-visible),
+    .entrada-preparada:not(.entrada-visible) [data-entrada-elemento],
+    .entrada-preparada:not(.entrada-visible) [data-entrada-paso] {
+      opacity: 0;
+      transform: translateY(24px);
+      filter: blur(8px);
+    }
+
+    .entrada-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .entrada-visible [data-entrada-elemento],
+    .entrada-visible [data-entrada-paso] {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .entrada-visible [data-entrada-elemento='texto'] {
+      transition-delay: 100ms;
+    }
+
+    .entrada-visible [data-entrada-elemento='ilustracion'] {
+      transition-delay: 200ms;
+    }
+
+    .entrada-visible [data-entrada-paso='1'] {
+      transition-delay: 120ms;
+    }
+
+    .entrada-visible [data-entrada-paso='2'] {
+      transition-delay: 240ms;
+    }
+
+    .entrada-visible [data-entrada-paso='3'] {
+      transition-delay: 360ms;
+    }
+  }
+}

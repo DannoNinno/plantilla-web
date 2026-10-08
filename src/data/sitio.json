@@ -2,5 +2,7 @@
   "nombre": "dannotech",
   "persona": "Daniel Salamanca",
   "descripcion": "Te ayudo a mejorar tu presencia digital, automatizar procesos y vender online con soluciones pensadas para tu negocio.",
-  "logo": "/dannotech-kit/svg/dannotech-imagotipo-horizontal-fondo-oscuro.svg"
+  "logo": "/dannotech-kit/svg/dannotech-imagotipo-horizontal-fondo-oscuro.svg",
+  "catalogoHabilitado": false,
+  "demosHabilitadas": false
 }

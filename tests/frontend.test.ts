@@ -152,8 +152,33 @@ test('los cuatro planes conservan precios y todo el detalle de tarifas.md', () =
 test('los precios desde se muestran en pesos chilenos sin decimales', () => {
   assert.deepEqual(
     getPaquetes().map((paquete) => precioDesdeCLP(paquete.precioDesde)),
-    ['Desde $150.000 CLP', 'Desde $350.000 CLP', 'Desde $800.000 CLP', 'Desde $1.200.000 CLP'],
+    ['Desde $150.000 CLP', 'Desde $350.000 CLP', 'Desde $500.000 CLP', 'Desde $700.000 CLP'],
   );
+});
+
+test('los casos y contextos preservan la privacidad y el perfil separa audiencias', () => {
+  const perfil = getPerfil();
+  for (const caso of perfil.proyectos) {
+    assert.doesNotMatch(JSON.stringify(caso), /Santo Tomás|TREBOL-IT|PAES|fallas|proveedores/i);
+  }
+  for (const capacidad of perfil.capacidades) {
+    assert.doesNotMatch(capacidad.contexto, /Santo Tomás|TREBOL-IT|PAES/i);
+  }
+  assert.equal(perfil.proyectos[0].nombre, 'Rediseño de plataforma de evaluaciones en línea');
+  assert.equal(
+    perfil.proyectos[0].problema,
+    'El sistema necesitaba una base más estable y mantenible.',
+  );
+  assert.doesNotMatch(JSON.stringify(perfil.experiencia), /PAES|fallas|proveedores/i);
+  const pagina = readFileSync('src/app/perfil/page.tsx', 'utf8');
+  assert.ok(pagina.indexOf('<FotoPerfil />') < pagina.indexOf('id="detalle-tecnico-titulo"'));
+  assert.ok(
+    pagina.indexOf('aria-labelledby="ficha-titulo"') < pagina.indexOf('id="detalle-tecnico"'),
+  );
+  assert.match(pagina, /www\.linkedin\.com\/in\/danielsalamancajorquera/);
+  assert.match(pagina, /¿Un proyecto o una idea para tu negocio\?/);
+  assert.doesNotMatch(pagina, /o una oportunidad profesional/);
+  assert.equal(getSitio().demosHabilitadas, false);
 });
 
 test('los primeros dos planes incluyen hasta cinco dias habiles y las reuniones en ese periodo', () => {
@@ -175,7 +200,7 @@ test('cada vista de detalle muestra todas las secciones de su plan', () => {
   for (const paquete of getPaquetes()) {
     const html = renderToStaticMarkup(createElement(DetallePaquete, {paquete}));
     for (const seccion of paquete.secciones) {
-      assert.ok(html.includes(`<h2 class="text-xl font-bold">${seccion.titulo}</h2>`));
+      assert.ok(html.includes(`class="text-xl font-bold">${seccion.titulo}</h2>`));
       if (seccion.descripcion) assert.ok(html.includes(seccion.descripcion));
       for (const elemento of seccion.elementos ?? []) {
         assert.ok(html.includes(`<li>${elemento}</li>`), `${paquete.nombre}: ${elemento}`);
@@ -216,8 +241,18 @@ test('la oferta presenta a dannotech como marca personal en primera persona', ()
   const html = renderToStaticMarkup(createElement(Entrada));
   assert.ok(html.includes(`Soy ${sitio.persona}, y ${sitio.nombre} es mi marca personal.`));
   assert.ok(html.includes('Tu negocio, mi experiencia.'));
-  assert.ok(html.includes('Conoce mis cuatro planes de servicios.'));
-  assert.match(getPerfil().presentacion, /^dannotech es mi marca personal\./);
+  assert.ok(html.includes('Este espacio todavía no está disponible.'));
+  assert.ok(html.includes('cursor-not-allowed'));
+  assert.ok(html.includes('grayscale'));
+  assert.ok(html.includes('Sitios desde $150.000 CLP'));
+  assert.equal(html.match(/href="#entradas"/g)?.length, 1);
+  assert.doesNotMatch(html, /href="\/catalogo(?:\/|")/);
+  for (const titulo of ['Qué hago y para quién', 'Por qué conmigo', 'Cómo trabajo']) {
+    assert.ok(html.includes(titulo));
+  }
+  assert.ok(html.indexOf('Catálogo</h3>') < html.indexOf('Perfil</h3>'));
+  assert.ok(html.includes('Próximamente'));
+  assert.match(getPerfil().presentacion, /^Soy Daniel/);
   assert.match(sitio.descripcion, /^Te ayudo a /);
   assert.match(catalogo.filosofia.titulo, /^No solo desarrollo /);
   assert.equal(catalogo.filosofia.introduccion, 'Te ayudo a:');
@@ -327,13 +362,21 @@ test('las capacidades, formacion, idiomas y titulo comparten efectos simples y a
   );
 });
 
-test('el CSS global solo contiene las directivas de Tailwind y no hay clases CSS propias', () => {
+test('el CSS global limita las clases propias a la entrada progresiva por scroll', () => {
   const css = readFileSync('src/app/globals.css', 'utf8').trim();
-  assert.deepEqual(css.split(/\r?\n/), [
-    '@tailwind base;',
-    '@tailwind components;',
-    '@tailwind utilities;',
-  ]);
+  for (const directiva of ['@tailwind base;', '@tailwind components;', '@tailwind utilities;']) {
+    assert.ok(css.includes(directiva));
+  }
+  assert.match(css, /prefers-reduced-motion: no-preference/);
+  assert.match(css, /transition-property: opacity, transform, filter/);
+  assert.match(css, /transition-duration: 600ms/);
+  assert.match(css, /transition-timing-function: ease-out/);
+  assert.match(css, /translateY\(24px\)/);
+  assert.match(css, /blur\(8px\)/);
+  for (const retraso of [100, 200, 120, 240, 360]) {
+    assert.ok(css.includes(`transition-delay: ${retraso}ms`));
+  }
+  assert.doesNotMatch(css, /scroll-snap|transition-property: all/);
   const clasesAnteriores = new Set([
     'boton',
     'campo',
@@ -366,13 +409,28 @@ test('el CSS global solo contiene las directivas de Tailwind y no hay clases CSS
   }
 });
 
+test('la home contiene cuatro bloques de scroll y conserva contenido sin JavaScript', () => {
+  const html = renderToStaticMarkup(createElement(Entrada));
+  assert.equal(html.match(/data-entrada="true"/g)?.length, 4);
+  assert.equal(html.match(/min-h-\[70vh\]/g)?.length, 4);
+  assert.equal(html.match(/data-entrada-elemento="ilustracion"/g)?.length, 5);
+  assert.equal(html.match(/data-entrada-paso="\d"/g)?.length, 4);
+  assert.doesNotMatch(html, /entrada-preparada|entrada-visible|scroll-snap/);
+  for (const pagina of ['perfil', 'catalogo', 'catalogo/[paquete]']) {
+    assert.ok(
+      readFileSync(path.join('src', 'app', pagina, 'page.tsx'), 'utf8').includes('EntradaScroll'),
+    );
+  }
+});
+
 test('la navegacion no apunta a administracion ni a endpoints eliminados', () => {
   const navegacion = getNavegacion();
   assert.deepEqual(
     navegacion.principal.map((link) => link.href),
-    ['/catalogo', '/perfil', '/contacto'],
+    ['/catalogo', '/perfil'],
   );
   assert.deepEqual(navegacion.pie, [{label: 'Contacto', href: '/contacto'}]);
+  assert.equal(getSitio().catalogoHabilitado, false);
   for (const link of [...navegacion.principal, ...navegacion.pie]) {
     assert.doesNotMatch(link.href, /^\/(admin|api)(\/|$)/);
   }
@@ -423,8 +481,8 @@ test('los correos oficiales solo se definen en la configuracion y no se expone G
   }
   const html = renderToStaticMarkup(createElement(Footer));
   assert.ok(html.includes(`href="${enlaceCorreo(CONTACT_EMAIL)}"`));
-  assert.ok(html.includes('Escríbeme por correo'));
-  assert.ok(!html.includes(`>${CONTACT_EMAIL}</a>`));
+  assert.ok(html.includes(CONTACT_EMAIL));
+  assert.ok(html.includes(`>${CONTACT_EMAIL}</a>`));
   assert.match(html, /href="\/contacto\/?"/);
 });
 

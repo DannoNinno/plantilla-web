@@ -9,20 +9,19 @@ import {
   GraduationCap,
   Languages,
   Layers3,
-  Mail,
   PanelsTopLeft,
   Sparkles,
 } from 'lucide-react';
-import {getPerfil} from '@/infrastructure/handlers/datos';
-import {CONTACT_EMAIL} from '@/domain/configuracion/contacto';
-import {enlaceCorreo} from '@/domain/servicios/contacto';
+import {getPerfil, getSitio} from '@/infrastructure/handlers/datos';
 import {clasesBoton} from '@/infrastructure/componentes/Boton/estilos';
+import FotoPerfil from '@/infrastructure/componentes/FotoPerfil/FotoPerfil';
+import EntradaScroll from '@/infrastructure/componentes/EntradaScroll/EntradaScroll';
 
 const perfil = getPerfil();
 
 export const metadata: Metadata = {
   title: 'Perfil y portafolio',
-  description: `${perfil.nombre}, ${perfil.cargo}. Arquitectura, integraciones y desarrollo de soluciones mantenibles. Conoce mis capacidades, experiencia y proyectos.`,
+  description: `Soy ${perfil.nombre}. Conoce cómo trabajo y qué puedo hacer por tu negocio.`,
 };
 
 const iconos: Partial<Record<string, typeof Layers3>> = {
@@ -37,19 +36,19 @@ const iconos: Partial<Record<string, typeof Layers3>> = {
 export default function PerfilPage() {
   return (
     <div>
-      <section className="bg-brand-ink bg-perfil-hero text-white" aria-labelledby="perfil-titulo">
+      <EntradaScroll
+        className="bg-brand-ink bg-perfil-hero text-white"
+        aria-labelledby="perfil-titulo"
+      >
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-sky">
-              Portafolio / {perfil.cabecera.nombre}
-            </p>
-            <p className="mt-8 flex items-center gap-2 text-sm text-white/75">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-coral" aria-hidden="true" />
-              {perfil.cargo}
+              Sobre mí / {perfil.cabecera.nombre}
             </p>
             <h1
               id="perfil-titulo"
-              className="group/titulo mt-3 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl"
+              data-entrada-elemento="titulo"
+              className="group/titulo mt-8 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl"
             >
               <span className="block motion-safe:fine-pointer:group-hover/titulo:animate-perfil-titulo">
                 {perfil.cabecera.nombre}
@@ -58,76 +57,125 @@ export default function PerfilPage() {
                 {perfil.cabecera.apellido}
               </span>
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+            <p
+              data-entrada-elemento="texto"
+              className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg"
+            >
               {perfil.presentacion}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#capacidades" className={clasesBoton('sky')}>
-                Explorar capacidades <ArrowDown size={18} aria-hidden="true" />
-              </a>
-              <a href="#contacto" className={clasesBoton('bordeOscuro')}>
+            <p
+              data-entrada-elemento="texto"
+              className="mt-4 max-w-xl leading-relaxed text-white/80"
+            >
+              Me gusta hablar claro y que sepas cómo va tu proyecto. Tratas conmigo de principio a
+              fin, sin mantención obligatoria, y lo que construyo queda a tu nombre.
+            </p>
+            <div data-entrada-elemento="texto" className="mt-8 flex flex-wrap gap-3">
+              <Link href="/contacto" className={clasesBoton('sky')}>
                 Hablemos <ArrowUpRight size={18} aria-hidden="true" />
+              </Link>
+              <a href="#detalle-tecnico" className={clasesBoton('bordeOscuro')}>
+                Detalle técnico <ArrowDown size={18} aria-hidden="true" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/danielsalamancajorquera"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={clasesBoton('bordeOscuro')}
+              >
+                LinkedIn <ArrowUpRight size={18} aria-hidden="true" />
               </a>
             </div>
           </div>
-          <aside
-            aria-labelledby="ficha-titulo"
-            className="overflow-hidden rounded-2xl border border-white/15 bg-white/5"
-          >
-            <div className="flex items-center justify-between border-b border-white/15 px-6 py-4">
-              <h2
-                id="ficha-titulo"
-                className="text-xs font-semibold uppercase tracking-[0.16em] text-white/80"
-              >
-                Ficha profesional
-              </h2>
-              <span className="font-mono text-xs text-brand-sky" aria-hidden="true">
-                {perfil.cabecera.iniciales} / 01
-              </span>
-            </div>
-            <div className="p-6 sm:p-8">
-              <div className="flex items-center gap-4">
-                <span
-                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-brand-sky/30 bg-brand-sky/10 font-mono text-2xl text-brand-sky"
-                  aria-hidden="true"
+          <div data-entrada-elemento="ilustracion" className="space-y-6">
+            <FotoPerfil />
+            <aside
+              aria-labelledby="ficha-titulo"
+              className="max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-white/5"
+            >
+              <div className="flex items-center justify-between border-b border-white/15 px-6 py-4">
+                <h2
+                  id="ficha-titulo"
+                  className="text-xs font-semibold uppercase tracking-[0.16em] text-white/80"
                 >
-                  {perfil.cabecera.iniciales}
+                  Ficha profesional
+                </h2>
+                <span className="font-mono text-xs text-brand-sky" aria-hidden="true">
+                  {perfil.cabecera.iniciales} / 01
                 </span>
-                <div>
-                  <p className="text-lg font-semibold">{perfil.cargo}</p>
-                  <p className="mt-1 text-sm text-white/65">{perfil.especialidad}</p>
-                </div>
               </div>
-              <dl className="mt-7 space-y-4 text-sm">
-                <div className="grid grid-cols-[6rem_1fr] gap-3 border-b border-white/10 pb-4">
-                  <dt className="text-white/60">Especialidad</dt>
-                  <dd>{perfil.especialidad}</dd>
+              <div className="p-6 sm:p-8">
+                <div className="flex items-center gap-4">
+                  <span
+                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-brand-sky/30 bg-brand-sky/10 font-mono text-2xl text-brand-sky"
+                    aria-hidden="true"
+                  >
+                    {perfil.cabecera.iniciales}
+                  </span>
+                  <div>
+                    <p className="text-lg font-semibold">{perfil.cargo}</p>
+                    <p className="mt-1 text-sm text-white/65">{perfil.especialidad}</p>
+                  </div>
                 </div>
-                <div className="grid grid-cols-[6rem_1fr] gap-3 border-b border-white/10 pb-4">
-                  <dt className="text-white/60">Formación</dt>
-                  <dd>{perfil.cabecera.formacion}</dd>
-                </div>
-                <div className="grid grid-cols-[6rem_1fr] gap-3">
-                  <dt className="text-white/60">Idioma</dt>
-                  <dd>{perfil.cabecera.idioma}</dd>
-                </div>
-              </dl>
-              <p className="mt-7 border-l-2 border-brand-coral pl-4 text-sm leading-relaxed text-white/80">
-                {perfil.principio}
-              </p>
-            </div>
-          </aside>
+                <dl className="mt-7 space-y-4 text-sm">
+                  <div className="grid grid-cols-[6rem_1fr] gap-3 border-b border-white/10 pb-4">
+                    <dt className="text-white/60">Especialidad</dt>
+                    <dd>{perfil.especialidad}</dd>
+                  </div>
+                  <div className="grid grid-cols-[6rem_1fr] gap-3 border-b border-white/10 pb-4">
+                    <dt className="text-white/60">Formación</dt>
+                    <dd>{perfil.cabecera.formacion}</dd>
+                  </div>
+                  <div className="grid grid-cols-[6rem_1fr] gap-3">
+                    <dt className="text-white/60">Idioma</dt>
+                    <dd>{perfil.cabecera.idioma}</dd>
+                  </div>
+                </dl>
+                <p className="mt-7 border-l-2 border-brand-coral pl-4 text-sm leading-relaxed text-white/80">
+                  {perfil.principio}
+                </p>
+              </div>
+            </aside>
+          </div>
         </div>
-      </section>
+      </EntradaScroll>
 
       <div className="mx-auto max-w-6xl px-6 py-14 sm:py-20">
-        <section id="capacidades" aria-labelledby="capacidades-titulo" className="scroll-mt-28">
+        <EntradaScroll
+          id="detalle-tecnico"
+          aria-labelledby="detalle-tecnico-titulo"
+          className="scroll-mt-28"
+        >
+          <h2
+            id="detalle-tecnico-titulo"
+            data-entrada-elemento="titulo"
+            className="text-3xl font-bold sm:text-4xl"
+          >
+            Detalle técnico
+          </h2>
+          <p
+            data-entrada-elemento="texto"
+            className="mt-4 max-w-2xl text-sm leading-relaxed text-brand-ink/70"
+          >
+            Si quieres conocer más de mi experiencia, aquí te cuento con qué trabajo y en qué
+            proyectos he participado.
+          </p>
+        </EntradaScroll>
+        <EntradaScroll
+          id="capacidades"
+          aria-labelledby="capacidades-titulo"
+          className="mt-20 scroll-mt-28"
+        >
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-profile">
                 01 / Capacidades
               </p>
-              <h2 id="capacidades-titulo" className="mt-3 text-3xl font-bold sm:text-4xl">
+              <h2
+                id="capacidades-titulo"
+                data-entrada-elemento="titulo"
+                className="mt-3 text-3xl font-bold sm:text-4xl"
+              >
                 Mi inventario técnico.
               </h2>
             </div>
@@ -137,11 +185,15 @@ export default function PerfilPage() {
           </div>
           <p
             id="capacidades-nota"
+            data-entrada-elemento="texto"
             className="mt-4 max-w-2xl text-sm leading-relaxed text-brand-ink/70"
           >
             Tecnologías, conocimientos y experiencia, organizados por área de trabajo.
           </p>
-          <div className="mt-8 overflow-hidden rounded-2xl border border-brand-ink/15 bg-white">
+          <div
+            data-entrada-elemento="texto"
+            className="mt-8 overflow-hidden rounded-2xl border border-brand-ink/15 bg-white"
+          >
             <table
               className="w-full table-fixed text-left text-sm"
               aria-describedby="capacidades-nota"
@@ -261,16 +313,20 @@ export default function PerfilPage() {
               ))}
             </ul>
           </div>
-        </section>
+        </EntradaScroll>
 
-        <section aria-labelledby="experiencia-titulo" className="mt-20">
+        <EntradaScroll aria-labelledby="experiencia-titulo" className="mt-20">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-profile">
             02 / Trayectoria
           </p>
-          <h2 id="experiencia-titulo" className="mt-3 text-3xl font-bold sm:text-4xl">
+          <h2
+            id="experiencia-titulo"
+            data-entrada-elemento="titulo"
+            className="mt-3 text-3xl font-bold sm:text-4xl"
+          >
             Experiencia en terreno.
           </h2>
-          <ol className="mt-8 space-y-5">
+          <ol data-entrada-elemento="texto" className="mt-8 space-y-5">
             {perfil.experiencia.map((experiencia) => (
               <li
                 key={experiencia.empresa}
@@ -308,17 +364,21 @@ export default function PerfilPage() {
               </li>
             ))}
           </ol>
-        </section>
+        </EntradaScroll>
 
-        <section aria-labelledby="proyectos-titulo" className="mt-20">
+        <EntradaScroll aria-labelledby="proyectos-titulo" className="mt-20">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-profile">
             03 / Casos destacados
           </p>
-          <h2 id="proyectos-titulo" className="mt-3 text-3xl font-bold sm:text-4xl">
+          <h2
+            id="proyectos-titulo"
+            data-entrada-elemento="titulo"
+            className="mt-3 text-3xl font-bold sm:text-4xl"
+          >
             Del desafío a la solución.
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-brand-ink/70">
-            Una selección de trabajo descrito en mi currículum. Estos casos no cuentan con una demo
+            Una selección de proyectos en los que he trabajado. Estos casos no cuentan con una demo
             pública enlazada.
           </p>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -364,13 +424,24 @@ export default function PerfilPage() {
               </article>
             ))}
           </div>
-        </section>
+        </EntradaScroll>
 
-        <section aria-labelledby="formacion-titulo" className="mt-20">
+        {getSitio().demosHabilitadas && (
+          <EntradaScroll aria-labelledby="demos-titulo" className="mt-20">
+            <h2 id="demos-titulo">Demos</h2>
+            <p>Sitios de ejemplo hechos con mi propia plantilla.</p>
+          </EntradaScroll>
+        )}
+
+        <EntradaScroll aria-labelledby="formacion-titulo" className="mt-20">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-profile">
             04 / Formación e idiomas
           </p>
-          <h2 id="formacion-titulo" className="mt-3 text-3xl font-bold sm:text-4xl">
+          <h2
+            id="formacion-titulo"
+            data-entrada-elemento="titulo"
+            className="mt-3 text-3xl font-bold sm:text-4xl"
+          >
             Aprendizaje como base.
           </h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -403,36 +474,26 @@ export default function PerfilPage() {
               </article>
             ))}
           </div>
-        </section>
+        </EntradaScroll>
 
-        <section
+        <EntradaScroll
           id="contacto"
           aria-labelledby="contacto-titulo"
           className="mt-20 scroll-mt-28 border-t border-brand-ink/15 pt-12"
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-profile">
-            05 / Contacto
-          </p>
-          <h2 id="contacto-titulo" className="mt-3 text-3xl font-bold sm:text-4xl">
-            Conversemos sobre tu próximo desafío.
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-brand-ink/75">
-            ¿Un proyecto, una integración o una oportunidad profesional? Cuéntame lo que tienes en
-            mente desde mi página de contacto.
-          </p>
-          <a
-            href={enlaceCorreo(CONTACT_EMAIL)}
-            className="mt-6 inline-flex max-w-full items-start gap-3 text-sm font-semibold text-brand-sky-profile underline-offset-4 hover:underline"
+          <h2
+            id="contacto-titulo"
+            data-entrada-elemento="titulo"
+            className="mt-3 text-3xl font-bold sm:text-4xl"
           >
-            <Mail size={20} className="shrink-0" aria-hidden="true" />
-            <span className="break-all">{CONTACT_EMAIL}</span>
-          </a>
+            ¿Un proyecto o una idea para tu negocio? Cuéntame lo que tienes en mente.
+          </h2>
           <div className="mt-6">
             <Link href="/contacto" className={clasesBoton('coral')}>
-              Ir al formulario de contacto <ArrowUpRight size={18} aria-hidden="true" />
+              Cuéntame tu idea <ArrowUpRight size={18} aria-hidden="true" />
             </Link>
           </div>
-        </section>
+        </EntradaScroll>
       </div>
     </div>
   );
