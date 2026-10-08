@@ -52,5 +52,18 @@
     .entrada-visible [data-entrada-paso='3'] {
       transition-delay: 360ms;
     }
+
+    .entrada-ligera.entrada-visible {
+      transition: none;
+    }
+
+    .entrada-ligera.entrada-preparada:not(.entrada-visible) > div {
+      opacity: 0;
+    }
+
+    .entrada-ligera.entrada-visible > div {
+      opacity: 1;
+      transition: opacity 250ms ease-out;
+    }
   }
 }

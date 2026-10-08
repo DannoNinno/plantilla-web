@@ -31,7 +31,6 @@ import type {DefinicionComponente} from '../src/domain/types/componentes';
 import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
 import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
 import Entrada from '../src/infrastructure/componentes/Entrada/Entrada';
-import NavegacionInicio from '../src/infrastructure/componentes/Entrada/NavegacionInicio';
 import Footer from '../src/infrastructure/componentes/Footer/Footer';
 import {clasesBoton} from '../src/infrastructure/componentes/Boton/estilos';
 import {esEnlaceActivo} from '../src/infrastructure/componentes/Header/navegacion';
@@ -297,7 +296,7 @@ test('Tailwind es la unica fuente de la paleta y las animaciones', () => {
   assert.equal(coloresMarca.sky, '#22C3F5');
   assert.equal(coloresMarca.coral, '#FF6B4A');
   assert.equal(tailwindConfig.theme.extend.colors.brand.ink, coloresMarca.ink);
-  assert.equal(tailwindConfig.theme.extend.animation.intro, 'entrada 650ms ease-out both');
+  assert.equal(tailwindConfig.theme.extend.animation.intro, 'entrada 450ms ease-out both');
   assert.equal(tailwindConfig.theme.extend.animation.pagina, 'entrada 300ms ease-out both');
   assert.deepEqual(tailwindConfig.theme.extend.fontFamily.sans, [
     'Poppins',
@@ -410,13 +409,21 @@ test('el CSS global limita las clases propias a la entrada progresiva por scroll
   }
 });
 
-test('la home contiene cuatro bloques de scroll y conserva contenido sin JavaScript', () => {
+test('la home revela sus cuatro bloques con una sola transicion ligera por contenido', () => {
   const html = renderToStaticMarkup(createElement(Entrada));
-  assert.equal(html.match(/data-entrada="true"/g)?.length, 4);
   assert.equal(html.match(/min-h-\[70vh\]/g)?.length, 4);
-  assert.equal(html.match(/data-entrada-elemento="ilustracion"/g)?.length, 5);
-  assert.equal(html.match(/data-entrada-paso="\d"/g)?.length, 4);
-  assert.doesNotMatch(html, /entrada-preparada|entrada-visible|scroll-snap/);
+  assert.equal(html.match(/data-entrada="true"/g)?.length, 4);
+  assert.equal(html.match(/entrada-ligera/g)?.length, 4);
+  assert.doesNotMatch(
+    html,
+    /data-entrada-elemento|data-entrada-paso|entrada-preparada|entrada-visible|scroll-snap|backdrop-blur/,
+  );
+  assert.equal(html.match(/motion-safe:animate-intro/g)?.length, 1);
+  assert.doesNotMatch(html, /(?:^|\s)animate-intro/);
+  const css = readFileSync('src/app/globals.css', 'utf8');
+  assert.match(css, /\.entrada-ligera\.entrada-visible\s*>\s*div\s*\{[^}]*transition: opacity 250ms ease-out/);
+  assert.match(css, /\.entrada-ligera\.entrada-preparada:not\(\.entrada-visible\)\s*>\s*div\s*\{[^}]*opacity: 0/);
+  assert.match(css, /\.entrada-ligera\.entrada-visible\s*\{[^}]*transition: none/);
   for (const pagina of ['perfil', 'catalogo', 'catalogo/[paquete]']) {
     assert.ok(
       readFileSync(path.join('src', 'app', pagina, 'page.tsx'), 'utf8').includes('EntradaScroll'),
@@ -424,14 +431,14 @@ test('la home contiene cuatro bloques de scroll y conserva contenido sin JavaScr
   }
 });
 
-test('la portada ofrece solo botones siguientes y encabezados numerados sin stepper', () => {
+test('la portada ofrece exploracion inicial y encabezados numerados sin botones siguientes', () => {
   const html = renderToStaticMarkup(createElement(Entrada));
-  assert.doesNotMatch(html, /aria-current="step"|>Anterior|Volver al inicio|Paso \d de/);
-  assert.equal(html.match(/>Siguiente /g)?.length, 3);
+  assert.doesNotMatch(html, /Siguiente|aria-current="step"|>Anterior|Volver al inicio|Paso \d de/);
   for (const id of ['presentacion', 'que-hago', 'por-que-conmigo', 'como-trabajo', 'entradas']) {
     assert.equal(html.match(new RegExp(`id="${id}"`, 'g'))?.length, 1);
-    if (id !== 'presentacion') assert.ok(html.includes(`href="#${id}"`));
   }
+  assert.ok(html.includes('href="#que-hago"'));
+  assert.ok(html.includes('Explorar el sitio'));
   for (const titulo of [
     '01 / Para tu negocio',
     '02 / Trato directo',
@@ -455,19 +462,6 @@ test('todos los fondos de la portada tienen degradados propios definidos en Tail
     assert.ok(html.includes(`bg-${nombre}`));
   }
   assert.notEqual(fondos.confianza, fondos['perfil-hero']);
-});
-
-test('los enlaces siguientes tienen movimiento sutil sin bordes ni sombras y conservan foco y tacto', () => {
-  for (const paso of [0, 1, 2] as const) {
-    const html = renderToStaticMarkup(createElement(NavegacionInicio, {paso}));
-    assert.ok(html.includes('min-h-12'));
-    assert.ok(html.includes('focus-visible:-translate-y-px'));
-    assert.ok(html.includes('group-hover/siguiente:translate-y-0.5'));
-    assert.ok(html.includes('group-focus-visible/siguiente:translate-y-0.5'));
-    assert.ok(html.includes('motion-reduce:transition-none'));
-    assert.doesNotMatch(html, /shadow-|bg-|border-/);
-    assert.ok(html.includes(paso === 1 ? 'text-white/80' : 'text-brand-ink/75'));
-  }
 });
 
 test('la navegacion no apunta a administracion ni a endpoints eliminados', () => {

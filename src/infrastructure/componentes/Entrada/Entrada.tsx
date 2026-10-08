@@ -5,7 +5,7 @@ import {precioDesdeCLP} from '../../../domain/servicios/precio';
 import {clasesBoton} from '../Boton/estilos';
 import EntradaScroll from '../EntradaScroll/EntradaScroll';
 import IlustracionServicio from './IlustracionServicio';
-import NavegacionInicio, {EnlaceSeccion} from './NavegacionInicio';
+import {EnlaceSeccion} from './EnlaceSeccion';
 
 const sitio = getSitio();
 
@@ -17,12 +17,7 @@ export default function Entrada() {
       </span>
       <div className="mt-10">
         <span className="mb-6 inline-flex rounded-2xl bg-brand-sky/10 p-4 text-brand-sky-text group-focus-visible:text-white fine-pointer:group-hover:text-white">
-          <PanelsTopLeft
-            data-entrada-elemento="ilustracion"
-            size={48}
-            strokeWidth={1.5}
-            aria-hidden="true"
-          />
+          <PanelsTopLeft size={48} strokeWidth={1.5} aria-hidden="true" />
         </span>
         <h3 className="text-4xl font-bold sm:text-5xl">Catálogo</h3>
         <p className="mt-4 max-w-sm text-lg leading-relaxed text-brand-ink/75 group-focus-visible:text-white fine-pointer:group-hover:text-white">
@@ -51,14 +46,14 @@ export default function Entrada() {
         className="relative flex min-h-intro scroll-mt-header flex-col bg-brand-ink bg-intro text-white sm:min-h-intro-lg sm:scroll-mt-header-lg"
       >
         <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-start justify-center px-6 py-16 sm:py-20">
-          <p className="mb-6 animate-intro text-sm font-medium uppercase tracking-[0.2em] text-brand-sky">
+          <p className="mb-6 text-sm font-medium uppercase tracking-[0.2em] text-brand-sky">
             {sitio.persona} / {sitio.nombre}
           </p>
-          <h1 className="max-w-4xl animate-intro text-4xl font-bold leading-tight [animation-delay:100ms] sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-4xl text-4xl font-bold leading-tight motion-safe:animate-intro sm:text-6xl lg:text-7xl">
             Tu negocio, mi experiencia.
             <span className="block text-brand-sky">Tecnología para avanzar.</span>
           </h1>
-          <p className="mt-6 max-w-xl animate-intro text-lg leading-relaxed text-white/75 [animation-delay:200ms]">
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
             Soy {sitio.persona}, y {sitio.nombre} es mi marca personal. {sitio.descripcion}
           </p>
           <EnlaceSeccion destino="que-hago" className={clasesBoton('coral', 'mt-8')}>
@@ -69,27 +64,20 @@ export default function Entrada() {
       <EntradaScroll
         id="que-hago"
         aria-labelledby="que-hago-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-light bg-servicios px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
+        className="entrada-ligera flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-light bg-servicios px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
-          <div data-entrada-elemento="ilustracion" className="md:order-2">
+          <div className="md:order-2">
             <IlustracionServicio servicio="sitio" />
           </div>
           <div className="md:order-1">
-            <p
-              data-entrada-elemento="titulo"
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text"
-            >
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text">
               01 / Para tu negocio
             </p>
-            <h2
-              id="que-hago-titulo"
-              data-entrada-elemento="titulo"
-              className="text-3xl font-bold sm:text-5xl"
-            >
+            <h2 id="que-hago-titulo" className="text-3xl font-bold sm:text-5xl">
               Qué hago y para quién
             </h2>
-            <div data-entrada-elemento="texto">
+            <div>
               <p className="mt-6 max-w-lg text-lg leading-relaxed text-brand-ink/75">
                 Te ayudo a mostrar tu pyme en internet, conseguir clientes y simplificar tu día a
                 día.
@@ -100,69 +88,47 @@ export default function Entrada() {
             </div>
           </div>
         </div>
-        <NavegacionInicio paso={0} />
       </EntradaScroll>
       <EntradaScroll
         id="por-que-conmigo"
         aria-labelledby="por-que-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-ink bg-confianza px-6 py-16 text-white sm:scroll-mt-header-lg sm:py-20"
+        className="entrada-ligera flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-ink bg-confianza px-6 py-16 text-white sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
-          <div data-entrada-elemento="ilustracion">
+          <div>
             <IlustracionServicio servicio="trato" />
           </div>
           <div>
-            <p
-              data-entrada-elemento="titulo"
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky"
-            >
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky">
               02 / Trato directo
             </p>
-            <h2
-              id="por-que-titulo"
-              data-entrada-elemento="titulo"
-              className="text-3xl font-bold sm:text-5xl"
-            >
+            <h2 id="por-que-titulo" className="text-3xl font-bold sm:text-5xl">
               Por qué conmigo
             </h2>
-            <p
-              data-entrada-elemento="texto"
-              className="mt-6 max-w-lg text-lg leading-relaxed text-white/80"
-            >
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/80">
               Hablas conmigo y yo lo construyo. Te lo entrego sin mantención obligatoria, con el
               dominio y los activos a tu nombre.
             </p>
           </div>
         </div>
-        <NavegacionInicio paso={1} />
       </EntradaScroll>
       <EntradaScroll
         id="como-trabajo"
         aria-labelledby="como-trabajo-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-light bg-proceso px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
+        className="entrada-ligera flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-light bg-proceso px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
-          <div data-entrada-elemento="ilustracion" className="md:order-2">
+          <div className="md:order-2">
             <IlustracionServicio servicio="proceso" />
           </div>
           <div className="md:order-1">
-            <p
-              data-entrada-elemento="titulo"
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-ink/70"
-            >
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-ink/70">
               03 / Paso a paso
             </p>
-            <h2
-              id="como-trabajo-titulo"
-              data-entrada-elemento="titulo"
-              className="text-3xl font-bold sm:text-5xl"
-            >
+            <h2 id="como-trabajo-titulo" className="text-3xl font-bold sm:text-5xl">
               Cómo trabajo
             </h2>
-            <p
-              data-entrada-elemento="texto"
-              className="mt-6 max-w-lg text-lg leading-relaxed text-brand-ink/75"
-            >
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-brand-ink/75">
               Voy contigo paso a paso, desde la primera conversación hasta la entrega.
             </p>
             <ol className="mt-8 space-y-4">
@@ -175,7 +141,7 @@ export default function Entrada() {
                 {titulo: 'Lo construyo', texto: 'Doy forma a tu idea y la reviso contigo.'},
                 {titulo: 'Te lo entrego', texto: 'Te explico cómo usarlo y queda en tus manos.'},
               ].map((paso, index) => (
-                <li key={paso.titulo} data-entrada-paso={index} className="flex gap-4">
+                <li key={paso.titulo} className="flex gap-4">
                   <span
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-sky/10 text-sm font-semibold text-brand-sky-text"
                     aria-hidden="true"
@@ -191,33 +157,25 @@ export default function Entrada() {
             </ol>
           </div>
         </div>
-        <NavegacionInicio paso={2} />
       </EntradaScroll>
       <EntradaScroll
         id="entradas"
         aria-labelledby="entradas-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col border-t border-brand-ink/10 bg-brand-light bg-entradas sm:scroll-mt-header-lg"
+        className="entrada-ligera flex min-h-[70vh] scroll-mt-header flex-col border-t border-brand-ink/10 bg-brand-light bg-entradas sm:scroll-mt-header-lg"
       >
         <div className="w-full border-b border-brand-ink/10 bg-brand-sky/10 px-6 py-6 text-center text-brand-ink sm:py-8">
-          <p
-            data-entrada-elemento="titulo"
-            className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text"
-          >
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text">
             04 / Tu próximo paso
           </p>
-          <h2
-            id="entradas-titulo"
-            data-entrada-elemento="titulo"
-            className="text-lg font-semibold sm:text-xl"
-          >
+          <h2 id="entradas-titulo" className="text-lg font-semibold sm:text-xl">
             Elige tu próximo paso.
           </h2>
         </div>
-        <div data-entrada-elemento="texto" className="isolate grid flex-1 md:grid-cols-2">
+        <div className="isolate grid flex-1 md:grid-cols-2">
           {sitio.catalogoHabilitado ? (
             <Link
               href="/catalogo"
-              className="group flex min-h-puerta min-w-0 flex-col justify-center bg-white/[0.65] px-6 py-16 text-brand-ink backdrop-blur-lg transition-colors duration-puerta ease-out focus-visible:bg-brand-catalogo-active focus-visible:text-white focus-visible:outline-brand-sky focus-visible:-outline-offset-4 fine-pointer:hover:bg-brand-catalogo-active fine-pointer:hover:text-white sm:px-12 lg:px-20"
+              className="group flex min-h-puerta min-w-0 flex-col justify-center bg-white/[0.65] px-6 py-16 text-brand-ink transition-colors duration-puerta ease-out focus-visible:bg-brand-catalogo-active focus-visible:text-white focus-visible:outline-brand-sky focus-visible:-outline-offset-4 fine-pointer:hover:bg-brand-catalogo-active fine-pointer:hover:text-white sm:px-12 lg:px-20"
             >
               {tarjetaCatalogo}
             </Link>
@@ -231,7 +189,7 @@ export default function Entrada() {
           )}
           <Link
             href="/perfil"
-            className="group flex min-h-puerta min-w-0 flex-col justify-center border-t border-brand-ink/[0.08] bg-white/[0.65] px-6 py-16 text-brand-ink backdrop-blur-lg transition-colors duration-puerta ease-out focus-visible:bg-brand-perfil-active focus-visible:text-white focus-visible:outline-brand-coral focus-visible:-outline-offset-4 fine-pointer:hover:bg-brand-perfil-active fine-pointer:hover:text-white sm:px-12 md:border-l md:border-t-0 lg:px-20"
+            className="group flex min-h-puerta min-w-0 flex-col justify-center border-t border-brand-ink/[0.08] bg-white/[0.65] px-6 py-16 text-brand-ink transition-colors duration-puerta ease-out focus-visible:bg-brand-perfil-active focus-visible:text-white focus-visible:outline-brand-coral focus-visible:-outline-offset-4 fine-pointer:hover:bg-brand-perfil-active fine-pointer:hover:text-white sm:px-12 md:border-l md:border-t-0 lg:px-20"
             aria-describedby="perfil-descripcion"
           >
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text transition-colors duration-puerta ease-out group-focus-visible:text-white fine-pointer:group-hover:text-white">
@@ -239,12 +197,7 @@ export default function Entrada() {
             </span>
             <div className="mt-10">
               <span className="mb-6 inline-flex rounded-2xl bg-brand-coral/10 p-4 text-brand-coral-dark transition-[transform,background-color,color] duration-puerta-icono ease-out group-focus-visible:-translate-y-2 group-focus-visible:bg-white/[0.12] group-focus-visible:text-white fine-pointer:group-hover:-translate-y-2 fine-pointer:group-hover:bg-white/[0.12] fine-pointer:group-hover:text-white motion-reduce:!transform-none">
-                <UserRound
-                  data-entrada-elemento="ilustracion"
-                  size={48}
-                  strokeWidth={1.5}
-                  aria-hidden="true"
-                />
+                <UserRound size={48} strokeWidth={1.5} aria-hidden="true" />
               </span>
               <h3 className="text-4xl font-bold sm:text-5xl">Perfil</h3>
               <p

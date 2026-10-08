@@ -2,13 +2,6 @@
 
 import {useEffect, useRef} from 'react';
 import type {MouseEvent, ReactNode} from 'react';
-import {ArrowDown} from 'lucide-react';
-
-const siguientes = [
-  {id: 'por-que-conmigo', titulo: 'Por qué conmigo'},
-  {id: 'como-trabajo', titulo: 'Cómo trabajo'},
-  {id: 'entradas', titulo: 'Catálogo / Perfil'},
-];
 
 let cancelarActual: (() => void) | undefined;
 
@@ -119,34 +112,5 @@ export function EnlaceSeccion({
     <a href={`#${destino}`} aria-label={etiqueta} className={className} onClick={navegar}>
       {children}
     </a>
-  );
-}
-
-export default function NavegacionInicio({paso}: {paso: 0 | 1 | 2}) {
-  const oscuro = paso === 1;
-  const siguiente = siguientes[paso];
-
-  return (
-    <nav
-      aria-label="Continuar por la portada"
-      className="mx-auto mt-8 flex w-full max-w-6xl justify-end"
-    >
-      <EnlaceSeccion
-        destino={siguiente.id}
-        etiqueta={`Siguiente: ${siguiente.titulo}`}
-        className={`group/siguiente inline-flex min-h-12 items-center gap-2 rounded-md px-2 py-3 text-sm font-medium transition-[color,transform] duration-200 ease-out motion-safe:focus-visible:-translate-y-px motion-safe:fine-pointer:hover:-translate-y-px motion-reduce:transform-none motion-reduce:transition-none ${
-          oscuro
-            ? 'text-white/80 focus-visible:text-white fine-pointer:hover:text-white'
-            : 'text-brand-ink/75 focus-visible:text-brand-ink fine-pointer:hover:text-brand-ink'
-        }`}
-      >
-        Siguiente{' '}
-        <ArrowDown
-          size={18}
-          aria-hidden="true"
-          className="transition-transform duration-200 ease-out motion-safe:group-focus-visible/siguiente:translate-y-0.5 motion-safe:fine-pointer:group-hover/siguiente:translate-y-0.5 motion-reduce:transition-none"
-        />
-      </EnlaceSeccion>
-    </nav>
   );
 }

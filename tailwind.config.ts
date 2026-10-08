@@ -83,7 +83,7 @@ export default {
         },
       },
       animation: {
-        intro: 'entrada 650ms ease-out both',
+        intro: 'entrada 450ms ease-out both',
         pagina: 'entrada 300ms ease-out both',
         'perfil-icono': 'perfil-icono 900ms cubic-bezier(0.22, 1, 0.36, 1) both',
         'perfil-titulo': 'perfil-titulo 650ms ease-out both',

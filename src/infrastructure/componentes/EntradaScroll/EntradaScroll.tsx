@@ -26,21 +26,23 @@ export default function EntradaScroll(props: ComponentPropsWithoutRef<'section'>
       bloque.classList.remove('entrada-visible');
     };
     const observar = () => {
+      if (bloque.classList.contains('entrada-visible')) return;
       observer?.disconnect();
+      const threshold = umbral();
       observer = new IntersectionObserver(
         (entradas) => {
           if (
             !navegando &&
             entradas.some(
-              (entrada) => entrada.isIntersecting && entrada.intersectionRatio >= umbral(),
+              (entrada) => entrada.isIntersecting && entrada.intersectionRatio >= threshold,
             )
           ) {
             mostrar();
           }
         },
-        {threshold: umbral()},
+        {threshold},
       );
-      if (!bloque.classList.contains('entrada-visible')) observer.observe(bloque);
+      observer.observe(bloque);
     };
 
     observar();
