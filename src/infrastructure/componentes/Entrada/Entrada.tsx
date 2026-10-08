@@ -1,17 +1,11 @@
 import Link from 'next/link';
-import {
-  ArrowDown,
-  ArrowUpRight,
-  LockKeyhole,
-  PanelsTopLeft,
-  Sparkles,
-  UserRound,
-} from 'lucide-react';
+import {ArrowDown, ArrowUpRight, LockKeyhole, PanelsTopLeft, UserRound} from 'lucide-react';
 import {getSitio} from '../../handlers/datos';
 import {precioDesdeCLP} from '../../../domain/servicios/precio';
 import {clasesBoton} from '../Boton/estilos';
 import EntradaScroll from '../EntradaScroll/EntradaScroll';
 import IlustracionServicio from './IlustracionServicio';
+import NavegacionInicio, {EnlaceSeccion} from './NavegacionInicio';
 
 const sitio = getSitio();
 
@@ -51,7 +45,11 @@ export default function Entrada() {
 
   return (
     <>
-      <section className="relative flex min-h-intro flex-col bg-brand-ink bg-intro text-white sm:min-h-intro-lg">
+      <section
+        id="presentacion"
+        tabIndex={-1}
+        className="relative flex min-h-intro scroll-mt-header flex-col bg-brand-ink bg-intro text-white sm:min-h-intro-lg sm:scroll-mt-header-lg"
+      >
         <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-start justify-center px-6 py-16 sm:py-20">
           <p className="mb-6 animate-intro text-sm font-medium uppercase tracking-[0.2em] text-brand-sky">
             {sitio.persona} / {sitio.nombre}
@@ -63,21 +61,27 @@ export default function Entrada() {
           <p className="mt-6 max-w-xl animate-intro text-lg leading-relaxed text-white/75 [animation-delay:200ms]">
             Soy {sitio.persona}, y {sitio.nombre} es mi marca personal. {sitio.descripcion}
           </p>
-          <a href="#entradas" className={clasesBoton('coral', 'mt-8')}>
+          <EnlaceSeccion destino="que-hago" className={clasesBoton('coral', 'mt-8')}>
             Explorar el sitio <ArrowDown size={18} aria-hidden="true" />
-          </a>
+          </EnlaceSeccion>
         </div>
       </section>
       <EntradaScroll
         id="que-hago"
         aria-labelledby="que-hago-titulo"
-        className="flex min-h-[70vh] items-center bg-brand-light px-6 py-16 sm:py-20"
+        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-sky/10 px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
           <div data-entrada-elemento="ilustracion" className="md:order-2">
             <IlustracionServicio servicio="sitio" />
           </div>
           <div className="md:order-1">
+            <p
+              data-entrada-elemento="titulo"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text"
+            >
+              01 / Para tu negocio
+            </p>
             <h2
               id="que-hago-titulo"
               data-entrada-elemento="titulo"
@@ -96,16 +100,24 @@ export default function Entrada() {
             </div>
           </div>
         </div>
+        <NavegacionInicio paso={0} />
       </EntradaScroll>
       <EntradaScroll
+        id="por-que-conmigo"
         aria-labelledby="por-que-titulo"
-        className="flex min-h-[70vh] items-center bg-white px-6 py-16 sm:py-20"
+        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-ink bg-perfil-hero px-6 py-16 text-white sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
           <div data-entrada-elemento="ilustracion">
             <IlustracionServicio servicio="trato" />
           </div>
           <div>
+            <p
+              data-entrada-elemento="titulo"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky"
+            >
+              02 / Trato directo
+            </p>
             <h2
               id="por-que-titulo"
               data-entrada-elemento="titulo"
@@ -115,23 +127,31 @@ export default function Entrada() {
             </h2>
             <p
               data-entrada-elemento="texto"
-              className="mt-6 max-w-lg text-lg leading-relaxed text-brand-ink/75"
+              className="mt-6 max-w-lg text-lg leading-relaxed text-white/80"
             >
               Hablas conmigo y yo lo construyo. Te lo entrego sin mantención obligatoria, con el
               dominio y los activos a tu nombre.
             </p>
           </div>
         </div>
+        <NavegacionInicio paso={1} />
       </EntradaScroll>
       <EntradaScroll
+        id="como-trabajo"
         aria-labelledby="como-trabajo-titulo"
-        className="flex min-h-[70vh] items-center bg-brand-light px-6 py-16 sm:py-20"
+        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-coral/10 px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
           <div data-entrada-elemento="ilustracion" className="md:order-2">
             <IlustracionServicio servicio="proceso" />
           </div>
           <div className="md:order-1">
+            <p
+              data-entrada-elemento="titulo"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-coral-dark"
+            >
+              03 / Paso a paso
+            </p>
             <h2
               id="como-trabajo-titulo"
               data-entrada-elemento="titulo"
@@ -171,14 +191,20 @@ export default function Entrada() {
             </ol>
           </div>
         </div>
+        <NavegacionInicio paso={2} />
       </EntradaScroll>
       <EntradaScroll
         id="entradas"
         aria-labelledby="entradas-titulo"
-        className="flex min-h-[70vh] scroll-mt-28 flex-col border-t border-brand-ink/10 bg-brand-light"
+        className="flex min-h-[70vh] scroll-mt-header flex-col border-t border-brand-ink/10 bg-brand-ink/[0.08] sm:scroll-mt-header-lg"
       >
-        <div className="flex w-full items-center justify-center gap-3 border-b border-brand-ink/10 bg-brand-sky/10 px-6 py-6 text-center text-brand-ink sm:py-8">
-          <Sparkles size={20} className="shrink-0 text-brand-sky-text" aria-hidden="true" />
+        <div className="w-full border-b border-brand-ink/10 bg-brand-sky/10 px-6 py-6 text-center text-brand-ink sm:py-8">
+          <p
+            data-entrada-elemento="titulo"
+            className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text"
+          >
+            04 / Tu próximo paso
+          </p>
           <h2
             id="entradas-titulo"
             data-entrada-elemento="titulo"

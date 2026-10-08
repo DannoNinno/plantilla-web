@@ -245,7 +245,7 @@ test('la oferta presenta a dannotech como marca personal en primera persona', ()
   assert.ok(html.includes('cursor-not-allowed'));
   assert.ok(html.includes('grayscale'));
   assert.ok(html.includes('Sitios desde $150.000 CLP'));
-  assert.equal(html.match(/href="#entradas"/g)?.length, 1);
+  assert.ok(html.includes('href="#que-hago"'));
   assert.doesNotMatch(html, /href="\/catalogo(?:\/|")/);
   for (const titulo of ['Qué hago y para quién', 'Por qué conmigo', 'Cómo trabajo']) {
     assert.ok(html.includes(titulo));
@@ -421,6 +421,33 @@ test('la home contiene cuatro bloques de scroll y conserva contenido sin JavaScr
       readFileSync(path.join('src', 'app', pagina, 'page.tsx'), 'utf8').includes('EntradaScroll'),
     );
   }
+});
+
+test('la portada ofrece solo botones siguientes y encabezados numerados sin stepper', () => {
+  const html = renderToStaticMarkup(createElement(Entrada));
+  assert.doesNotMatch(html, /aria-current="step"|>Anterior|Volver al inicio|Paso \d de/);
+  assert.equal(html.match(/>Siguiente /g)?.length, 3);
+  for (const id of ['presentacion', 'que-hago', 'por-que-conmigo', 'como-trabajo', 'entradas']) {
+    assert.equal(html.match(new RegExp(`id="${id}"`, 'g'))?.length, 1);
+    if (id !== 'presentacion') assert.ok(html.includes(`href="#${id}"`));
+  }
+  for (const titulo of [
+    '01 / Para tu negocio',
+    '02 / Trato directo',
+    '03 / Paso a paso',
+    '04 / Tu próximo paso',
+  ]) {
+    assert.ok(html.includes(titulo));
+  }
+  for (const fondo of [
+    'bg-brand-sky/10',
+    'bg-brand-ink bg-perfil-hero',
+    'bg-brand-coral/10',
+    'bg-brand-ink/[0.08]',
+  ]) {
+    assert.ok(html.includes(fondo));
+  }
+  assert.doesNotMatch(html, /scroll-snap|overflow-hidden/);
 });
 
 test('la navegacion no apunta a administracion ni a endpoints eliminados', () => {
