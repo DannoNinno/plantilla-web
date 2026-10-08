@@ -3,7 +3,6 @@ export interface ConfiguracionSitio {
   persona: string;
   descripcion: string;
   logo: string;
-  contacto: {whatsapp: string; correo: string};
 }
 
 export interface EnlaceNavegacion {

@@ -1,18 +1,206 @@
 [
   {
     "id": "landing",
-    "nombre": "Landing",
-    "resumen": "Presenta tu negocio en una sola página.",
-    "descripcion": "Una página informativa para explicar lo que haces y facilitar que te contacten. Actualizas su contenido subiendo un Excel.",
-    "administracion": "Contenido mediante Excel y un único administrador.",
-    "entrega": "Una entrega, un sitio propio. La mantención es opcional."
+    "nombre": "Presencia Digital",
+    "resumen": "Te ayudo a dar a conocer tu negocio y facilitar el primer contacto.",
+    "descripcion": "Diseño y desarrollo tu landing page adaptable a móviles, con hasta 5 vistas o secciones y canales de contacto para comenzar tu presencia online.",
+    "precioDesde": 150000,
+    "secciones": [
+      {
+        "titulo": "Ideal para",
+        "elementos": [
+          "Emprendedores.",
+          "Profesionales independientes.",
+          "Negocios que necesitan presencia online.",
+          "Empresas que aún no cuentan con sitio web."
+        ]
+      },
+      {
+        "titulo": "Incluye",
+        "elementos": [
+          "Landing Page responsive.",
+          "Hasta 5 vistas o secciones.",
+          "Formulario de contacto.",
+          "Integración WhatsApp.",
+          "Integración redes sociales.",
+          "Diseño adaptable a dispositivos móviles.",
+          "Configuración técnica básica."
+        ]
+      },
+      {
+        "titulo": "Reuniones Incluidas",
+        "elementos": [
+          "1 reunión de levantamiento (máximo 2 horas).",
+          "1 reunión de revisión y entrega (máximo 2 horas)."
+        ]
+      },
+      {
+        "titulo": "Plazo de entrega",
+        "elementos": [
+          "Hasta 5 días hábiles.",
+          "Las reuniones incluidas se realizan dentro de ese período."
+        ]
+      },
+      {
+        "titulo": "Capacitación",
+        "elementos": ["1 sesión de capacitación incluida (máximo 1 hora)."]
+      },
+      {
+        "titulo": "No Incluye",
+        "elementos": [
+          "Panel de administración.",
+          "Gestión de usuarios.",
+          "Base de datos.",
+          "Integraciones externas.",
+          "E-commerce.",
+          "Funcionalidades personalizadas."
+        ]
+      },
+      {
+        "titulo": "Consideraciones",
+        "elementos": [
+          "El dominio lo compras tú y queda a tu nombre.",
+          "Puedo ayudarte con la configuración del dominio.",
+          "Incluyo 1 ronda de ajustes posterior a la entrega."
+        ]
+      }
+    ]
   },
   {
     "id": "portal",
-    "nombre": "Portal",
-    "resumen": "Un espacio para el día a día de tu negocio.",
-    "descripcion": "Pensado para recibir pedidos, publicar novedades y presentar contacto, direcciones y sedes. Actualizas el contenido desde tu panel.",
-    "administracion": "Panel de administración con un único usuario.",
-    "entrega": "Una entrega, un sitio propio. La mantención es opcional."
+    "nombre": "Captación de Clientes",
+    "resumen": "Desarrollo tu sitio para captar contactos y administrar tu contenido.",
+    "descripcion": "Desarrollo tu sitio con panel de administración, hasta 10 vistas o secciones, formularios avanzados y SEO básico para ayudarte a captar nuevos clientes.",
+    "precioDesde": 350000,
+    "secciones": [
+      {
+        "titulo": "Ideal para",
+        "elementos": [
+          "Pymes que buscan generar contactos.",
+          "Negocios que requieren actualizar contenido frecuentemente.",
+          "Empresas que desean independencia para administrar su sitio."
+        ]
+      },
+      {
+        "titulo": "Incluye",
+        "descripcion": "Incluyo todo lo del Plan Presencia Digital más:",
+        "elementos": [
+          "Panel de administración.",
+          "Gestión de contenido.",
+          "Actualización de textos.",
+          "Actualización de imágenes.",
+          "Hasta 10 vistas o secciones.",
+          "Formularios avanzados.",
+          "Optimización básica para motores de búsqueda (SEO)."
+        ]
+      },
+      {
+        "titulo": "Reuniones Incluidas",
+        "elementos": [
+          "Reunión de levantamiento.",
+          "Revisión intermedia.",
+          "Validación y pruebas.",
+          "Entrega final."
+        ]
+      },
+      {
+        "titulo": "Capacitación",
+        "elementos": ["Capacitación inicial incluida (1 hora)."]
+      },
+      {
+        "titulo": "Plazo de entrega",
+        "elementos": [
+          "Hasta 5 días hábiles.",
+          "Las reuniones incluidas se realizan dentro de ese período."
+        ]
+      },
+      {
+        "titulo": "Ajustes",
+        "elementos": ["Hasta 2 rondas de correcciones."]
+      },
+      {
+        "titulo": "No Incluye",
+        "elementos": [
+          "E-commerce.",
+          "Integraciones empresariales complejas.",
+          "Automatizaciones avanzadas."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "automatizacion",
+    "nombre": "Automatización de Procesos",
+    "resumen": "Te ayudo a reducir tareas repetitivas y centralizar tu información.",
+    "descripcion": "Desarrollo una solución para conectar tus herramientas y simplificar procesos manuales. Evalúo contigo lo que necesitas y cotizo según el alcance de tu proyecto.",
+    "precioDesde": 800000,
+    "secciones": [
+      {
+        "titulo": "Ideal para",
+        "elementos": [
+          "Empresas que realizan procesos manuales repetitivos.",
+          "Negocios que utilizan múltiples herramientas sin integración.",
+          "Equipos que necesitan centralizar información."
+        ]
+      },
+      {
+        "titulo": "Ejemplos",
+        "elementos": [
+          "Gestión de clientes.",
+          "Formularios inteligentes.",
+          "Reservas online.",
+          "CRM básico.",
+          "Integración con correos.",
+          "Automatización de notificaciones.",
+          "Integración con APIs externas."
+        ]
+      },
+      {
+        "titulo": "Incluye",
+        "elementos": [
+          "Levantamiento funcional.",
+          "Diseño de solución.",
+          "Desarrollo personalizado.",
+          "Capacitación.",
+          "Soporte inicial de salida."
+        ]
+      },
+      {
+        "titulo": "Consideraciones",
+        "descripcion": "Evalúo tu proyecto y lo cotizo según su alcance."
+      }
+    ]
+  },
+  {
+    "id": "comercio-electronico",
+    "nombre": "Comercio Electrónico",
+    "resumen": "Creo tu tienda online para que puedas vender tus productos.",
+    "descripcion": "Desarrollo tu tienda online con catálogo, carrito y gestión de pedidos. Evalúo tus requerimientos y la factibilidad técnica para definir el alcance y los medios de pago.",
+    "precioDesde": 1200000,
+    "secciones": [
+      {
+        "titulo": "Ideal para",
+        "elementos": [
+          "Empresas que venden productos online.",
+          "Tiendas físicas que buscan digitalizar ventas.",
+          "Negocios con catálogo de productos."
+        ]
+      },
+      {
+        "titulo": "Incluye",
+        "elementos": [
+          "Catálogo de productos.",
+          "Gestión de inventario básica.",
+          "Carrito de compras.",
+          "Gestión de pedidos.",
+          "Administración de contenido.",
+          "Configuración de medios de pago según factibilidad técnica."
+        ]
+      },
+      {
+        "titulo": "Consideraciones",
+        "descripcion": "Evalúo cada tienda de forma individual, porque los requerimientos pueden variar mucho de un negocio a otro."
+      }
+    ]
   }
 ]

@@ -3,6 +3,10 @@ export interface Paquete {
   nombre: string;
   resumen: string;
   descripcion: string;
-  administracion: string;
-  entrega: string;
+  precioDesde: number;
+  secciones: {
+    titulo: string;
+    descripcion?: string;
+    elementos?: string[];
+  }[];
 }

@@ -1,7 +1,8 @@
 {
   "principal": [
     {"label": "Catálogo", "href": "/catalogo"},
-    {"label": "Perfil", "href": "/perfil"}
+    {"label": "Perfil", "href": "/perfil"},
+    {"label": "Contacto", "href": "/contacto"}
   ],
-  "pie": [{"label": "Contacto", "href": "/perfil#contacto"}]
+  "pie": [{"label": "Contacto", "href": "/contacto"}]
 }

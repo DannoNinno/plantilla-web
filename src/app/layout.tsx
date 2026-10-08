@@ -5,6 +5,7 @@ import Footer from '@/infrastructure/componentes/Footer/Footer';
 import {getSitio} from '@/infrastructure/handlers/datos';
 import type {LayoutProps} from '@/domain/types/ui';
 import {coloresMarca} from '../../tailwind.config';
+import {CONTACT_EMAIL, QUOTES_EMAIL} from '@/domain/configuracion/contacto';
 
 const sitio = getSitio();
 
@@ -12,6 +13,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: {default: `${sitio.nombre} | ${sitio.persona}`, template: `%s | ${sitio.nombre}`},
   description: sitio.descripcion,
+  other: {
+    'contact:email': CONTACT_EMAIL,
+    'quotes:email': QUOTES_EMAIL,
+  },
   icons: {
     icon: [
       {url: '/favicon.ico', sizes: '48x48'},

@@ -12,6 +12,8 @@ export interface LoadingModalProps {
 }
 
 export interface ContactoProps {
+  paquetes: Pick<Paquete, 'id' | 'nombre'>[];
+  paqueteInicial?: string;
   resumen?: string;
   mensajeEtiqueta?: string;
 }
@@ -19,7 +21,7 @@ export interface ContactoProps {
 export interface ConfiguradorProps {
   paquete: Paquete;
   definiciones: DefinicionComponente[];
-  whatsapp: string;
+  paquetes: Paquete[];
   nombreSitio: string;
 }
 

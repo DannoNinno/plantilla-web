@@ -39,7 +39,6 @@ export interface Perfil {
   especialidad: string;
   presentacion: string;
   principio: string;
-  correo: string;
   experiencia: Experiencia[];
   capacidades: Capacidad[];
   competencias: string[];

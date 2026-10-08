@@ -1,0 +1,50 @@
+{
+  "filosofia": {
+    "titulo": "No solo desarrollo páginas web.",
+    "introduccion": "Te ayudo a:",
+    "objetivos": [
+      "Conseguir más clientes.",
+      "Mejorar tu presencia digital.",
+      "Automatizar procesos manuales.",
+      "Ahorrar tiempo operativo.",
+      "Centralizar información.",
+      "Crear soluciones escalables para tu negocio."
+    ],
+    "conclusion": "Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecnológica."
+  },
+  "alcance": {
+    "introduccion": "Para cuidar la calidad de mi trabajo y cumplir los plazos que acordamos:",
+    "condiciones": [
+      "Evalúo por separado cualquier requerimiento fuera del alcance que contrataste.",
+      "Si necesitas cambios significativos, puedo preparar una nueva cotización.",
+      "Te informo las horas adicionales y necesito tu aprobación antes de realizarlas."
+    ]
+  },
+  "principios": [
+    "Te explico los costos con transparencia.",
+    "Defino contigo el alcance antes de comenzar.",
+    "Mantengo una comunicación constante contigo.",
+    "Desarrollo soluciones que puedas mantener en el tiempo.",
+    "Me enfoco en lo que aporta valor a tu negocio.",
+    "Te entrego documentación básica cuando corresponde.",
+    "Tu dominio y tus activos digitales quedan siempre a tu nombre."
+  ],
+  "adicionales": [
+    {
+      "nombre": "Reuniones Adicionales",
+      "costo": "$25.000 CLP por hora."
+    },
+    {
+      "nombre": "Capacitación Adicional",
+      "costo": "$25.000 CLP por hora."
+    },
+    {
+      "nombre": "Desarrollo Fuera de Alcance",
+      "costo": "Desde $35.000 CLP por hora."
+    },
+    {
+      "nombre": "Soporte Evolutivo",
+      "costo": "Cotización según necesidad."
+    }
+  ]
+}

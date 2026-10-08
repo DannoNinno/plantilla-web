@@ -3,13 +3,14 @@
 import {useState} from 'react';
 import type {ConfiguradorProps} from '../../../domain/types/ui';
 import {resolverSeleccion} from '../../../domain/casos-de-uso/componentes/seleccion';
-import {enlaceWhatsapp, mensajeSeleccion} from '../../../domain/servicios/contacto';
+import {mensajeSeleccion} from '../../../domain/servicios/contacto';
 import Contacto from '../Contacto/Contacto';
+import {clasesBoton} from '../Boton/estilos';
 
 export default function Configurador({
   paquete,
   definiciones,
-  whatsapp,
+  paquetes,
   nombreSitio,
 }: ConfiguradorProps) {
   const bases = definiciones
@@ -22,7 +23,6 @@ export default function Configurador({
     paquete.nombre,
     activos.map((item) => item.nombre),
   );
-  const urlWhatsapp = enlaceWhatsapp(whatsapp, mensaje);
 
   return (
     <>
@@ -137,10 +137,7 @@ export default function Configurador({
               })}
             </div>
           )}
-          <a
-            href="#vista-previa"
-            className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand-ink/20 px-5 py-3 text-sm font-semibold transition-colors lg:hidden"
-          >
+          <a href="#vista-previa" className={clasesBoton('borde', 'mt-5 w-full lg:hidden')}>
             Ver vista previa
           </a>
           <div className="mt-8 border-t border-brand-ink/10 pt-6">
@@ -153,28 +150,15 @@ export default function Configurador({
                 ))}
               </ul>
             )}
-            <a
-              href="#consulta"
-              className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-coral px-5 py-3 text-sm font-semibold text-brand-ink transition-colors"
-            >
+            <a href="#consulta" className={clasesBoton('coral', 'mt-5 w-full')}>
               Consultar por este paquete
             </a>
-            {urlWhatsapp && (
-              <a
-                href={urlWhatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand-ink/20 px-5 py-3 text-sm font-semibold transition-colors"
-              >
-                Enviar selección por WhatsApp
-              </a>
-            )}
           </div>
         </section>
       </div>
       <section id="consulta" className="mt-16 scroll-mt-28">
         <h2 className="text-2xl font-bold">Conversemos sobre tu sitio</h2>
-        <Contacto resumen={mensaje} />
+        <Contacto paquetes={paquetes} paqueteInicial={paquete.id} resumen={mensaje} />
       </section>
     </>
   );

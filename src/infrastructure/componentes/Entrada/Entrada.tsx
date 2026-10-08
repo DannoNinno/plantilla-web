@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import {ArrowDown, ArrowUpRight, PanelsTopLeft, Sparkles, UserRound} from 'lucide-react';
 import {getSitio} from '../../handlers/datos';
+import {clasesBoton} from '../Boton/estilos';
 
 const sitio = getSitio();
 
@@ -13,17 +14,13 @@ export default function Entrada() {
             {sitio.persona} / {sitio.nombre}
           </p>
           <h1 className="max-w-4xl animate-intro text-4xl font-bold leading-tight [animation-delay:100ms] sm:text-6xl lg:text-7xl">
-            Un sitio para tu negocio.
-            <span className="block text-brand-sky">El control, en tus manos.</span>
+            Tu negocio, mi experiencia.
+            <span className="block text-brand-sky">Tecnología para avanzar.</span>
           </h1>
           <p className="mt-6 max-w-xl animate-intro text-lg leading-relaxed text-white/75 [animation-delay:200ms]">
-            {sitio.descripcion} Te lo entrego funcionando. Tú lo administras y decides si necesitas
-            mantención.
+            Soy {sitio.persona}, y {sitio.nombre} es mi marca personal. {sitio.descripcion}
           </p>
-          <a
-            href="#entradas"
-            className="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-coral px-5 py-3 text-sm font-semibold text-brand-ink transition-colors"
-          >
+          <a href="#entradas" className={clasesBoton('coral', 'mt-8')}>
             Explorar el sitio <ArrowDown size={18} aria-hidden="true" />
           </a>
           <a
@@ -63,11 +60,12 @@ export default function Entrada() {
                 id="catalogo-descripcion"
                 className="mt-4 max-w-sm text-lg leading-relaxed text-brand-ink/75 transition-[opacity,color] duration-puerta ease-out group-focus-visible:text-white group-focus-visible:opacity-100 fine-pointer:opacity-0 fine-pointer:group-hover:text-white fine-pointer:group-hover:opacity-100"
               >
-                Conoce Landing y Portal. Explora lo que recibes y prepara tu cotización.
+                Conoce mis cuatro planes de servicios. Revisa sus alcances y conversemos sobre lo
+                que necesita tu negocio.
               </p>
             </div>
             <span className="mt-10 flex items-center gap-3 font-semibold text-brand-sky-text transition-colors duration-puerta ease-out group-focus-visible:text-white fine-pointer:group-hover:text-white">
-              Conocer los paquetes <ArrowUpRight size={20} aria-hidden="true" />
+              Conocer los planes <ArrowUpRight size={20} aria-hidden="true" />
             </span>
           </Link>
           <Link

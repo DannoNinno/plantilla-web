@@ -1,4 +1,5 @@
 import type {Metadata} from 'next';
+import Link from 'next/link';
 import {
   ArrowDown,
   ArrowUpRight,
@@ -13,7 +14,9 @@ import {
   Sparkles,
 } from 'lucide-react';
 import {getPerfil} from '@/infrastructure/handlers/datos';
-import Contacto from '@/infrastructure/componentes/Contacto/Contacto';
+import {CONTACT_EMAIL} from '@/domain/configuracion/contacto';
+import {enlaceCorreo} from '@/domain/servicios/contacto';
+import {clasesBoton} from '@/infrastructure/componentes/Boton/estilos';
 
 const perfil = getPerfil();
 
@@ -59,16 +62,10 @@ export default function PerfilPage() {
               {perfil.presentacion}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#capacidades"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-sky px-5 py-3 text-sm font-semibold text-brand-ink transition-colors"
-              >
+              <a href="#capacidades" className={clasesBoton('sky')}>
                 Explorar capacidades <ArrowDown size={18} aria-hidden="true" />
               </a>
-              <a
-                href="#contacto"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/25 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-              >
+              <a href="#contacto" className={clasesBoton('bordeOscuro')}>
                 Hablemos <ArrowUpRight size={18} aria-hidden="true" />
               </a>
             </div>
@@ -359,7 +356,7 @@ export default function PerfilPage() {
                     href={proyecto.enlace}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-brand-ink/20 px-5 py-3 text-sm font-semibold transition-colors"
+                    className={clasesBoton('borde', 'mt-5')}
                   >
                     Ver proyecto <ArrowUpRight size={18} aria-hidden="true" />
                   </a>
@@ -420,17 +417,21 @@ export default function PerfilPage() {
             Conversemos sobre tu próximo desafío.
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-brand-ink/75">
-            ¿Un proyecto, una integración o una oportunidad profesional? Escríbeme directamente o
-            conversemos sobre lo que tienes en mente.
+            ¿Un proyecto, una integración o una oportunidad profesional? Cuéntame lo que tienes en
+            mente desde mi página de contacto.
           </p>
           <a
-            href={`mailto:${perfil.correo}`}
+            href={enlaceCorreo(CONTACT_EMAIL)}
             className="mt-6 inline-flex max-w-full items-start gap-3 text-sm font-semibold text-brand-sky-profile underline-offset-4 hover:underline"
           >
             <Mail size={20} className="shrink-0" aria-hidden="true" />
-            <span className="break-all">{perfil.correo}</span>
+            <span className="break-all">{CONTACT_EMAIL}</span>
           </a>
-          <Contacto mensajeEtiqueta="Cuéntame sobre tu proyecto u oportunidad" />
+          <div className="mt-6">
+            <Link href="/contacto" className={clasesBoton('coral')}>
+              Ir al formulario de contacto <ArrowUpRight size={18} aria-hidden="true" />
+            </Link>
+          </div>
         </section>
       </div>
     </div>
