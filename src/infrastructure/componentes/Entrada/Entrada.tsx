@@ -69,7 +69,7 @@ export default function Entrada() {
       <EntradaScroll
         id="que-hago"
         aria-labelledby="que-hago-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-sky/10 px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
+        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-light bg-servicios px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
           <div data-entrada-elemento="ilustracion" className="md:order-2">
@@ -105,7 +105,7 @@ export default function Entrada() {
       <EntradaScroll
         id="por-que-conmigo"
         aria-labelledby="por-que-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-ink bg-perfil-hero px-6 py-16 text-white sm:scroll-mt-header-lg sm:py-20"
+        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-ink bg-confianza px-6 py-16 text-white sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
           <div data-entrada-elemento="ilustracion">
@@ -139,7 +139,7 @@ export default function Entrada() {
       <EntradaScroll
         id="como-trabajo"
         aria-labelledby="como-trabajo-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-coral/10 px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
+        className="flex min-h-[70vh] scroll-mt-header flex-col justify-center bg-brand-light bg-proceso px-6 py-16 sm:scroll-mt-header-lg sm:py-20"
       >
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
           <div data-entrada-elemento="ilustracion" className="md:order-2">
@@ -148,7 +148,7 @@ export default function Entrada() {
           <div className="md:order-1">
             <p
               data-entrada-elemento="titulo"
-              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-coral-dark"
+              className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-brand-ink/70"
             >
               03 / Paso a paso
             </p>
@@ -196,7 +196,7 @@ export default function Entrada() {
       <EntradaScroll
         id="entradas"
         aria-labelledby="entradas-titulo"
-        className="flex min-h-[70vh] scroll-mt-header flex-col border-t border-brand-ink/10 bg-brand-ink/[0.08] sm:scroll-mt-header-lg"
+        className="flex min-h-[70vh] scroll-mt-header flex-col border-t border-brand-ink/10 bg-brand-light bg-entradas sm:scroll-mt-header-lg"
       >
         <div className="w-full border-b border-brand-ink/10 bg-brand-sky/10 px-6 py-6 text-center text-brand-ink sm:py-8">
           <p
@@ -213,10 +213,7 @@ export default function Entrada() {
             Elige tu próximo paso.
           </h2>
         </div>
-        <div
-          data-entrada-elemento="texto"
-          className="isolate grid flex-1 bg-entradas md:grid-cols-2"
-        >
+        <div data-entrada-elemento="texto" className="isolate grid flex-1 md:grid-cols-2">
           {sitio.catalogoHabilitado ? (
             <Link
               href="/catalogo"

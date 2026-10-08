@@ -31,6 +31,7 @@ import type {DefinicionComponente} from '../src/domain/types/componentes';
 import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
 import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
 import Entrada from '../src/infrastructure/componentes/Entrada/Entrada';
+import NavegacionInicio from '../src/infrastructure/componentes/Entrada/NavegacionInicio';
 import Footer from '../src/infrastructure/componentes/Footer/Footer';
 import {clasesBoton} from '../src/infrastructure/componentes/Boton/estilos';
 import {esEnlaceActivo} from '../src/infrastructure/componentes/Header/navegacion';
@@ -439,15 +440,34 @@ test('la portada ofrece solo botones siguientes y encabezados numerados sin step
   ]) {
     assert.ok(html.includes(titulo));
   }
-  for (const fondo of [
-    'bg-brand-sky/10',
-    'bg-brand-ink bg-perfil-hero',
-    'bg-brand-coral/10',
-    'bg-brand-ink/[0.08]',
-  ]) {
+  for (const fondo of ['bg-servicios', 'bg-confianza', 'bg-proceso', 'bg-entradas']) {
     assert.ok(html.includes(fondo));
   }
   assert.doesNotMatch(html, /scroll-snap|overflow-hidden/);
+});
+
+test('todos los fondos de la portada tienen degradados propios definidos en Tailwind', () => {
+  const fondos = tailwindConfig.theme.extend.backgroundImage;
+  const html = renderToStaticMarkup(createElement(Entrada));
+  for (const nombre of ['intro', 'servicios', 'confianza', 'proceso', 'entradas'] as const) {
+    assert.match(fondos[nombre], /linear-gradient/);
+    assert.match(fondos[nombre], /radial-gradient/);
+    assert.ok(html.includes(`bg-${nombre}`));
+  }
+  assert.notEqual(fondos.confianza, fondos['perfil-hero']);
+});
+
+test('los enlaces siguientes tienen movimiento sutil sin bordes ni sombras y conservan foco y tacto', () => {
+  for (const paso of [0, 1, 2] as const) {
+    const html = renderToStaticMarkup(createElement(NavegacionInicio, {paso}));
+    assert.ok(html.includes('min-h-12'));
+    assert.ok(html.includes('focus-visible:-translate-y-px'));
+    assert.ok(html.includes('group-hover/siguiente:translate-y-0.5'));
+    assert.ok(html.includes('group-focus-visible/siguiente:translate-y-0.5'));
+    assert.ok(html.includes('motion-reduce:transition-none'));
+    assert.doesNotMatch(html, /shadow-|bg-|border-/);
+    assert.ok(html.includes(paso === 1 ? 'text-white/80' : 'text-brand-ink/75'));
+  }
 });
 
 test('la navegacion no apunta a administracion ni a endpoints eliminados', () => {

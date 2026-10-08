@@ -16,6 +16,8 @@ function rgb(hex: string) {
   return [1, 3, 5].map((inicio) => parseInt(hex.slice(inicio, inicio + 2), 16)).join(' ');
 }
 
+const fondoAzul = `linear-gradient(135deg, color-mix(in srgb, ${coloresMarca.ink} 94%, ${coloresMarca.sky}) 0%, color-mix(in srgb, ${coloresMarca.ink} 78%, ${coloresMarca['sky-text']}) 100%)`;
+
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
@@ -41,9 +43,12 @@ export default {
         puerta: '65svh',
       },
       backgroundImage: {
-        intro: `radial-gradient(ellipse at 85% 20%, rgb(${rgb(coloresMarca.sky)} / 0.1), transparent 60%)`,
+        intro: `radial-gradient(ellipse at 85% 20%, rgb(${rgb(coloresMarca.sky)} / 0.18), transparent 60%), ${fondoAzul}`,
+        confianza: `radial-gradient(ellipse at 15% 30%, rgb(${rgb(coloresMarca.sky)} / 0.16), transparent 65%), ${fondoAzul}`,
+        servicios: `radial-gradient(ellipse at 85% 35%, rgb(${rgb(coloresMarca.sky)} / 0.22), transparent 65%), linear-gradient(135deg, color-mix(in srgb, ${coloresMarca.light} 94%, ${coloresMarca.sky}) 0%, color-mix(in srgb, ${coloresMarca.light} 70%, ${coloresMarca.sky}) 100%)`,
+        proceso: `radial-gradient(ellipse at 15% 70%, rgb(${rgb(coloresMarca.coral)} / 0.2), transparent 65%), linear-gradient(135deg, color-mix(in srgb, ${coloresMarca.light} 90%, ${coloresMarca.coral}) 0%, color-mix(in srgb, ${coloresMarca.light} 68%, ${coloresMarca.coral}) 100%)`,
         'perfil-hero': `radial-gradient(ellipse at 85% 25%, rgb(${rgb(coloresMarca.sky)} / 0.12), transparent 55%), radial-gradient(ellipse at 5% 100%, rgb(${rgb(coloresMarca.coral)} / 0.06), transparent 45%)`,
-        entradas: `radial-gradient(ellipse at 15% 45%, rgb(${rgb(coloresMarca.sky)} / 0.08), transparent 50%), radial-gradient(ellipse at 85% 55%, rgb(${rgb(coloresMarca.coral)} / 0.06), transparent 50%)`,
+        entradas: `radial-gradient(ellipse at 15% 45%, rgb(${rgb(coloresMarca.sky)} / 0.08), transparent 50%), radial-gradient(ellipse at 85% 55%, rgb(${rgb(coloresMarca.coral)} / 0.06), transparent 50%), linear-gradient(135deg, ${coloresMarca.light} 0%, color-mix(in srgb, ${coloresMarca.light} 90%, ${coloresMarca.ink}) 100%)`,
       },
       transitionDuration: {
         puerta: '280ms',
