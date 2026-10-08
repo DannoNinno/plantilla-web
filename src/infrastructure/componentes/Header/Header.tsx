@@ -33,9 +33,10 @@ const Header: React.FC<HeaderProps> = ({links = defaultLinks}) => {
                 <span
                   key={link.href}
                   aria-disabled="true"
-                  className="inline-flex min-h-12 items-center gap-1 rounded-lg px-1.5 py-3 text-xs text-white/50 sm:text-sm"
+                  className="inline-flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-lg px-1.5 py-2 text-xs leading-tight text-white/50 sm:text-sm"
                 >
-                  {link.label} <span className="text-[10px] sm:text-xs">Próximamente</span>
+                  <span>{link.label}</span>
+                  <span className="text-[10px] sm:text-xs">Próximamente</span>
                 </span>
               );
             }
