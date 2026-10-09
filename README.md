@@ -74,19 +74,24 @@ El lint utiliza ESLint 9 con [configuración plana](./eslint.config.mjs); no se 
 
 ## Bóveda y demostración — fase 1
 
-- `/componentes/`: índice agrupado por plan mínimo.
-- `/componentes/portada/` y `/componentes/formulario-contacto/`: ejemplos aislados, descripción, plan y tabla de props. Las fichas conservan un único h1.
-- `/demo/presencia/` y `/demo/captacion/`: páginas completas de Café Aurora, sin la cabecera ni el pie de dannotech. Incluyen aviso visible y una barra inferior para cambiar de plan, volver al portal o a contacto con el plan preseleccionado. La barra ocupa su propia fila; el contenido se desplaza por encima y los controles nunca quedan detrás de una superposición fija.
+- `/componentes/`: muestra directamente las piezas funcionales programadas, no tarjetas de secciones ni agrupaciones comerciales por plan. Por ahora permite probar el formulario de contacto.
+- `/componentes/formulario-contacto/`: muestra la pieza aislada primero. La documentación de props y el plan mínimo están en «Información técnica», cerrada por defecto. Cada vista conserva un único h1.
+- `/demo/presencia/` y `/demo/captacion/`: páginas completas de Café Aurora, sin la cabecera ni el pie de dannotech. Presencia muestra cinco secciones elegidas y Captación las ocho disponibles en fase 2. Ambas incluyen aviso visible y botonera flotante para cambiar de plan, volver al portal o a contacto con el plan preseleccionado.
+- Portada vive en `secciones/portada`, solo forma parte de la demo del sitio y ya no tiene ficha pública en `/componentes/portada/`.
 
-[negocio.json](./src/data/demo/negocio.json) es la fuente única del contenido ficticio y los textos de la demo. [negocio.ts](./src/demo/negocio.ts) solo lo importa. Los SVG originales incorporados por Daniel viven en [public/demo/cafe-aurora-demo/](./public/demo/cafe-aurora-demo/); fase 1 usa su logo y portada, y las demás ilustraciones quedan disponibles para fases posteriores. El manifest del kit describe activos; no es otra fuente de contenido de negocio.
+[negocio.json](./src/data/demo/negocio.json) es la fuente única del contenido ficticio y los textos de la demo. [negocio.ts](./src/demo/negocio.ts) solo lo importa. Los SVG originales incorporados por Daniel viven en [public/demo/cafe-aurora-demo/](./public/demo/cafe-aurora-demo/); las primeras dos fases usan logo, portada, fachada, galería y la ilustración de la sede principal. Los activos de equipo, productos, novedades y promoción quedan disponibles para Captación. El manifest describe activos; no es otra fuente de contenido de negocio.
 
-Cada pieza tiene carpeta, props exportadas, ejemplo y README con dependencias de copia. El código del componente no importa su ejemplo, el registro ni el negocio. Para llevarlo a otro proyecto se copian la carpeta, las piezas base indicadas y los tokens de Tailwind; no hay que modificar el código. La bóveda también admite futuras piezas que no sean secciones de una landing.
+Cada pieza tiene carpeta, props exportadas, ejemplo y README con dependencias de copia. El código del componente no importa su ejemplo, el registro ni el negocio. Para llevarlo a otro proyecto se copian la carpeta, las piezas base indicadas y los tokens de Tailwind; no hay que modificar el código. La bóveda está destinada a piezas funcionales: formularios, carruseles, navbars, sidebars, módulos de noticias u otras piezas que Daniel aporte. Las secciones comerciales se ensamblan en la demo del plan, no se presentan como componentes de la bóveda.
 
-[registro.ts](./src/infrastructure/componentes/boveda/registro.ts) es la única lista. Agregar una pieza requiere su carpeta y una entrada en ese registro, incluyendo su documentación de props. [planes.ts](./src/demo/planes.ts) deriva el orden del registro, filtra por plan y aplica topes de 5 y 10; las piezas marcadas como siempre incluidas no consumen el límite. No se repite una lista de componentes en cada página.
+[registro.ts](./src/infrastructure/componentes/boveda/registro.ts) mantiene una única lista tipada, sin duplicar componentes ni ejemplos. `categoria: 'componente'` publica una pieza en la bóveda; `categoria: 'seccion'` no genera ficha pública. `registroBoveda` es una vista filtrada, no un segundo inventario. `enDemo` decide explícitamente si la entrada se ensambla en las demos: una nueva pieza de la bóveda no debe aparecer automáticamente en Café Aurora. [planes.ts](./src/demo/planes.ts) deriva el orden, filtra por plan y aplica topes de 5 y 10; las piezas siempre incluidas no consumen el límite.
 
-El formulario de ejemplo solo valida y muestra éxito en memoria: no tiene peticiones, login, almacenamiento ni envíos de correo. Sin JavaScript no permite enviar y muestra un aviso. El formulario real de dannotech sigue separado y abre el programa de correo. Ambos planes muestran los mismos dos componentes mientras dure fase 1.
+El formulario de ejemplo solo valida y muestra éxito en memoria: no tiene peticiones, login, almacenamiento ni envíos de correo. Sin JavaScript no permite enviar y muestra un aviso. El formulario real de dannotech sigue separado y abre el programa de correo.
 
-La botonera inferior es una tarjeta compacta y centrada, con sombra y cuatro acciones con iconos. Coral identifica las acciones de dannotech (cotizar y volver al portal); celeste identifica los planes, con un indicador del plan activo. Las etiquetas cortas vienen del JSON y cada enlace conserva su nombre accesible completo. El aviso de demostración se muestra arriba, no se repite dentro de la botonera.
+La botonera inferior es una tarjeta compacta y centrada, con fondo azul oscuro, sombra y cuatro acciones con iconos. Coral identifica las acciones de dannotech (cotizar y volver al portal); celeste identifica los planes, con un indicador del plan activo. Las etiquetas cortas vienen del JSON y cada enlace conserva su nombre accesible completo. El aviso superior es una pequeña cápsula del mismo color: su detalle sigue disponible para lectores de pantalla y como tooltip. Ambos controles son overlays fijos sin franjas de fondo; el contenido se desplaza por debajo y el espacio transparente permite hacer clic en la demo. El contenido tiene padding inicial y final, y un hook mantiene el campo enfocado entre los límites reales de los overlays al navegar con teclado. Solo este marco necesita una frontera cliente; las secciones siguen entrando como contenido de servidor. El aviso no se repite dentro de la botonera. En la bóveda el formulario mantiene su aviso propio de simulación, sin agregar otra franja de demo.
+
+Las cuatro acciones crecen un 5 % al hacer hover con mouse o recibir foco visible, con una transición de 150 ms y regreso al tamaño normal al pulsar. Con movimiento reducido no se aplica escala ni transición; no se ejecutan animaciones en bucle ni lógica JavaScript para el hover.
+
+El portal, la bóveda y las secciones de la demo comparten `fontFamily.sans`, igual que la landing y el perfil. `TituloSeccion` usa ese token: no introduce fuentes serif ni una tipografía distinta para Café Aurora. El logo y las ilustraciones originales siguen siendo imágenes y no alteran la fuente del marcado.
 
 ### Archivos nuevos de fase 1
 
@@ -113,8 +118,7 @@ src/
       Contenedor/Contenedor.tsx
       SaltoContenido/SaltoContenido.tsx
       TituloSeccion/TituloSeccion.tsx
-    boveda/
-      registro.ts
+    secciones/
       portada/
         Portada.tsx
         tipos.ts
@@ -122,6 +126,8 @@ src/
         props.ts
         index.ts
         README.md
+    boveda/
+      registro.ts
       formulario-contacto/
         FormularioContacto.tsx
         FormularioInteractivo.tsx
@@ -136,28 +142,142 @@ src/
         README.md
     demo/
       AvisoDemo/AvisoDemo.tsx
+      PaginaPlan/MarcoDemo.tsx
+      PaginaPlan/useEnfoqueDemo.ts
       FichaComponente/FichaComponente.tsx
       FichaComponente/TablaProps.tsx
       HerramientasDemo/HerramientasDemo.tsx
       HerramientasDemo/AccionHerramienta.tsx
       HerramientasDemo/SelectorPlan.tsx
       IndiceBoveda/IndiceBoveda.tsx
-      IndiceBoveda/TarjetaComponente.tsx
+      IndiceBoveda/MuestraComponente.tsx
       PaginaPlan/PaginaPlan.tsx
 tests/boveda.test.ts
 ```
 
 Las rutas de inicio, perfil, contacto y catálogo, junto con el template existente, se movieron a `(portal)` para conservar su marco visual. Además se actualizaron los scripts de lint/pruebas, la configuración de tokens y las pruebas de estructura.
 
+## Demostración — fase 2
+
+Se completaron las seis secciones restantes de Presencia Digital: Servicios, Quiénes somos, Galería, Testimonios, Preguntas frecuentes y Ubicación y horarios. No se publican en la bóveda de piezas funcionales. Sus tarjetas, imágenes y preguntas están fragmentadas en subcomponentes dentro de cada carpeta.
+
+Daniel eligió esta composición para `/demo/presencia/`, en este orden:
+
+1. Portada.
+2. Servicios.
+3. Quiénes somos.
+4. Testimonios.
+5. Formulario de contacto.
+
+La selección vive en `interfaz.planes.presencia.secciones` del JSON. `seleccionarComposicion` valida nombres, duplicados, disponibilidad y el límite real de cinco; no descarta silenciosamente una configuración inválida. `/demo/captacion/` permite explorar las ocho secciones disponibles (menos de su tope de diez), sin implementar aún las funciones avanzadas ni el panel.
+
+WhatsApp, redes sociales y pie de página se incluyen siempre y no consumen el límite. Sus destinos de ejemplo son internos: WhatsApp y las redes llevan al formulario simulado, no a números, cuentas ni perfiles reales. El nombre accesible del botón y el aviso de redes explican esta simulación. El pie tiene identidad propia de Café Aurora y retorno al inicio. El contacto real de dannotech no se modifica.
+
+### Archivos incorporados en fase 2
+
+```text
+src/infrastructure/componentes/
+  base/MarcoSeccion/MarcoSeccion.tsx
+  boveda/
+    registrar.ts
+    formulario-contacto/definicion.ts
+  secciones/
+    portada/definicion.ts
+    servicios/
+      Servicios.tsx
+      TarjetaServicio.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    quienes-somos/
+      QuienesSomos.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    galeria/
+      Galeria.tsx
+      ImagenGaleria.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    testimonios/
+      Testimonios.tsx
+      TarjetaTestimonio.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    preguntas-frecuentes/
+      PreguntasFrecuentes.tsx
+      PreguntaFrecuente.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    ubicacion-horarios/
+      UbicacionHorarios.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    whatsapp/
+      Whatsapp.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    redes-sociales/
+      RedesSociales.tsx
+      EnlaceSocial.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+    pie-pagina/
+      PiePagina.tsx
+      tipos.ts
+      ejemplo.ts
+      definicion.ts
+      index.ts
+      README.md
+```
+
+También se ampliaron el JSON, el ensamblaje por plan, el registro, las pruebas y los textos de estado del catálogo. Cada definición aporta metadatos y props tipadas desde su carpeta; `registro.ts` sigue siendo la única lista y `registrar.ts` solo conserva el enlace genérico entre componente y props, para que el registro no crezca por encima de 150 líneas. Al copiar una sección se excluyen `ejemplo.ts` y `definicion.ts`.
+
+### Decisiones de implementación
+
+- Galería estática con imágenes diferidas, sin carrusel, autoplay ni otra carga de JavaScript.
+- Preguntas frecuentes con `details`/`summary`: funcionan con teclado y sin JavaScript.
+- Dirección ilustrada, sin mapas externos ni coordenadas reales.
+- Opiniones claramente ficticias, sin atribuirlas a personas reales.
+- Las secciones nuevas son de servidor, comparten la tipografía del portal y reciben todo el contenido por props.
+- Nuevo token `canal.whatsapp` y margen de anclas de cuatro rem para evitar que el aviso fijo tape los destinos.
+- No se agregaron dependencias, hojas de estilo, animaciones en bucle, backend ni commits.
+
+### Validación de fase 2
+
+49 pruebas aprobadas, lint sin advertencias y build de producción correcto. Se verificaron las composiciones de cinco y ocho secciones, las tres piezas sin consumo de cupo, un h1 por demo y ausencia de desplazamiento horizontal a 360, 768 y 1440 px. Las preguntas responden al teclado; el formulario muestra éxito local, enfoca su resultado y no realiza XHR, fetch ni POST. El ancla de contacto queda debajo del aviso fijo y la bóveda conserva solo el formulario funcional. Los recursos nuevos existen y los SVG comprobados responden con HTTP 200.
+
 ### Pendientes
 
-- TODO(Daniel): aprobar fase 1 antes de continuar con los seis componentes restantes de Presencia Digital y sus tres piezas siempre incluidas.
+- TODO(Daniel): revisar la fase 2 y sus cambios sin commit antes de avanzar a Captación.
 - TODO(Daniel): implementar en fase 3 las piezas de Captación, edición simulada de textos/imágenes y Bandeja de contactos conectada a `onConsulta`.
 - TODO(Daniel): aportar futuras piezas de la bóveda; revisar sus dependencias y props antes de incorporarlas, sin implementar autenticación real en estas demos.
 
 ### Revisión de estándares
 
-Las piezas nuevas mantienen un archivo por componente, lógica del formulario en un hook, Tailwind sin hojas nuevas ni estilos en línea, y páginas que solo ensamblan. Las páginas preexistentes de perfil y catálogo se trasladaron sin cambiar su código: conservan marcado de secciones y archivos de más de 150 líneas. No se refactorizaron porque la autorización fue para separar rutas, no para modificar su implementación. La única hoja existente sigue siendo [globals.css](./src/app/globals.css).
+Las piezas nuevas mantienen un archivo por componente, lógica del formulario en un hook, Tailwind sin hojas nuevas ni estilos en línea, y páginas que solo ensamblan. El catálogo y los detalles de plan se fragmentaron al autorizar su conexión con las demos; conservan los precios, contenidos de servicio y consulta existentes. La página preexistente de perfil solo se trasladó: conserva marcado de secciones y más de 150 líneas, sin refactorizarla fuera del alcance autorizado. La única hoja existente sigue siendo [globals.css](./src/app/globals.css).
 
 ## Datos
 
@@ -176,7 +296,11 @@ La voz de dannotech es la de Daniel Salamanca, su marca personal: los textos de 
 
 Las descripciones de paquetes son contenido del catálogo, no funcionalidades implementadas. El registro JSON del configurador heredado permanece vacío y no se conecta a las nuevas demos. La bóveda usa su propio registro TypeScript para las piezas reutilizables y sus ejemplos; ninguno carga datos del servidor ni módulos administrativos reales.
 
-El catálogo organiza los cuatro planes de [tarifas.md](./tarifas.md), con precios desde en CLP, un resumen por opción y vistas de detalle para su alcance, reuniones, capacitación, exclusiones y consideraciones según corresponda. Los servicios y costos adicionales aparecen al final del catálogo general. Los contenidos públicos se mantienen en los JSON; al actualizar las tarifas, sincroniza esos datos con el documento. Las pruebas verifican que los precios y el detalle de cada plan coincidan con la fuente. Actualmente el catálogo está desactivado: el menú y la tarjeta indican «Próximamente», y las rutas del catálogo redirigen a la portada. Para reactivarlo, cambia `catalogoHabilitado` a `true` en [sitio.json](./src/data/sitio.json) y vuelve a construir y desplegar.
+El catálogo organiza los cuatro planes de [tarifas.md](./tarifas.md), con precios desde en CLP, un resumen por opción y vistas de detalle para su alcance, reuniones, capacitación, exclusiones y consideraciones según corresponda. Los servicios y costos adicionales aparecen al final del catálogo general. Los contenidos públicos se mantienen en los JSON; al actualizar las tarifas, sincroniza esos datos con el documento. Las pruebas verifican que los precios y el detalle de cada plan coincidan con la fuente. El catálogo está habilitado mediante `catalogoHabilitado` en [sitio.json](./src/data/sitio.json): el menú y la tarjeta de inicio usan sus enlaces existentes, sin modificar el home.
+
+La sección «Explora antes de cotizar» diferencia dos recorridos: catálogo → detalle del plan → demo del sitio correspondiente, y catálogo → bóveda → componente aislado. Presencia Digital (`landing`) abre `/demo/presencia/`; Captación de Clientes (`portal`) abre `/demo/captacion/`. La relación con los planes del catálogo vive en el JSON de la demo y se consulta con `getDemoPaquete`; Automatización y Comercio Electrónico no muestran demos que aún no existen. El detalle ofrece también acceso a la bóveda y un aviso de funciones pendientes para no presentar como terminado el panel ni otras funcionalidades de Captación. Los textos de este recorrido están en [catalogo.json](./src/data/catalogo.json).
+
+Los archivos de página del catálogo solo ensamblan. Su presentación se separa en [Catalogo](./src/infrastructure/componentes/Catalogo) (presentación, filosofía, exploración, lista y tarjeta de planes, alcance, principios y adicionales) y [DetallePaquete](./src/infrastructure/componentes/DetallePaquete) (presentación, detalle existente, enlaces y consulta). Son componentes de servidor con props tipadas y clases Tailwind, sin hojas de estilo nuevas.
 
 Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación de Clientes, respectivamente. Ambos planes tienen un plazo de hasta 5 días hábiles, con las reuniones incluidas dentro de ese período. El configurador se muestra solo si el plan tiene componentes definidos; de lo contrario, se presenta el detalle y el formulario, sin una demostración vacía ni canales de contacto adicionales dentro del plan.
 
@@ -214,7 +338,7 @@ En los planes se preselecciona el plan correspondiente. Consulta prepara un `mai
 
 El configurador mantiene su selección y resolución de dependencias únicamente en memoria del navegador. No persiste datos al salir ni modifica el sitio.
 
-Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/componentes/`, las fichas `/componentes/[slug]/` y las demos `/demo/presencia/` y `/demo/captacion/`. Mientras el catálogo esté desactivado, `/catalogo/` y todas sus subrutas redirigen a `/`; el contenido y las rutas de los cuatro planes permanecen listos para reactivarse con el flag. Las rutas `/api` y `/admin` ya no existen.
+Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, los detalles `/catalogo/landing/`, `/catalogo/portal/`, `/catalogo/automatizacion/` y `/catalogo/comercio-electronico/`, `/componentes/`, las fichas `/componentes/[slug]/` y las demos `/demo/presencia/` y `/demo/captacion/`. Si se desactiva el flag del catálogo y se reconstruye el sitio, sus rutas vuelven a redirigir a `/`. Las rutas `/api` y `/admin` ya no existen.
 
 ## Docker anterior
 

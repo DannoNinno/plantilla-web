@@ -1,71 +1,35 @@
-import {createElement} from 'react';
-import type {ComponentType} from 'react';
-import {Portada, type PortadaProps} from './portada';
-import {ejemploPortada} from './portada/ejemplo';
-import {propsPortada} from './portada/props';
-import {FormularioContacto, type FormularioContactoProps} from './formulario-contacto';
-import {ejemploFormularioContacto} from './formulario-contacto/ejemplo';
-import {propsFormularioContacto} from './formulario-contacto/props';
+import {registrar} from './registrar';
+import {definicionPortada} from '../secciones/portada/definicion';
+import {definicionServicios} from '../secciones/servicios/definicion';
+import {definicionQuienesSomos} from '../secciones/quienes-somos/definicion';
+import {definicionGaleria} from '../secciones/galeria/definicion';
+import {definicionTestimonios} from '../secciones/testimonios/definicion';
+import {definicionPreguntas} from '../secciones/preguntas-frecuentes/definicion';
+import {definicionUbicacion} from '../secciones/ubicacion-horarios/definicion';
+import {definicionFormulario} from './formulario-contacto/definicion';
+import {definicionWhatsapp} from '../secciones/whatsapp/definicion';
+import {definicionRedes} from '../secciones/redes-sociales/definicion';
+import {definicionPie} from '../secciones/pie-pagina/definicion';
 
-export type PlanBoveda = 'presencia' | 'captacion';
-
-export interface DocumentacionProp {
-  nombre: string;
-  tipo: string;
-  requerida: boolean;
-  descripcion: string;
-}
-
-interface DefinicionRegistro<Props extends object> {
-  slug: string;
-  nombre: string;
-  descripcionCorta: string;
-  planMinimo: PlanBoveda;
-  cuentaParaTope: boolean;
-  componente: ComponentType<Props>;
-  propsEjemplo: Props;
-  propsAisladas?: Partial<Props>;
-  props: DocumentacionProp[];
-}
-
-function registrar<Props extends object>(entrada: DefinicionRegistro<Props>) {
-  return {
-    ...entrada,
-    renderizar: (aislado = false) =>
-      createElement(
-        entrada.componente,
-        aislado ? {...entrada.propsEjemplo, ...entrada.propsAisladas} : entrada.propsEjemplo,
-      ),
-  };
-}
+export type {PlanBoveda, DocumentacionProp} from './registrar';
 
 export const registro = [
-  registrar<PortadaProps>({
-    slug: 'portada',
-    nombre: 'Portada',
-    descripcionCorta: 'Presentación del negocio con título, imagen y llamada a la acción.',
-    planMinimo: 'presencia',
-    cuentaParaTope: true,
-    componente: Portada,
-    propsEjemplo: ejemploPortada,
-    propsAisladas: {nivelTitulo: 'h2', accion: undefined},
-    props: propsPortada,
-  }),
-  registrar<FormularioContactoProps>({
-    slug: 'formulario-contacto',
-    nombre: 'Formulario de contacto',
-    descripcionCorta:
-      'Consulta accesible con validación y resultado local, sin enviar información.',
-    planMinimo: 'presencia',
-    cuentaParaTope: true,
-    componente: FormularioContacto,
-    propsEjemplo: ejemploFormularioContacto,
-    props: propsFormularioContacto,
-  }),
+  registrar(definicionPortada),
+  registrar(definicionServicios),
+  registrar(definicionQuienesSomos),
+  registrar(definicionGaleria),
+  registrar(definicionTestimonios),
+  registrar(definicionPreguntas),
+  registrar(definicionUbicacion),
+  registrar(definicionFormulario),
+  registrar(definicionWhatsapp),
+  registrar(definicionRedes),
+  registrar(definicionPie),
 ];
 
 export type EntradaBoveda = (typeof registro)[number];
+export const registroBoveda = registro.filter((entrada) => entrada.categoria === 'componente');
 
 export function getComponente(slug: string) {
-  return registro.find((entrada) => entrada.slug === slug);
+  return registroBoveda.find((entrada) => entrada.slug === slug);
 }

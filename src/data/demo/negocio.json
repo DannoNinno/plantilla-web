@@ -65,6 +65,181 @@
       "precio": 9900
     }
   ],
+  "servicios": {
+    "id": "servicios",
+    "titulo": "Tu pausa, a tu manera.",
+    "descripcion": "Desde una taza preparada al momento hasta café recién tostado para disfrutar en casa.",
+    "elementos": [
+      {
+        "id": "barra",
+        "titulo": "Café en nuestra barra",
+        "descripcion": "Espresso, filtrados y preparaciones de temporada, acompañados de algo rico."
+      },
+      {
+        "id": "grano",
+        "titulo": "Granos para llevar",
+        "descripcion": "Pequeñas partidas tostadas con cuidado. Te ayudamos a elegir el perfil y la molienda."
+      },
+      {
+        "id": "encuentros",
+        "titulo": "Catas y encuentros",
+        "descripcion": "Experiencias para explorar aromas, métodos y sabores con tu grupo."
+      }
+    ]
+  },
+  "nosotros": {
+    "id": "quienes-somos",
+    "titulo": "Un lugar para bajar el ritmo.",
+    "descripcion": "Café Aurora nació de una idea sencilla: un buen café sabe mejor cuando hay tiempo para compartirlo.",
+    "parrafos": [
+      "Somos una cafetería y tostaduría de barrio imaginaria. Nos gusta conocer lo que hay detrás de cada grano y prepararlo sin apuro.",
+      "En esta historia ficticia, la barra, las plantas y el aroma del tueste reciben a quienes vienen a trabajar, conversar o hacer una pausa."
+    ],
+    "imagen": {
+      "src": "/demo/cafe-aurora-demo/demo/nosotros/nosotros.svg",
+      "alt": "Fachada ilustrada de la cafetería ficticia Café Aurora.",
+      "width": 1200,
+      "height": 900
+    }
+  },
+  "galeria": {
+    "id": "galeria",
+    "titulo": "Así se siente Aurora.",
+    "descripcion": "Ilustraciones originales de nuestros sabores y espacios ficticios.",
+    "imagenes": [
+      {
+        "id": "tazas",
+        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-01.svg",
+        "alt": "Tazas ilustradas con arte latte sobre una mesa.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Una taza para comenzar."
+      },
+      {
+        "id": "granos",
+        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-02.svg",
+        "alt": "Granos de café tostado ilustrados.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "El aroma del tueste."
+      },
+      {
+        "id": "bolsas",
+        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-03.svg",
+        "alt": "Bolsas ilustradas de café en una repisa.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Aurora también en casa."
+      },
+      {
+        "id": "fachada",
+        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-04.svg",
+        "alt": "Fachada ilustrada del local al anochecer.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "La última pausa del día."
+      },
+      {
+        "id": "galletas",
+        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-05.svg",
+        "alt": "Galletas y una taza de café ilustradas.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Algo rico para acompañar."
+      },
+      {
+        "id": "rincon",
+        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-06.svg",
+        "alt": "Rincón ilustrado con plantas y café de grano.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Tu rincón favorito."
+      }
+    ]
+  },
+  "testimonios": {
+    "id": "testimonios",
+    "titulo": "Historias de una buena pausa.",
+    "descripcion": "Opiniones ficticias escritas solo para mostrar cómo funciona esta sección. No son reseñas reales.",
+    "elementos": [
+      {
+        "id": "pausa",
+        "texto": "Me imaginé entrando por un café rápido y quedándome a disfrutar la mañana.",
+        "autor": "Visitante ficticio",
+        "detalle": "Una pausa en la barra"
+      },
+      {
+        "id": "casa",
+        "texto": "La recomendación de molienda hizo más sencilla mi primera preparación en casa.",
+        "autor": "Cliente de ejemplo",
+        "detalle": "Café para llevar"
+      },
+      {
+        "id": "cata",
+        "texto": "El encuentro nos ayudó a descubrir cuánto puede cambiar una taza con otro método.",
+        "autor": "Grupo imaginario",
+        "detalle": "Una cata compartida"
+      }
+    ]
+  },
+  "preguntas": {
+    "id": "preguntas-frecuentes",
+    "titulo": "Antes de tu próxima taza.",
+    "descripcion": "Respuestas de ejemplo para conocer nuestra cafetería ficticia.",
+    "elementos": [
+      {
+        "id": "molienda",
+        "pregunta": "¿Pueden moler el café para mi método?",
+        "respuesta": "Sí, en esta demo ofrecemos molienda para espresso, filtro y prensa francesa. Cuéntanos cómo lo preparas."
+      },
+      {
+        "id": "opciones",
+        "pregunta": "¿Hay alternativas sin leche de origen animal?",
+        "respuesta": "Nuestra carta ficticia incluye opciones vegetales. En un sitio real, aquí se informarían las alternativas y sus alérgenos."
+      },
+      {
+        "id": "encuentros",
+        "pregunta": "¿Cómo consulto por una cata o un encuentro?",
+        "respuesta": "Puedes probar el formulario de contacto. Solo muestra un resultado simulado: no envía mensajes ni reserva actividades."
+      },
+      {
+        "id": "real",
+        "pregunta": "¿Puedo visitar o comprar en Café Aurora?",
+        "respuesta": "No. Café Aurora es un negocio inventado para esta demostración. Sus direcciones, productos y actividades no son reales."
+      }
+    ]
+  },
+  "ubicacion": {
+    "id": "ubicacion",
+    "titulo": "Imagina tu próxima visita.",
+    "descripcion": "Este local y su dirección son ficticios. No se muestra un mapa ni una ruta hacia un lugar real.",
+    "etiquetaDireccion": "Dirección de ejemplo",
+    "etiquetaHorarios": "Horario de ejemplo",
+    "imagen": {
+      "src": "/demo/cafe-aurora-demo/demo/sedes/sede-01.svg",
+      "alt": "Ilustración de la sede Centro de Café Aurora, un local ficticio.",
+      "width": 1200,
+      "height": 800
+    }
+  },
+  "whatsapp": {
+    "texto": "WhatsApp de demostración: ir al formulario simulado",
+    "href": "#contacto"
+  },
+  "redes": {
+    "etiqueta": "Redes sociales de demostración",
+    "descripcion": "Enlaces de ejemplo: abren el contacto simulado, no perfiles reales.",
+    "enlaces": [
+      {"id": "instagram", "texto": "Instagram", "href": "#contacto"},
+      {"id": "facebook", "texto": "Facebook", "href": "#contacto"}
+    ]
+  },
+  "pie": {
+    "descripcion": "Un buen café, una pausa y una historia por compartir.",
+    "copyright": "Café Aurora · Negocio ficticio. Ilustraciones originales de demostración.",
+    "textoVolver": "Volver al inicio",
+    "hrefVolver": "#portada"
+  },
   "novedades": [
     {
       "id": "cata",
@@ -74,8 +249,8 @@
   ],
   "sedes": [
     {
-      "id": "jardin",
-      "nombre": "Sede Jardín",
+      "id": "centro",
+      "nombre": "Sede Centro",
       "direccion": "Paseo del Alba 120, Ciudad Aurora (dirección ficticia)",
       "horarios": "Lunes a viernes, 08:00 a 18:00"
     },
@@ -99,16 +274,19 @@
       "href": "/contacto?paquete=landing"
     },
     "selector": "Cambiar plan de demostración",
-    "fase": "Fase 1: Portada y Formulario de contacto. Las secciones restantes y el panel simulado se incorporarán en las siguientes fases.",
+    "fase": "La demo de Presencia muestra cinco secciones elegidas. Captación permite explorar las ocho secciones de esta fase; sus funciones avanzadas y el panel simulado siguen pendientes.",
     "planes": {
       "presencia": {
+        "paqueteId": "landing",
         "nombre": "Presencia Digital",
         "textoCorto": "Presencia",
         "descripcion": "Una página para presentar el negocio y facilitar el primer contacto.",
         "cotizacionHref": "/contacto?paquete=landing",
-        "limite": 5
+        "limite": 5,
+        "secciones": ["portada", "servicios", "quienes-somos", "testimonios", "formulario-contacto"]
       },
       "captacion": {
+        "paqueteId": "portal",
         "nombre": "Captación de Clientes",
         "textoCorto": "Captación",
         "descripcion": "En las siguientes fases sumará contenido ampliado, formularios avanzados y administración simulada.",
@@ -118,20 +296,16 @@
     },
     "boveda": {
       "titulo": "Bóveda de componentes",
-      "descripcion": "Piezas reutilizables, con props tipadas y ejemplos de Café Aurora. Explora cada componente o visita la página ensamblada.",
-      "ver": "Ver componente",
-      "demo": "Ver demostración",
-      "vacio": "Los componentes exclusivos de este plan llegarán en la fase 3.",
+      "descripcion": "Prueba piezas funcionales ya programadas. Aquí encontrarás formularios y, más adelante, carruseles, navegación y otros módulos reutilizables.",
+      "ver": "Abrir componente por separado",
+      "vacio": "Todavía no hay componentes disponibles.",
       "incluido": "Disponible desde",
-      "cuenta": "Cuenta para el límite de secciones",
-      "noCuenta": "No cuenta para el límite",
       "volver": "Volver a la bóveda",
       "props": "Props del componente",
       "columnas": ["Prop", "Tipo", "Requerida", "Descripción"],
       "si": "Sí",
       "no": "No",
-      "aislado": "Ejemplo aislado",
-      "verPagina": "Ver página completa"
+      "informacionTecnica": "Información técnica"
     }
   }
 }

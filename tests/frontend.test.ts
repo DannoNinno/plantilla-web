@@ -242,17 +242,16 @@ test('la oferta presenta a dannotech como marca personal en primera persona', ()
   const html = renderToStaticMarkup(createElement(Entrada));
   assert.ok(html.includes(`Soy ${sitio.persona}, y ${sitio.nombre} es mi marca personal.`));
   assert.ok(html.includes('Tu negocio, mi experiencia.'));
-  assert.ok(html.includes('Este espacio todavía no está disponible.'));
-  assert.ok(html.includes('cursor-not-allowed'));
-  assert.ok(html.includes('grayscale'));
+  assert.doesNotMatch(html, /Este espacio todavía no está disponible\.|grayscale/);
+  assert.doesNotMatch(html, /(?:\s|")cursor-not-allowed(?:\s|")/);
   assert.ok(html.includes('Sitios desde $150.000 CLP'));
   assert.ok(html.includes('href="#que-hago"'));
-  assert.doesNotMatch(html, /href="\/catalogo(?:\/|")/);
+  assert.match(html, /href="\/catalogo"/);
   for (const titulo of ['Qué hago y para quién', 'Por qué conmigo', 'Cómo trabajo']) {
     assert.ok(html.includes(titulo));
   }
   assert.ok(html.indexOf('Catálogo</h3>') < html.indexOf('Perfil</h3>'));
-  assert.ok(html.includes('Próximamente'));
+  assert.doesNotMatch(html, /Próximamente/);
   assert.match(getPerfil().presentacion, /^Soy Daniel/);
   assert.match(sitio.descripcion, /^Te ayudo a /);
   assert.match(catalogo.filosofia.titulo, /^No solo desarrollo /);
@@ -431,12 +430,12 @@ test('la home revela sus cuatro bloques con una sola transicion ligera por conte
     /\.entrada-ligera\.entrada-preparada:not\(\.entrada-visible\)\s*>\s*div\s*\{[^}]*opacity: 0/,
   );
   assert.match(css, /\.entrada-ligera\.entrada-visible\s*\{[^}]*transition: none/);
-  for (const pagina of ['perfil', 'catalogo', 'catalogo/[paquete]']) {
-    assert.ok(
-      readFileSync(path.join('src', 'app', '(portal)', pagina, 'page.tsx'), 'utf8').includes(
-        'EntradaScroll',
-      ),
-    );
+  for (const pagina of [
+    'src/app/(portal)/perfil/page.tsx',
+    'src/infrastructure/componentes/Catalogo/PresentacionCatalogo.tsx',
+    'src/infrastructure/componentes/DetallePaquete/PresentacionPaquete.tsx',
+  ]) {
+    assert.ok(readFileSync(pagina, 'utf8').includes('EntradaScroll'));
   }
 });
 
@@ -480,7 +479,7 @@ test('la navegacion no apunta a administracion ni a endpoints eliminados', () =>
     ['/catalogo', '/perfil'],
   );
   assert.deepEqual(navegacion.pie, [{label: 'Contacto', href: '/contacto'}]);
-  assert.equal(getSitio().catalogoHabilitado, false);
+  assert.equal(getSitio().catalogoHabilitado, true);
   for (const link of [...navegacion.principal, ...navegacion.pie]) {
     assert.doesNotMatch(link.href, /^\/(admin|api)(\/|$)/);
   }

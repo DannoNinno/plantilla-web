@@ -1,6 +1,6 @@
 import {notFound} from 'next/navigation';
 import FichaComponente from '@/infrastructure/componentes/demo/FichaComponente/FichaComponente';
-import {registro, getComponente} from '@/infrastructure/componentes/boveda/registro';
+import {registroBoveda, getComponente} from '@/infrastructure/componentes/boveda/registro';
 import {negocio} from '@/demo/negocio';
 
 interface ContextoComponente {
@@ -10,7 +10,7 @@ interface ContextoComponente {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return registro.map(({slug}) => ({slug}));
+  return registroBoveda.map(({slug}) => ({slug}));
 }
 
 export async function generateMetadata({params}: ContextoComponente) {
@@ -27,8 +27,6 @@ export default async function ComponentePage({params}: ContextoComponente) {
       entrada={entrada}
       plan={negocio.interfaz.planes[entrada.planMinimo].nombre}
       textos={negocio.interfaz.boveda}
-      aviso={negocio.interfaz.aviso}
-      descripcionAviso={negocio.interfaz.detalleAviso}
     >
       {entrada.renderizar(true)}
     </FichaComponente>

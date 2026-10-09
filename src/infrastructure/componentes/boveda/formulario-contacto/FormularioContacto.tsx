@@ -12,13 +12,18 @@ export default function FormularioContacto(props: FormularioContactoProps) {
       className="scroll-mt-demo-ancla bg-seccion-fondo py-16 text-seccion-tinta sm:py-24"
     >
       <Contenedor>
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div className="min-w-0 space-y-6">
-            {titulo && (
-              <TituloSeccion titulo={titulo} descripcion={descripcion} nivel={nivelTitulo} />
-            )}
-            {!titulo && descripcion && <p className="break-words">{descripcion}</p>}
-          </div>
+        <div
+          data-introduccion={Boolean(titulo || descripcion)}
+          className="grid gap-12 data-[introduccion=true]:lg:grid-cols-2 data-[introduccion=false]:mx-auto data-[introduccion=false]:max-w-3xl"
+        >
+          {(titulo || descripcion) && (
+            <div className="min-w-0 space-y-6">
+              {titulo && (
+                <TituloSeccion titulo={titulo} descripcion={descripcion} nivel={nivelTitulo} />
+              )}
+              {!titulo && descripcion && <p className="break-words">{descripcion}</p>}
+            </div>
+          )}
           <FormularioInteractivo campos={campos} textos={textos} onConsulta={onConsulta} />
         </div>
       </Contenedor>

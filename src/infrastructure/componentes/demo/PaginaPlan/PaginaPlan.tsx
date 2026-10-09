@@ -2,6 +2,7 @@ import type {ReactNode} from 'react';
 import AvisoDemo from '../AvisoDemo/AvisoDemo';
 import HerramientasDemo from '../HerramientasDemo/HerramientasDemo';
 import type {HerramientasDemoProps} from '../HerramientasDemo/HerramientasDemo';
+import MarcoDemo from './MarcoDemo';
 
 export interface PaginaPlanProps {
   children?: ReactNode;
@@ -19,15 +20,14 @@ export default function PaginaPlan({
   herramientas,
 }: PaginaPlanProps) {
   return (
-    <div className="flex h-dvh flex-col bg-seccion-fondo text-seccion-tinta">
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        <AvisoDemo titulo={aviso} descripcion={descripcionAviso} />
-        {children}
-        <p className="mx-auto max-w-3xl break-words px-5 py-8 text-center text-sm leading-relaxed">
-          {fase}
-        </p>
-      </div>
-      <HerramientasDemo {...herramientas} />
-    </div>
+    <MarcoDemo
+      aviso={<AvisoDemo titulo={aviso} descripcion={descripcionAviso} flotante />}
+      herramientas={<HerramientasDemo {...herramientas} />}
+    >
+      {children}
+      <p className="mx-auto max-w-3xl break-words px-5 py-8 text-center text-sm leading-relaxed">
+        {fase}
+      </p>
+    </MarcoDemo>
   );
 }

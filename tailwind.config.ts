@@ -23,6 +23,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        canal: {whatsapp: '#25D366'},
         seccion: {
           fondo: '#F6EDE0',
           tinta: '#3B2418',
@@ -38,12 +39,11 @@ export default {
       },
       fontFamily: {
         sans: ['Poppins', 'system-ui', 'sans-serif'],
-        editorial: ['Georgia', 'Times New Roman', 'serif'],
       },
       spacing: {
         header: alturaCabecera.base,
         'header-lg': alturaCabecera.amplia,
-        'demo-ancla': '2rem',
+        'demo-ancla': '4rem',
       },
       outlineWidth: {foco: '3px'},
       zIndex: {salto: '60'},

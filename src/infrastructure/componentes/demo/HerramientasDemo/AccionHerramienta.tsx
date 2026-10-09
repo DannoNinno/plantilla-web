@@ -24,12 +24,12 @@ export default function AccionHerramienta({
       title={texto}
       aria-current={actual ? 'page' : undefined}
       data-familia={familia}
-      className="group flex min-h-12 w-16 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1 text-brand-ink transition-colors duration-150 focus-visible:outline focus-visible:outline-foco focus-visible:outline-offset-2 focus-visible:outline-brand-sky-text data-[familia=marca]:bg-brand-coral/10 data-[familia=plan]:bg-brand-sky/10 aria-[current=page]:ring-1 aria-[current=page]:ring-brand-sky-text fine-pointer:data-[familia=marca]:hover:bg-brand-coral/20 fine-pointer:data-[familia=plan]:hover:bg-brand-sky/20 motion-reduce:transition-none sm:w-20"
+      className="group flex min-h-12 w-16 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1 text-brand-light transition duration-150 focus-visible:outline focus-visible:outline-foco focus-visible:outline-offset-2 focus-visible:outline-brand-sky data-[familia=marca]:bg-brand-coral/10 data-[familia=plan]:bg-brand-sky/10 aria-[current=page]:ring-1 aria-[current=page]:ring-brand-sky fine-pointer:data-[familia=marca]:hover:bg-brand-coral/20 fine-pointer:data-[familia=plan]:hover:bg-brand-sky/20 motion-safe:fine-pointer:hover:scale-105 motion-safe:focus-visible:scale-105 active:scale-100 motion-reduce:transform-none motion-reduce:transition-none sm:w-20"
     >
       <Icono
         size={20}
         aria-hidden="true"
-        className="shrink-0 group-data-[familia=marca]:text-brand-coral-dark group-data-[familia=plan]:text-brand-sky-text"
+        className="shrink-0 group-data-[familia=marca]:text-brand-coral group-data-[familia=plan]:text-brand-sky"
       />
       <span className="max-w-full break-words text-center text-xs font-semibold">{textoCorto}</span>
     </a>

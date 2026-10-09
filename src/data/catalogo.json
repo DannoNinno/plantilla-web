@@ -1,4 +1,38 @@
 {
+  "textos": {
+    "etiqueta": "Mis servicios",
+    "titulo": "Te ayudo a hacer crecer tu negocio.",
+    "identidad": "Soy {persona}, y {marca} es mi marca personal.",
+    "presentacion": "Trabajo directamente contigo para mejorar tu presencia digital, captar clientes, automatizar procesos o llevar tus productos a una tienda online.",
+    "planes": "Elige tu punto de partida",
+    "precios": "Los valores son precios desde. Defino contigo el alcance y preparo tu cotización antes de comenzar.",
+    "plan": "Plan",
+    "detalle": "Ver detalle de",
+    "cotizacion": "Cotizo según lo que necesita tu negocio. No hay pagos ni compras en este sitio.",
+    "alcance": "Gestión de alcance",
+    "principios": "Mis compromisos contigo",
+    "adicionales": "Servicios y costos adicionales",
+    "detalleAdicionales": "Si necesitas horas adicionales o soporte fuera de lo contratado, te explico el costo y espero tu aprobación antes de avanzar.",
+    "volver": "Volver al catálogo",
+    "verAlcance": "Gestión de alcance y mis compromisos",
+    "verAdicionales": "Consultar costos adicionales",
+    "verBase": "Ver la base incluida de Presencia Digital",
+    "consulta": "Conversemos sobre tu proyecto"
+  },
+  "exploracion": {
+    "titulo": "Explora antes de cotizar",
+    "descripcion": "Puedes recorrer el sitio de ejemplo del plan que te interesa o revisar sus componentes por separado.",
+    "sitio": "Demo del sitio",
+    "detalleSitio": "Entra al detalle de Presencia Digital o Captación de Clientes para abrir la demo correspondiente a ese plan.",
+    "verPlanes": "Ver planes",
+    "componentes": "Componentes por separado",
+    "detalleComponentes": "Prueba piezas funcionales ya programadas, como el formulario de contacto, sin recorrer un sitio completo. Las secciones del sitio se muestran en la demo de cada plan.",
+    "verComponentes": "Explorar componentes",
+    "componentesHref": "/componentes",
+    "verDemo": "Ver demo del sitio",
+    "detallePlan": "Recorre el sitio de ejemplo de este plan o revisa las piezas reutilizables por separado.",
+    "fase": "Presencia muestra cinco secciones elegidas. Captación permite explorar las ocho secciones de esta fase; las funciones avanzadas y el panel simulado siguen pendientes."
+  },
   "filosofia": {
     "titulo": "No solo desarrollo páginas web.",
     "introduccion": "Te ayudo a:",

@@ -20,7 +20,7 @@ export default function SelectorPlan({planes, actual, etiqueta}: SelectorPlanPro
     <div
       role="group"
       aria-label={etiqueta}
-      className="flex min-w-0 gap-1 border-l border-brand-ink/15 pl-2"
+      className="flex min-w-0 gap-1 border-l border-brand-light/20 pl-2"
     >
       {planes.map((plan) => (
         <AccionHerramienta
