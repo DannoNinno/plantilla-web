@@ -2,6 +2,10 @@ import {createElement} from 'react';
 import type {ComponentType} from 'react';
 import {Portada, type PortadaProps} from './portada';
 import {ejemploPortada} from './portada/ejemplo';
+import {propsPortada} from './portada/props';
+import {FormularioContacto, type FormularioContactoProps} from './formulario-contacto';
+import {ejemploFormularioContacto} from './formulario-contacto/ejemplo';
+import {propsFormularioContacto} from './formulario-contacto/props';
 
 export type PlanBoveda = 'presencia' | 'captacion';
 
@@ -45,42 +49,22 @@ export const registro = [
     componente: Portada,
     propsEjemplo: ejemploPortada,
     propsAisladas: {nivelTitulo: 'h2', accion: undefined},
-    props: [
-      {
-        nombre: 'titulo',
-        tipo: 'string',
-        requerida: true,
-        descripcion: 'Título de la presentación.',
-      },
-      {nombre: 'id', tipo: 'string', requerida: false, descripcion: 'Ancla de la sección.'},
-      {
-        nombre: 'etiqueta',
-        tipo: 'string',
-        requerida: false,
-        descripcion: 'Texto previo al título.',
-      },
-      {nombre: 'descripcion', tipo: 'string', requerida: false, descripcion: 'Texto de apoyo.'},
-      {
-        nombre: 'nivelTitulo',
-        tipo: "'h1' | 'h2'",
-        requerida: false,
-        descripcion: 'h1 por defecto; h2 en una ficha aislada.',
-      },
-      {
-        nombre: 'accion',
-        tipo: '{texto, href}',
-        requerida: false,
-        descripcion: 'Enlace opcional. Omitido en la ficha para no apuntar a otra sección.',
-      },
-      {
-        nombre: 'imagen',
-        tipo: '{src, alt, width, height}',
-        requerida: false,
-        descripcion: 'Imagen opcional con dimensiones y alternativa textual.',
-      },
-    ],
+    props: propsPortada,
+  }),
+  registrar<FormularioContactoProps>({
+    slug: 'formulario-contacto',
+    nombre: 'Formulario de contacto',
+    descripcionCorta:
+      'Consulta accesible con validación y resultado local, sin enviar información.',
+    planMinimo: 'presencia',
+    cuentaParaTope: true,
+    componente: FormularioContacto,
+    propsEjemplo: ejemploFormularioContacto,
+    props: propsFormularioContacto,
   }),
 ];
+
+export type EntradaBoveda = (typeof registro)[number];
 
 export function getComponente(slug: string) {
   return registro.find((entrada) => entrada.slug === slug);

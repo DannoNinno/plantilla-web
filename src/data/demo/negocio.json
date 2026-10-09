@@ -3,15 +3,21 @@
   "descripcion": "Cafetería y tostaduría ficticia. Un lugar para hacer una pausa, descubrir nuevos sabores y compartir un buen café.",
   "portada": {
     "id": "portada",
+    "logo": {
+      "src": "/demo/cafe-aurora-demo/demo/logos/cafe-aurora-logo.svg",
+      "alt": "Café Aurora, cafetería y tostaduría",
+      "width": 700,
+      "height": 200
+    },
     "etiqueta": "Cafetería y tostaduría",
     "titulo": "Un buen café cambia tu mañana.",
     "descripcion": "En Café Aurora tostamos en pequeñas partidas y preparamos cada taza con calma. Ven por tu favorito, descubre algo nuevo y quédate un rato.",
     "accion": {"texto": "Conversemos", "href": "#contacto"},
     "imagen": {
-      "src": "/demo/cafe-aurora.svg",
-      "alt": "Ilustración de una taza de café y granos, creada para el negocio ficticio Café Aurora.",
-      "width": 960,
-      "height": 720
+      "src": "/demo/cafe-aurora-demo/demo/portada/portada.svg",
+      "alt": "Amanecer ilustrado sobre una plantación de café.",
+      "width": 1600,
+      "height": 900
     }
   },
   "contacto": {
@@ -41,7 +47,8 @@
       "exito": "Consulta simulada recibida. No se ha enviado ningún mensaje.",
       "reiniciar": "Escribir otra consulta",
       "errorGeneral": "Revisa los campos señalados antes de continuar.",
-      "limite": "El texto supera el límite permitido."
+      "limite": "El texto supera el límite permitido.",
+      "sinJavascript": "Activa JavaScript para probar el formulario simulado. No se realizará ningún envío."
     }
   },
   "productos": [
@@ -80,23 +87,32 @@
     }
   ],
   "interfaz": {
+    "favicon": "/demo/cafe-aurora-demo/demo/logos/favicon.svg",
     "salto": "Ir al contenido",
     "aviso": "Sitio de demostración",
     "detalleAviso": "Café Aurora es un negocio ficticio. Ningún formulario realiza envíos.",
     "herramientas": "Herramientas de la demostración",
-    "portal": {"texto": "Volver al portal", "href": "/"},
-    "cotizacion": {"texto": "Volver a la cotización", "href": "/contacto?paquete=landing"},
+    "portal": {"texto": "Volver al portal", "textoCorto": "Portal", "href": "/"},
+    "cotizacion": {
+      "texto": "Volver a la cotización",
+      "textoCorto": "Cotizar",
+      "href": "/contacto?paquete=landing"
+    },
     "selector": "Cambiar plan de demostración",
     "fase": "Fase 1: Portada y Formulario de contacto. Las secciones restantes y el panel simulado se incorporarán en las siguientes fases.",
     "planes": {
       "presencia": {
         "nombre": "Presencia Digital",
+        "textoCorto": "Presencia",
         "descripcion": "Una página para presentar el negocio y facilitar el primer contacto.",
+        "cotizacionHref": "/contacto?paquete=landing",
         "limite": 5
       },
       "captacion": {
         "nombre": "Captación de Clientes",
+        "textoCorto": "Captación",
         "descripcion": "En las siguientes fases sumará contenido ampliado, formularios avanzados y administración simulada.",
+        "cotizacionHref": "/contacto?paquete=portal",
         "limite": 10
       }
     },

@@ -51,6 +51,7 @@ Para Workers Builds conectado a GitHub:
 src/
   app/                       Rutas, vistas y estilos globales
     (portal)/                Marco actual de dannotech; conserva sus URLs
+    (demo)/                  Demo a página completa, sin cabecera/pie del portal
   data/                      Datos públicos en JSON
     demo/negocio.json        Fuente única del negocio ficticio Café Aurora
   demo/                      Adaptadores tipados y ensamblaje de ejemplos
@@ -62,6 +63,7 @@ src/
     componentes/<nombre>/    Componentes visuales
     componentes/base/        Piezas visuales compartidas
     componentes/boveda/      Componentes agnósticos y registro único
+    componentes/demo/        Vistas de la bóveda y herramientas de demostración
     configuracion/           Configuración de Next.js
     handlers/datos.ts        Funciones simples que leen los JSON
 ```
@@ -69,6 +71,93 @@ src/
 Los [handlers de datos](./src/infrastructure/handlers/datos.ts) son funciones, no clases ni repositorios. Los JSON se importan directamente; no se consulta ninguna API para cargarlos. Los tipos del frontend permiten verificar su estructura durante la compilación.
 
 El lint utiliza ESLint 9 con [configuración plana](./eslint.config.mjs); no se agregaron dependencias. `npm run lint` verifica también las pruebas y falla ante advertencias. La bóveda es independiente del antiguo configurador del catálogo.
+
+## Bóveda y demostración — fase 1
+
+- `/componentes/`: índice agrupado por plan mínimo.
+- `/componentes/portada/` y `/componentes/formulario-contacto/`: ejemplos aislados, descripción, plan y tabla de props. Las fichas conservan un único h1.
+- `/demo/presencia/` y `/demo/captacion/`: páginas completas de Café Aurora, sin la cabecera ni el pie de dannotech. Incluyen aviso visible y una barra inferior para cambiar de plan, volver al portal o a contacto con el plan preseleccionado. La barra ocupa su propia fila; el contenido se desplaza por encima y los controles nunca quedan detrás de una superposición fija.
+
+[negocio.json](./src/data/demo/negocio.json) es la fuente única del contenido ficticio y los textos de la demo. [negocio.ts](./src/demo/negocio.ts) solo lo importa. Los SVG originales incorporados por Daniel viven en [public/demo/cafe-aurora-demo/](./public/demo/cafe-aurora-demo/); fase 1 usa su logo y portada, y las demás ilustraciones quedan disponibles para fases posteriores. El manifest del kit describe activos; no es otra fuente de contenido de negocio.
+
+Cada pieza tiene carpeta, props exportadas, ejemplo y README con dependencias de copia. El código del componente no importa su ejemplo, el registro ni el negocio. Para llevarlo a otro proyecto se copian la carpeta, las piezas base indicadas y los tokens de Tailwind; no hay que modificar el código. La bóveda también admite futuras piezas que no sean secciones de una landing.
+
+[registro.ts](./src/infrastructure/componentes/boveda/registro.ts) es la única lista. Agregar una pieza requiere su carpeta y una entrada en ese registro, incluyendo su documentación de props. [planes.ts](./src/demo/planes.ts) deriva el orden del registro, filtra por plan y aplica topes de 5 y 10; las piezas marcadas como siempre incluidas no consumen el límite. No se repite una lista de componentes en cada página.
+
+El formulario de ejemplo solo valida y muestra éxito en memoria: no tiene peticiones, login, almacenamiento ni envíos de correo. Sin JavaScript no permite enviar y muestra un aviso. El formulario real de dannotech sigue separado y abre el programa de correo. Ambos planes muestran los mismos dos componentes mientras dure fase 1.
+
+La botonera inferior es una tarjeta compacta y centrada, con sombra y cuatro acciones con iconos. Coral identifica las acciones de dannotech (cotizar y volver al portal); celeste identifica los planes, con un indicador del plan activo. Las etiquetas cortas vienen del JSON y cada enlace conserva su nombre accesible completo. El aviso de demostración se muestra arriba, no se repite dentro de la botonera.
+
+### Archivos nuevos de fase 1
+
+```text
+eslint.config.mjs
+public/demo/cafe-aurora-demo/          Kit SVG aportado por Daniel, conservado
+src/
+  app/
+    (portal)/
+      layout.tsx
+      componentes/page.tsx
+      componentes/[slug]/page.tsx
+    (demo)/
+      layout.tsx
+      demo/[plan]/page.tsx
+  data/demo/negocio.json
+  demo/
+    negocio.ts
+    planes.ts
+  infrastructure/componentes/
+    Contacto/PaginaContacto.tsx
+    base/
+      Boton/Boton.tsx
+      Contenedor/Contenedor.tsx
+      SaltoContenido/SaltoContenido.tsx
+      TituloSeccion/TituloSeccion.tsx
+    boveda/
+      registro.ts
+      portada/
+        Portada.tsx
+        tipos.ts
+        ejemplo.ts
+        props.ts
+        index.ts
+        README.md
+      formulario-contacto/
+        FormularioContacto.tsx
+        FormularioInteractivo.tsx
+        CampoContacto.tsx
+        ResultadoContacto.tsx
+        useFormularioContacto.ts
+        validacion.ts
+        tipos.ts
+        ejemplo.ts
+        props.ts
+        index.ts
+        README.md
+    demo/
+      AvisoDemo/AvisoDemo.tsx
+      FichaComponente/FichaComponente.tsx
+      FichaComponente/TablaProps.tsx
+      HerramientasDemo/HerramientasDemo.tsx
+      HerramientasDemo/AccionHerramienta.tsx
+      HerramientasDemo/SelectorPlan.tsx
+      IndiceBoveda/IndiceBoveda.tsx
+      IndiceBoveda/TarjetaComponente.tsx
+      PaginaPlan/PaginaPlan.tsx
+tests/boveda.test.ts
+```
+
+Las rutas de inicio, perfil, contacto y catálogo, junto con el template existente, se movieron a `(portal)` para conservar su marco visual. Además se actualizaron los scripts de lint/pruebas, la configuración de tokens y las pruebas de estructura.
+
+### Pendientes
+
+- TODO(Daniel): aprobar fase 1 antes de continuar con los seis componentes restantes de Presencia Digital y sus tres piezas siempre incluidas.
+- TODO(Daniel): implementar en fase 3 las piezas de Captación, edición simulada de textos/imágenes y Bandeja de contactos conectada a `onConsulta`.
+- TODO(Daniel): aportar futuras piezas de la bóveda; revisar sus dependencias y props antes de incorporarlas, sin implementar autenticación real en estas demos.
+
+### Revisión de estándares
+
+Las piezas nuevas mantienen un archivo por componente, lógica del formulario en un hook, Tailwind sin hojas nuevas ni estilos en línea, y páginas que solo ensamblan. Las páginas preexistentes de perfil y catálogo se trasladaron sin cambiar su código: conservan marcado de secciones y archivos de más de 150 líneas. No se refactorizaron porque la autorización fue para separar rutas, no para modificar su implementación. La única hoja existente sigue siendo [globals.css](./src/app/globals.css).
 
 ## Datos
 

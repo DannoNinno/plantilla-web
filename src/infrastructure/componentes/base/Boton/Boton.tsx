@@ -1,16 +1,22 @@
-import type {ButtonHTMLAttributes, ReactNode} from 'react';
+import type {AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode} from 'react';
 import {clasesBoton} from '../../Boton/estilos';
 
 export type BotonProps = {
   children: ReactNode;
   variante?: Parameters<typeof clasesBoton>[0];
-} & ({href: string} | ({href?: never} & ButtonHTMLAttributes<HTMLButtonElement>));
+} & (
+  | ({href: string} & AnchorHTMLAttributes<HTMLAnchorElement>)
+  | ({href?: never} & ButtonHTMLAttributes<HTMLButtonElement>)
+);
 
 export default function Boton({children, variante = 'ink', ...props}: BotonProps) {
-  const clases = clasesBoton(variante, 'max-w-full whitespace-normal break-words');
+  const clases = clasesBoton(
+    variante,
+    'max-w-full whitespace-normal break-words focus-visible:outline focus-visible:outline-foco focus-visible:outline-offset-4',
+  );
   if (props.href !== undefined) {
     return (
-      <a href={props.href} className={clases}>
+      <a {...props} className={clases}>
         {children}
       </a>
     );

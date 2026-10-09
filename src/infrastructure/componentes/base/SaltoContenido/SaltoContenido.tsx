@@ -1,4 +1,8 @@
-export default function SaltoContenido({etiqueta}: {etiqueta: string}) {
+export interface SaltoContenidoProps {
+  etiqueta: string;
+}
+
+export default function SaltoContenido({etiqueta}: SaltoContenidoProps) {
   return (
     <a
       href="#contenido"

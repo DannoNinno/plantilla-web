@@ -6,4 +6,5 @@ export interface PortadaProps {
   nivelTitulo?: 'h1' | 'h2';
   accion?: {texto: string; href: string};
   imagen?: {src: string; alt: string; width: number; height: number};
+  logo?: {src: string; alt: string; width: number; height: number};
 }

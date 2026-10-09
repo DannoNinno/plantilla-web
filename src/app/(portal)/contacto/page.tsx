@@ -1,16 +1,20 @@
-import Contacto from '@/infrastructure/componentes/Contacto/Contacto';
+import PaginaContacto from '@/infrastructure/componentes/Contacto/PaginaContacto';
 import {getPaquetes} from '@/infrastructure/handlers/datos';
+import {notFound} from 'next/navigation';
 
 export const metadata = {
   title: 'Contacto',
   description: 'Cuéntame qué necesitas o solicita una cotización para tu negocio.',
 };
 
-export default function ContactoPage() {
-  return (
-    <div className="mx-auto max-w-2xl px-6 py-12 sm:py-20">
-      <h1 className="text-4xl font-bold">Conversemos sobre tu proyecto</h1>
-      <Contacto paquetes={getPaquetes()} />
-    </div>
-  );
+export default async function ContactoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{paquete?: string | string[]}>;
+}) {
+  const {paquete} = await searchParams;
+  const paquetes = getPaquetes();
+  const paqueteInicial = paquetes.find((opcion) => opcion.id === paquete)?.id;
+  if (paquete !== undefined && paquete !== 'consulta' && !paqueteInicial) notFound();
+  return <PaginaContacto paquetes={paquetes} paqueteInicial={paqueteInicial} />;
 }

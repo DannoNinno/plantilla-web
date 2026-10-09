@@ -12,19 +12,27 @@ export default function Portada({
   nivelTitulo = 'h1',
   accion,
   imagen,
+  logo,
 }: PortadaProps) {
   return (
     <section id={id} className="bg-seccion-fondo py-16 text-seccion-tinta sm:py-24">
       <Contenedor>
         <div className="grid min-h-demo-portada items-center gap-12 lg:grid-cols-2">
           <div className="min-w-0 space-y-8">
+            {logo && (
+              <Image {...logo} alt={logo.alt} sizes="288px" className="h-auto w-72 max-w-full" />
+            )}
             <TituloSeccion
               titulo={titulo}
               descripcion={descripcion}
               etiqueta={etiqueta}
               nivel={nivelTitulo}
             />
-            {accion && <Boton href={accion.href}>{accion.texto}</Boton>}
+            {accion && (
+              <Boton href={accion.href} variante="seccion">
+                {accion.texto}
+              </Boton>
+            )}
           </div>
           {imagen && (
             <Image

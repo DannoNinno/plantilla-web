@@ -24,9 +24,9 @@ export default {
     extend: {
       colors: {
         seccion: {
-          fondo: '#FFF8EF',
-          tinta: '#30261F',
-          acento: '#28604C',
+          fondo: '#F6EDE0',
+          tinta: '#3B2418',
+          acento: '#3F5A40',
           suave: '#E8EDDE',
         },
         brand: {
@@ -38,12 +38,11 @@ export default {
       },
       fontFamily: {
         sans: ['Poppins', 'system-ui', 'sans-serif'],
+        editorial: ['Georgia', 'Times New Roman', 'serif'],
       },
       spacing: {
         header: alturaCabecera.base,
         'header-lg': alturaCabecera.amplia,
-        'demo-herramientas': '14rem',
-        'demo-herramientas-lg': '8rem',
         'demo-ancla': '2rem',
       },
       outlineWidth: {foco: '3px'},
