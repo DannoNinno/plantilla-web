@@ -174,7 +174,7 @@ Edita estos archivos para cambiar el contenido y vuelve a construir al publicar.
 
 La voz de dannotech es la de Daniel Salamanca, su marca personal: los textos de presentación y oferta se escriben en primera persona singular y se dirigen al cliente de tú. Evita presentar la marca como una agencia o un equipo; conserva los precios, límites y condiciones al ajustar el tono.
 
-Las descripciones de paquetes son contenido del catálogo, no funcionalidades implementadas. El registro de componentes permanece vacío, sin inventar demostraciones. Las futuras definiciones pueden mostrar su nombre y descripción en la vista previa; no cargan datos del servidor ni módulos administrativos.
+Las descripciones de paquetes son contenido del catálogo, no funcionalidades implementadas. El registro JSON del configurador heredado permanece vacío y no se conecta a las nuevas demos. La bóveda usa su propio registro TypeScript para las piezas reutilizables y sus ejemplos; ninguno carga datos del servidor ni módulos administrativos reales.
 
 El catálogo organiza los cuatro planes de [tarifas.md](./tarifas.md), con precios desde en CLP, un resumen por opción y vistas de detalle para su alcance, reuniones, capacitación, exclusiones y consideraciones según corresponda. Los servicios y costos adicionales aparecen al final del catálogo general. Los contenidos públicos se mantienen en los JSON; al actualizar las tarifas, sincroniza esos datos con el documento. Las pruebas verifican que los precios y el detalle de cada plan coincidan con la fuente. Actualmente el catálogo está desactivado: el menú y la tarjeta indican «Próximamente», y las rutas del catálogo redirigen a la portada. Para reactivarlo, cambia `catalogoHabilitado` a `true` en [sitio.json](./src/data/sitio.json) y vuelve a construir y desplegar.
 
@@ -182,7 +182,7 @@ Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación 
 
 Los correos oficiales se centralizan en [contacto.ts](./src/domain/configuracion/contacto.ts): `CONTACT_EMAIL` para contacto general y `QUOTES_EMAIL` para cotizaciones. No se guardan direcciones en los JSON ni se repiten en componentes. El footer y los metadatos usan esta configuración; los enlaces se construyen como `mailto:` con asuntos codificados.
 
-La foto del perfil se carga desde `public/perfil/daniel-salamanca.png`; si no está disponible, se muestran las iniciales. La sección Demos permanece oculta mediante `demosHabilitadas` en [sitio.json](./src/data/sitio.json), lista para ejemplos propios. El kit visual original está en [public/dannotech-kit](./public/dannotech-kit). Se conservan estilos, colores, animaciones y movimiento reducido. Poppins sigue pendiente de sus archivos locales; se usa la fuente del sistema y no se descargan fuentes externas.
+La foto del perfil se carga desde `public/perfil/daniel-salamanca.png`; si no está disponible, se muestran las iniciales. La sección Demos del perfil permanece oculta mediante `demosHabilitadas` en [sitio.json](./src/data/sitio.json); ese flag no oculta las nuevas rutas independientes de la bóveda y Café Aurora. El kit visual original está en [public/dannotech-kit](./public/dannotech-kit). Se conservan estilos, colores, animaciones y movimiento reducido. Poppins sigue pendiente de sus archivos locales; se usa la fuente del sistema y no se descargan fuentes externas.
 
 La portada presenta tres bloques de servicios y un cuarto de entradas, cada uno con un mínimo de 70vh y scroll libre. Las ilustraciones SVG alternan derecha/izquierda/derecha en escritorio y aparecen arriba del texto en móvil. La tarjeta del catálogo desactivado usa tonos grises, un indicador de bloqueo y la etiqueta «Próximamente», sin interacción. En el perfil, la ficha profesional permanece debajo de la foto dentro de la presentación azul; la tabla de capacidades y la trayectoria quedan más abajo, bajo «Detalle técnico». Los textos mantienen un tono cercano y directo.
 
@@ -214,7 +214,7 @@ En los planes se preselecciona el plan correspondiente. Consulta prepara un `mai
 
 El configurador mantiene su selección y resolución de dependencias únicamente en memoria del navegador. No persiste datos al salir ni modifica el sitio.
 
-Rutas disponibles: `/`, `/perfil/` y `/contacto/`. Mientras el catálogo esté desactivado, `/catalogo/` y todas sus subrutas redirigen a `/`; el contenido y las rutas de los cuatro planes permanecen listos para reactivarse con el flag. Las rutas `/api` y `/admin` ya no existen.
+Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/componentes/`, las fichas `/componentes/[slug]/` y las demos `/demo/presencia/` y `/demo/captacion/`. Mientras el catálogo esté desactivado, `/catalogo/` y todas sus subrutas redirigen a `/`; el contenido y las rutas de los cuatro planes permanecen listos para reactivarse con el flag. Las rutas `/api` y `/admin` ya no existen.
 
 ## Docker anterior
 
