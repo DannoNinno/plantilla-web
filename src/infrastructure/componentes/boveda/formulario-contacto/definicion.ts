@@ -15,4 +15,5 @@ export const definicionFormulario: DefinicionRegistro<FormularioContactoProps> =
   propsEjemplo: ejemploFormularioContacto,
   propsAisladas: {titulo: undefined, descripcion: undefined},
   props: propsFormularioContacto,
+  conectarConsulta: (props, onConsulta) => ({...props, onConsulta}),
 };

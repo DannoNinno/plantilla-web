@@ -1,6 +1,6 @@
-import type {Ref} from 'react';
-import {limitesContacto} from './validacion';
-import type {CampoContactoProps, NombreCampoContacto} from './tipos';
+import type {Ref, ChangeEventHandler} from 'react';
+import {limitesContacto} from '../consulta/validacion';
+import type {CampoContactoProps, NombreCampoContacto} from '../consulta/tipos';
 
 export interface CampoRenderizadoProps extends CampoContactoProps {
   nombre: NombreCampoContacto;
@@ -8,6 +8,8 @@ export interface CampoRenderizadoProps extends CampoContactoProps {
   avisoId: string;
   errorActual?: string;
   inputRef?: Ref<HTMLInputElement>;
+  valor?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 }
 
 export default function CampoContacto({
@@ -18,11 +20,15 @@ export default function CampoContacto({
   placeholder,
   errorActual,
   inputRef,
+  valor,
+  onChange,
 }: CampoRenderizadoProps) {
   const comunes = {
     id,
     name: nombre,
     placeholder,
+    value: valor,
+    onChange,
     required: true,
     maxLength: limitesContacto[nombre],
     'aria-invalid': Boolean(errorActual),

@@ -56,13 +56,25 @@
       "id": "amanecer",
       "nombre": "Mezcla Amanecer",
       "descripcion": "Café de perfil suave, con notas de cacao.",
-      "precio": 8900
+      "precio": 8900,
+      "imagen": {
+        "src": "/demo/cafe-aurora-demo/demo/productos/producto-01.svg",
+        "alt": "Bolsa ilustrada de café Mezcla Amanecer.",
+        "width": 800,
+        "height": 800
+      }
     },
     {
       "id": "altura",
-      "nombre": "Tostado de Altura",
+      "nombre": "Origen Sur",
       "descripcion": "Café de perfil frutal para preparar con filtro.",
-      "precio": 9900
+      "precio": 9900,
+      "imagen": {
+        "src": "/demo/cafe-aurora-demo/demo/productos/producto-02.svg",
+        "alt": "Bolsa ilustrada de café Origen Sur.",
+        "width": 800,
+        "height": 800
+      }
     }
   ],
   "servicios": {
@@ -214,13 +226,7 @@
     "titulo": "Imagina tu próxima visita.",
     "descripcion": "Este local y su dirección son ficticios. No se muestra un mapa ni una ruta hacia un lugar real.",
     "etiquetaDireccion": "Dirección de ejemplo",
-    "etiquetaHorarios": "Horario de ejemplo",
-    "imagen": {
-      "src": "/demo/cafe-aurora-demo/demo/sedes/sede-01.svg",
-      "alt": "Ilustración de la sede Centro de Café Aurora, un local ficticio.",
-      "width": 1200,
-      "height": 800
-    }
+    "etiquetaHorarios": "Horario de ejemplo"
   },
   "whatsapp": {
     "texto": "WhatsApp de demostración: ir al formulario simulado",
@@ -244,7 +250,26 @@
     {
       "id": "cata",
       "titulo": "Una mañana para descubrir café",
-      "descripcion": "Ejemplo ficticio de una cata guiada en nuestra tostaduría."
+      "descripcion": "Ejemplo ficticio de una cata guiada en nuestra tostaduría.",
+      "fecha": "Actividad de ejemplo",
+      "imagen": {
+        "src": "/demo/cafe-aurora-demo/demo/novedades/novedad-02.svg",
+        "alt": "Tres tazas ilustradas para una cata ficticia.",
+        "width": 1200,
+        "height": 675
+      }
+    },
+    {
+      "id": "nuevo-blend",
+      "titulo": "Un nuevo aroma en la barra",
+      "descripcion": "Una mezcla imaginaria para mostrar cómo publicar novedades desde el panel.",
+      "fecha": "Novedad ficticia",
+      "imagen": {
+        "src": "/demo/cafe-aurora-demo/demo/novedades/novedad-03.svg",
+        "alt": "Ilustración del lanzamiento de una mezcla ficticia de café.",
+        "width": 1200,
+        "height": 675
+      }
     }
   ],
   "sedes": [
@@ -252,15 +277,127 @@
       "id": "centro",
       "nombre": "Sede Centro",
       "direccion": "Paseo del Alba 120, Ciudad Aurora (dirección ficticia)",
-      "horarios": "Lunes a viernes, 08:00 a 18:00"
+      "horarios": "Lunes a viernes, 08:00 a 18:00",
+      "imagen": {
+        "src": "/demo/cafe-aurora-demo/demo/sedes/sede-01.svg",
+        "alt": "Ilustración de la sede Centro de Café Aurora, un local ficticio.",
+        "width": 1200,
+        "height": 800
+      }
     },
     {
-      "id": "tostaduria",
-      "nombre": "Sede Tostaduría",
+      "id": "barrio-sur",
+      "nombre": "Sede Barrio Sur",
       "direccion": "Camino del Tueste 45, Ciudad Aurora (dirección ficticia)",
-      "horarios": "Martes a sábado, 09:00 a 17:00"
+      "horarios": "Martes a sábado, 09:00 a 17:00",
+      "imagen": {
+        "src": "/demo/cafe-aurora-demo/demo/sedes/sede-02.svg",
+        "alt": "Ilustración de la sede Barrio Sur de Café Aurora, un local ficticio.",
+        "width": 1200,
+        "height": 800
+      }
     }
   ],
+  "seccionNovedades": {
+    "id": "novedades",
+    "titulo": "Lo que está pasando en Aurora.",
+    "descripcion": "Noticias de ejemplo: puedes editar sus textos e imágenes durante esta visita."
+  },
+  "catalogo": {
+    "id": "catalogo",
+    "titulo": "Un poquito de Aurora en casa.",
+    "descripcion": "Catálogo ficticio, sin carrito ni compras. Consultar por WhatsApp abre el contacto simulado y no envía mensajes.",
+    "textoConsulta": "Consultar por WhatsApp",
+    "hrefConsulta": "#contacto"
+  },
+  "seccionSedes": {
+    "id": "sedes",
+    "titulo": "Más de un lugar para hacer una pausa.",
+    "descripcion": "Locales imaginarios y direcciones ficticias. No son destinos reales.",
+    "etiquetaDireccion": "Dirección de ejemplo",
+    "etiquetaHorarios": "Horario de ejemplo"
+  },
+  "promocion": {
+    "id": "promocion",
+    "etiqueta": "Promoción ficticia",
+    "titulo": "La tarde también merece un buen café.",
+    "descripcion": "Un ejemplo de promoción destacada que puedes adaptar desde el panel. No corresponde a un descuento ni beneficio real.",
+    "accion": {"texto": "Consultar la promoción", "href": "#contacto"},
+    "imagen": {
+      "src": "/demo/cafe-aurora-demo/demo/promociones/promocion.svg",
+      "alt": "Banner ilustrado de una promoción ficticia con una taza de café.",
+      "width": 1600,
+      "height": 600
+    }
+  },
+  "equipo": {
+    "id": "equipo",
+    "titulo": "Detrás de cada taza.",
+    "descripcion": "Personajes e ilustraciones ficticios, sin personas reales.",
+    "personas": [
+      {
+        "id": "barra",
+        "nombre": "Barista ficticia",
+        "rol": "Preparación y barra",
+        "imagen": {
+          "src": "/demo/cafe-aurora-demo/demo/equipo/equipo-01.svg",
+          "alt": "Retrato ilustrado de una barista ficticia.",
+          "width": 600,
+          "height": 600
+        }
+      },
+      {
+        "id": "tueste",
+        "nombre": "Tostador de ejemplo",
+        "rol": "Tueste y selección",
+        "imagen": {
+          "src": "/demo/cafe-aurora-demo/demo/equipo/equipo-02.svg",
+          "alt": "Retrato ilustrado de un tostador ficticio.",
+          "width": 600,
+          "height": 600
+        }
+      },
+      {
+        "id": "local",
+        "nombre": "Encargada imaginaria",
+        "rol": "Encuentros y atención",
+        "imagen": {
+          "src": "/demo/cafe-aurora-demo/demo/equipo/equipo-03.svg",
+          "alt": "Retrato ilustrado de una encargada ficticia.",
+          "width": 600,
+          "height": 600
+        }
+      }
+    ]
+  },
+  "google": {
+    "etiqueta": "Vista previa en Google",
+    "url": "cafe-aurora.ejemplo.invalid",
+    "nota": "Simulación visual: no consulta Google ni garantiza cómo aparecerá un resultado real."
+  },
+  "cotizacionPasos": {
+    "id": "cotizacion",
+    "titulo": "Imaginemos tu próximo encuentro.",
+    "descripcion": "Prueba una solicitud por pasos. No calcula un precio real ni envía información.",
+    "servicio": {
+      "etiqueta": "Qué te interesa",
+      "placeholder": "Elige una opción",
+      "error": "Selecciona un servicio disponible."
+    },
+    "mensaje": {
+      "etiqueta": "Cuéntanos lo que necesitas",
+      "placeholder": "Describe tu encuentro o consulta",
+      "error": "Escribe al menos 10 caracteres."
+    },
+    "textos": {
+      "siguiente": "Siguiente paso",
+      "anterior": "Paso anterior",
+      "paso": "Paso {actual} de {total}",
+      "pasos": ["Elige un servicio", "Describe tu solicitud", "Tus datos de contacto"],
+      "enviar": "Simular solicitud",
+      "exito": "Solicitud simulada recibida. No se ha enviado información."
+    }
+  },
   "interfaz": {
     "favicon": "/demo/cafe-aurora-demo/demo/logos/favicon.svg",
     "salto": "Ir al contenido",
@@ -274,7 +411,7 @@
       "href": "/contacto?paquete=landing"
     },
     "selector": "Cambiar plan de demostración",
-    "fase": "La demo de Presencia muestra cinco secciones elegidas. Captación permite explorar las ocho secciones de esta fase; sus funciones avanzadas y el panel simulado siguen pendientes.",
+    "fase": "Todos los datos y actividades son ficticios. En Captación puedes probar la edición y la bandeja simuladas; sus cambios solo duran en esta visita y se pierden al recargar o cambiar de plan.",
     "planes": {
       "presencia": {
         "paqueteId": "landing",
@@ -289,9 +426,110 @@
         "paqueteId": "portal",
         "nombre": "Captación de Clientes",
         "textoCorto": "Captación",
-        "descripcion": "En las siguientes fases sumará contenido ampliado, formularios avanzados y administración simulada.",
+        "descripcion": "Diez secciones iniciales, cotización por pasos y administración simulada de textos, imágenes y consultas.",
         "cotizacionHref": "/contacto?paquete=portal",
-        "limite": 10
+        "limite": 10,
+        "secciones": [
+          "portada",
+          "servicios",
+          "quienes-somos",
+          "testimonios",
+          "novedades",
+          "catalogo-sin-compra",
+          "cotizacion-pasos",
+          "sedes",
+          "promocion-destacada",
+          "formulario-contacto"
+        ]
+      }
+    },
+    "administracion": {
+      "titulo": "Administración de demostración",
+      "aviso": "Sin login, base de datos ni envíos. Los cambios y mensajes solo existen en esta página y se pierden al recargar o cambiar de plan.",
+      "activar": "Cambiar a vista administrador",
+      "desactivar": "Cambiar a vista visitante",
+      "textoAdmin": "Admin",
+      "textoVisita": "Visita",
+      "secciones": "Secciones del sitio",
+      "seleccion": "{actual} de {limite} secciones",
+      "fijas": "Portada y Contacto permanecen incluidos para mantener el título principal y los destinos de contacto de esta demo.",
+      "limite": "Ya hay diez secciones. Desactiva una antes de agregar otra.",
+      "editor": "Editar contenido",
+      "elegir": "Pieza que quieres editar",
+      "enVivo": "Los cambios se ven directamente en el sitio de abajo. Puedes volver a vista visitante para recorrerlo.",
+      "imagenes": "Ilustraciones disponibles",
+      "errorImagen": "Selecciona una ilustración disponible.",
+      "errorNumero": "Escribe un número entero no negativo y dentro del rango seguro.",
+      "errorTexto": "Este texto no puede quedar vacío.",
+      "errorLongitud": "Escribe como máximo 2000 caracteres.",
+      "maximoTexto": 2000,
+      "bandeja": "Bandeja de contactos",
+      "sinContactos": "Todavía no hay mensajes. Prueba Contacto o la cotización por pasos en vista visitante.",
+      "leido": "Leído",
+      "nuevo": "Nuevo",
+      "marcar": "Marcar como leído",
+      "eliminar": "Eliminar mensaje",
+      "nombre": "Nombre",
+      "correo": "Correo",
+      "origen": "Origen",
+      "mensaje": "Mensaje",
+      "restablecer": "Restablecer demo",
+      "restablecido": "Demo restablecida: se descartaron los cambios y los mensajes simulados.",
+      "noJavascript": "Activa JavaScript para probar la edición y la bandeja simuladas.",
+      "etiquetas": {
+        "logo": "Logo",
+        "etiquetaDireccion": "Etiqueta de dirección",
+        "etiquetaHorarios": "Etiqueta de horarios",
+        "correo": "Correo",
+        "mensaje": "Mensaje",
+        "enviar": "Botón de envío simulado",
+        "aviso": "Aviso",
+        "exito": "Mensaje de éxito",
+        "reiniciar": "Botón de reinicio",
+        "errorGeneral": "Aviso de campos inválidos",
+        "limite": "Aviso de límite",
+        "sinJavascript": "Aviso sin JavaScript",
+        "textoConsulta": "Botón de consulta",
+        "siguiente": "Botón del siguiente paso",
+        "anterior": "Botón del paso anterior",
+        "paso": "Indicador de progreso",
+        "pasos": "Nombres de los pasos",
+        "sedes": "Sedes",
+        "enlaces": "Enlaces",
+        "textoVolver": "Botón para volver",
+        "titulo": "Título",
+        "descripcion": "Descripción",
+        "etiqueta": "Etiqueta",
+        "texto": "Texto",
+        "nombre": "Nombre",
+        "imagen": "Imagen",
+        "imagenes": "Imágenes",
+        "src": "Ilustración",
+        "alt": "Texto alternativo",
+        "elementos": "Elementos",
+        "personas": "Personas",
+        "productos": "Productos",
+        "parrafos": "Párrafos",
+        "leyenda": "Leyenda",
+        "autor": "Autor",
+        "detalle": "Detalle",
+        "pregunta": "Pregunta",
+        "respuesta": "Respuesta",
+        "direccion": "Dirección",
+        "horarios": "Horarios",
+        "precio": "Precio de ejemplo",
+        "fecha": "Fecha de ejemplo",
+        "rol": "Rol",
+        "copyright": "Texto final",
+        "accion": "Acción",
+        "campos": "Campos",
+        "textos": "Mensajes",
+        "servicio": "Servicio",
+        "opciones": "Opciones",
+        "placeholder": "Texto de ayuda",
+        "error": "Mensaje de error",
+        "nota": "Nota",
+        "url": "URL de ejemplo"
       }
     },
     "boveda": {

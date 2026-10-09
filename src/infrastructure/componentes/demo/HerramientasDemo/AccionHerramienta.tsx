@@ -7,6 +7,7 @@ export interface AccionHerramientaProps {
   icono: LucideIcon;
   familia: 'marca' | 'plan';
   actual?: boolean;
+  compacta?: boolean;
 }
 
 export default function AccionHerramienta({
@@ -16,6 +17,7 @@ export default function AccionHerramienta({
   icono: Icono,
   familia,
   actual = false,
+  compacta = false,
 }: AccionHerramientaProps) {
   return (
     <a
@@ -24,7 +26,8 @@ export default function AccionHerramienta({
       title={texto}
       aria-current={actual ? 'page' : undefined}
       data-familia={familia}
-      className="group flex min-h-12 w-16 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1 text-brand-light transition duration-150 focus-visible:outline focus-visible:outline-foco focus-visible:outline-offset-2 focus-visible:outline-brand-sky data-[familia=marca]:bg-brand-coral/10 data-[familia=plan]:bg-brand-sky/10 aria-[current=page]:ring-1 aria-[current=page]:ring-brand-sky fine-pointer:data-[familia=marca]:hover:bg-brand-coral/20 fine-pointer:data-[familia=plan]:hover:bg-brand-sky/20 motion-safe:fine-pointer:hover:scale-105 motion-safe:focus-visible:scale-105 active:scale-100 motion-reduce:transform-none motion-reduce:transition-none sm:w-20"
+      data-compacta={compacta}
+      className="group flex min-h-12 w-16 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1 text-brand-light transition duration-150 focus-visible:outline focus-visible:outline-foco focus-visible:outline-offset-2 focus-visible:outline-brand-sky data-[compacta=true]:w-12 data-[familia=marca]:bg-brand-coral/10 data-[familia=plan]:bg-brand-sky/10 aria-[current=page]:ring-1 aria-[current=page]:ring-brand-sky fine-pointer:data-[familia=marca]:hover:bg-brand-coral/20 fine-pointer:data-[familia=plan]:hover:bg-brand-sky/20 motion-safe:fine-pointer:hover:scale-105 motion-safe:focus-visible:scale-105 active:scale-100 motion-reduce:transform-none motion-reduce:transition-none sm:w-20 sm:data-[compacta=true]:w-16"
     >
       <Icono
         size={20}

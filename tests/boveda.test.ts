@@ -43,6 +43,22 @@ import {UbicacionHorarios} from '../src/infrastructure/componentes/secciones/ubi
 import {Whatsapp} from '../src/infrastructure/componentes/secciones/whatsapp';
 import {RedesSociales} from '../src/infrastructure/componentes/secciones/redes-sociales';
 import {PiePagina} from '../src/infrastructure/componentes/secciones/pie-pagina';
+import {Novedades} from '../src/infrastructure/componentes/secciones/novedades';
+import {CatalogoSinCompra} from '../src/infrastructure/componentes/secciones/catalogo-sin-compra';
+import {Sedes} from '../src/infrastructure/componentes/secciones/sedes';
+import {Equipo} from '../src/infrastructure/componentes/secciones/equipo';
+import {PromocionDestacada} from '../src/infrastructure/componentes/secciones/promocion-destacada';
+import {VistaGoogle} from '../src/infrastructure/componentes/secciones/vista-google';
+import {FormularioCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos';
+import {ejemploCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos/ejemplo';
+import {
+  validarSolicitud,
+  erroresPaso,
+  pasoPrimerError,
+} from '../src/infrastructure/componentes/boveda/cotizacion-pasos/validacion';
+import {obtenerCampos} from '../src/infrastructure/componentes/boveda/edicion/campos';
+import {actualizarContenido} from '../src/infrastructure/componentes/boveda/edicion/actualizar';
+import {cambiarSeleccion, marcarMensaje, eliminarMensaje} from '../src/demo/administracion';
 
 test('la demo tiene una unica fuente JSON sin duplicar el negocio', () => {
   assert.deepEqual(negocio, JSON.parse(readFileSync('src/data/demo/negocio.json', 'utf8')));
@@ -133,15 +149,11 @@ test('las demos respetan 5 y 10 secciones y no cuentan las piezas siempre inclui
       getSeccionesPlan(plan)
         .filter((entrada) => entrada.cuentaParaTope)
         .map((entrada) => entrada.slug),
-      plan === 'presencia'
-        ? ['portada', 'servicios', 'quienes-somos', 'testimonios', 'formulario-contacto']
-        : registro
-            .filter((entrada) => entrada.enDemo && entrada.cuentaParaTope)
-            .map((entrada) => entrada.slug),
+      negocio.interfaz.planes[plan].secciones,
     );
     assert.equal(
       getSeccionesPlan(plan).filter((entrada) => entrada.cuentaParaTope).length,
-      plan === 'presencia' ? 5 : 8,
+      plan === 'presencia' ? 5 : 10,
     );
     assert.deepEqual(
       getSeccionesPlan(plan)
@@ -237,7 +249,7 @@ test('la galeria y ubicacion usan recursos propios dimensionados sin mapas exter
   for (const imagen of [
     ...negocio.galeria.imagenes,
     negocio.nosotros.imagen,
-    negocio.ubicacion.imagen,
+    negocio.sedes[0].imagen,
   ]) {
     assert.ok(
       existsSync(path.join('public', ...imagen.src.split('/').filter(Boolean))),
@@ -342,7 +354,7 @@ test('el indice y las fichas se generan desde el registro con un solo h1', () =>
     }),
   );
   assert.equal(indice.match(/<h1\b/g)?.length, 1);
-  assert.equal(indice.match(/<form\b/g)?.length, 1);
+  assert.equal(indice.match(/<form\b/g)?.length, registroBoveda.length);
   assert.doesNotMatch(
     indice,
     /href="\/componentes\/portada"|href="\/demo\/|Cuenta para el límite|<table/,
@@ -544,7 +556,7 @@ test('el registro conserva componentes, ejemplos tipados y metadatos unicos', ()
   assert.equal(getComponente('portada'), undefined);
   assert.deepEqual(
     registroBoveda.map((entrada) => entrada.slug),
-    ['formulario-contacto'],
+    ['formulario-contacto', 'cotizacion-pasos'],
   );
   assert.ok(registroBoveda.every((entrada) => entrada.categoria === 'componente'));
   const portada = registro.find((entrada) => entrada.slug === 'portada');
@@ -559,4 +571,192 @@ test('el registro conserva componentes, ejemplos tipados y metadatos unicos', ()
   const formulario = getComponente('formulario-contacto');
   assert.ok(formulario);
   assert.doesNotMatch(renderToStaticMarkup(formulario.renderizar(true)), /<h1\b|<h2\b/);
+});
+
+test('Captacion publica piezas agnosticas, listas vacias y una vista Google sin conexiones', () => {
+  for (const pieza of [
+    createElement(Novedades, {}),
+    createElement(Sedes, {etiquetaDireccion: 'Dirección', etiquetaHorarios: 'Horarios'}),
+    createElement(Equipo, {}),
+    createElement(PromocionDestacada, {}),
+    createElement(CatalogoSinCompra, {textoConsulta: 'Consultar', hrefConsulta: '#consulta'}),
+  ]) {
+    const html = renderToStaticMarkup(pieza);
+    assert.ok(html.includes('<section'));
+    assert.doesNotMatch(html, /undefined|<h1\b|<img\b/);
+  }
+  const google = renderToStaticMarkup(
+    createElement(VistaGoogle, {
+      ...negocio.google,
+      titulo: negocio.nombre,
+      descripcion: negocio.descripcion,
+    }),
+  );
+  assert.ok(google.includes(negocio.google.url));
+  assert.doesNotMatch(google, /<a\b|<iframe|google\.com|<h1\b/);
+  const entrada = registro.find((item) => item.slug === 'vista-google');
+  assert.ok(entrada);
+  assert.equal(entrada.enDemo, false);
+  assert.equal(entrada.cuentaParaTope, false);
+  assert.ok(!getSeccionesPlan('captacion').some((item) => item.slug === 'equipo'));
+});
+
+test('los recursos de Captacion existen con dimensiones y texto alternativo', () => {
+  const imagenes = registro
+    .flatMap((item) => item.crearInstancia().campos)
+    .filter((campo) => campo.tipo === 'imagen');
+  assert.ok(imagenes.length >= 15);
+  for (const {valor: imagen} of imagenes) {
+    assert.ok(
+      existsSync(path.join('public', ...imagen.src.split('/').filter(Boolean))),
+      imagen.src,
+    );
+    assert.ok(imagen.width > 0 && imagen.height > 0 && imagen.alt.trim());
+  }
+});
+
+test('la cotizacion reutiliza limites exactos y valida cada paso y toda la solicitud', () => {
+  const valida = {
+    servicio: ejemploCotizacion.campos.servicio.opciones[0].id,
+    nombre: 'Cliente ficticio',
+    correo: 'cliente@ejemplo.invalid',
+    mensaje: 'a'.repeat(10),
+  };
+  assert.deepEqual(validarSolicitud(valida, ejemploCotizacion), {});
+  const errores = validarSolicitud(
+    {servicio: 'ausente', nombre: '', correo: 'incorrecto', mensaje: 'corto'},
+    ejemploCotizacion,
+  );
+  assert.deepEqual(Object.keys(erroresPaso(errores, 1)), ['servicio']);
+  assert.deepEqual(Object.keys(erroresPaso(errores, 2)), ['mensaje']);
+  assert.deepEqual(Object.keys(erroresPaso(errores, 3)), ['nombre', 'correo']);
+  assert.equal(pasoPrimerError(errores), 1);
+  assert.equal(pasoPrimerError({mensaje: 'error', correo: 'error'}), 2);
+  assert.equal(pasoPrimerError({correo: 'error'}), 3);
+  assert.deepEqual(
+    validarSolicitud(
+      {...valida, mensaje: 'a'.repeat(2000), nombre: 'a'.repeat(100)},
+      ejemploCotizacion,
+    ),
+    {},
+  );
+  assert.equal(
+    validarSolicitud({...valida, mensaje: 'a'.repeat(2001)}, ejemploCotizacion).mensaje,
+    negocio.contacto.textos.limite,
+  );
+  assert.equal(
+    validarSolicitud({...valida, mensaje: 'a'.repeat(9)}, ejemploCotizacion).mensaje,
+    ejemploCotizacion.campos.mensaje.error,
+  );
+  const html = renderToStaticMarkup(createElement(FormularioCotizacion, ejemploCotizacion));
+  assert.match(html, /<select[^>]*name="servicio"/);
+  assert.match(html, /<button[^>]*type="submit"[^>]*disabled=""/);
+  assert.ok(html.includes('<noscript>'));
+  assert.doesNotMatch(html, /action=|mailto:|<h1\b/);
+});
+
+test('la edicion es inmutable y bloquea anclas, identidades y rutas incompatibles', () => {
+  const props = {
+    id: 'seccion',
+    href: '#contacto',
+    titulo: 'Inicial',
+    elementos: [{id: 'producto', nombre: 'Producto', precio: 1200}],
+    imagen: negocio.portada.imagen,
+  };
+  const campos = obtenerCampos(props);
+  assert.ok(
+    !campos.some((campo) =>
+      ['id', 'href', 'src', 'width', 'height'].includes(campo.ruta.at(-1) ?? ''),
+    ),
+  );
+  const titulo = actualizarContenido(props, ['titulo'], 'Nuevo título');
+  assert.equal(titulo.titulo, 'Nuevo título');
+  assert.equal(props.titulo, 'Inicial');
+  const producto = actualizarContenido(props, ['elementos', '0', 'precio'], 0);
+  assert.equal(producto.elementos[0].precio, 0);
+  assert.equal(props.elementos[0].precio, 1200);
+  for (const numero of [-1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.throws(
+      () => actualizarContenido(props, ['elementos', '0', 'precio'], numero),
+      /incompatible/,
+    );
+  }
+  for (const ruta of [
+    ['id'],
+    ['href'],
+    ['imagen', 'src'],
+    ['__proto__'],
+    ['elementos', '99', 'nombre'],
+  ]) {
+    assert.throws(() => actualizarContenido(props, ruta, 'otro'), /no editable/);
+  }
+  assert.throws(() => actualizarContenido(props, ['titulo'], 10), /incompatible/);
+  const imagen = actualizarContenido(props, ['imagen'], negocio.sedes[0].imagen);
+  assert.deepEqual(imagen.imagen, negocio.sedes[0].imagen);
+  assert.deepEqual(props.imagen, negocio.portada.imagen);
+});
+
+test('las instancias enlazan props tipadas y reflejan cambios sin alterar el registro', () => {
+  const portada = registro.find((item) => item.slug === 'portada');
+  assert.ok(portada);
+  const inicial = portada.crearInstancia();
+  const cambiada = inicial.actualizar(['titulo'], 'Título editado de prueba');
+  assert.ok(renderToStaticMarkup(cambiada.renderizar()).includes('Título editado de prueba'));
+  assert.doesNotMatch(renderToStaticMarkup(inicial.renderizar()), /Título editado de prueba/);
+  assert.doesNotMatch(renderToStaticMarkup(portada.renderizar()), /Título editado de prueba/);
+});
+
+test('el selector intercambia secciones sin superar diez ni eliminar las piezas fijas', () => {
+  const inicial = negocio.interfaz.planes.captacion.secciones;
+  const disponibles = registro
+    .filter((item) => item.enDemo && item.cuentaParaTope)
+    .map((item) => item.slug);
+  const fijas = ['portada', 'formulario-contacto'];
+  assert.throws(() => cambiarSeleccion(inicial, 'equipo', disponibles, 10, fijas), /Límite/);
+  assert.throws(() => cambiarSeleccion(inicial, 'portada', disponibles, 10, fijas), /fija/);
+  assert.throws(
+    () => cambiarSeleccion(inicial, 'desconocida', disponibles, 10, fijas),
+    /no disponible/,
+  );
+  const sinNovedades = cambiarSeleccion(inicial, 'novedades', disponibles, 10, fijas);
+  const conEquipo = cambiarSeleccion(sinNovedades, 'equipo', disponibles, 10, fijas);
+  assert.equal(conEquipo.length, 10);
+  assert.ok(conEquipo.includes('equipo'));
+  assert.ok(!conEquipo.includes('novedades'));
+  assert.equal(inicial.length, 10);
+  assert.equal(negocio.catalogo.hrefConsulta, '#contacto');
+  assert.equal(negocio.promocion.accion.href, '#contacto');
+});
+
+test('la bandeja marca mensajes sin mutar ni aceptar identidades desconocidas', () => {
+  const mensajes = [
+    {
+      id: 1,
+      nombre: 'Ficticio',
+      correo: 'ficticio@ejemplo.invalid',
+      mensaje: 'Consulta de ejemplo',
+      origen: 'Contacto',
+      leido: false,
+    },
+  ];
+  assert.equal(marcarMensaje(mensajes, 1)[0].leido, true);
+  assert.equal(mensajes[0].leido, false);
+  assert.throws(() => marcarMensaje(mensajes, 99), /no disponible/);
+  assert.deepEqual(eliminarMensaje(mensajes, 1), []);
+  assert.equal(mensajes.length, 1);
+  assert.throws(() => eliminarMensaje(mensajes, 99), /no disponible/);
+});
+
+test('la simulacion no incorpora persistencia, autenticacion ni peticiones', () => {
+  const rutas = [
+    'src/infrastructure/componentes/demo/AdministracionDemo/useAdministracion.ts',
+    'src/infrastructure/componentes/boveda/cotizacion-pasos/useCotizacion.ts',
+    'src/demo/administracion.ts',
+  ];
+  for (const ruta of rutas) {
+    assert.doesNotMatch(
+      readFileSync(ruta, 'utf8'),
+      /localStorage|sessionStorage|fetch\(|XMLHttpRequest|axios|document\.cookie|use server/,
+    );
+  }
 });

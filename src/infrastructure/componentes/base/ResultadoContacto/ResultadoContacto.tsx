@@ -1,5 +1,5 @@
 import type {Ref} from 'react';
-import Boton from '../../base/Boton/Boton';
+import Boton from '../Boton/Boton';
 
 export interface ResultadoContactoProps {
   exito: string;

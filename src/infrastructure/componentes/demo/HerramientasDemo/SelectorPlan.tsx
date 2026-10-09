@@ -13,9 +13,10 @@ export interface SelectorPlanProps {
   planes: PlanDemo[];
   actual?: PlanBoveda;
   etiqueta: string;
+  compacta?: boolean;
 }
 
-export default function SelectorPlan({planes, actual, etiqueta}: SelectorPlanProps) {
+export default function SelectorPlan({planes, actual, etiqueta, compacta}: SelectorPlanProps) {
   return (
     <div
       role="group"
@@ -31,6 +32,7 @@ export default function SelectorPlan({planes, actual, etiqueta}: SelectorPlanPro
           icono={iconosPlan[plan.id]}
           familia="plan"
           actual={actual === plan.id}
+          compacta={compacta}
         />
       ))}
     </div>

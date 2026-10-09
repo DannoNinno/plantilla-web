@@ -17,13 +17,7 @@ export function getPlanesDemo() {
 export function getSeccionesPlan(plan: PlanBoveda) {
   const disponibles = registro.filter((entrada) => entrada.enDemo);
   const limite = negocio.interfaz.planes[plan].limite;
-  if (plan !== 'presencia') return seleccionarSecciones(disponibles, plan, limite);
-  return seleccionarComposicion(
-    disponibles,
-    negocio.interfaz.planes.presencia.secciones,
-    plan,
-    limite,
-  );
+  return seleccionarComposicion(disponibles, negocio.interfaz.planes[plan].secciones, plan, limite);
 }
 
 export function seleccionarComposicion<

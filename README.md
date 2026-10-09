@@ -76,7 +76,7 @@ El lint utiliza ESLint 9 con [configuración plana](./eslint.config.mjs); no se 
 
 - `/componentes/`: muestra directamente las piezas funcionales programadas, no tarjetas de secciones ni agrupaciones comerciales por plan. Por ahora permite probar el formulario de contacto.
 - `/componentes/formulario-contacto/`: muestra la pieza aislada primero. La documentación de props y el plan mínimo están en «Información técnica», cerrada por defecto. Cada vista conserva un único h1.
-- `/demo/presencia/` y `/demo/captacion/`: páginas completas de Café Aurora, sin la cabecera ni el pie de dannotech. Presencia muestra cinco secciones elegidas y Captación las ocho disponibles en fase 2. Ambas incluyen aviso visible y botonera flotante para cambiar de plan, volver al portal o a contacto con el plan preseleccionado.
+- `/demo/presencia/` y `/demo/captacion/`: páginas completas de Café Aurora, sin la cabecera ni el pie de dannotech. Presencia muestra cinco secciones elegidas y Captación diez, con edición y bandeja simuladas. Ambas incluyen aviso visible y botonera flotante para cambiar de plan, volver al portal o a contacto con el plan preseleccionado.
 - Portada vive en `secciones/portada`, solo forma parte de la demo del sitio y ya no tiene ficha pública en `/componentes/portada/`.
 
 [negocio.json](./src/data/demo/negocio.json) es la fuente única del contenido ficticio y los textos de la demo. [negocio.ts](./src/demo/negocio.ts) solo lo importa. Los SVG originales incorporados por Daniel viven en [public/demo/cafe-aurora-demo/](./public/demo/cafe-aurora-demo/); las primeras dos fases usan logo, portada, fachada, galería y la ilustración de la sede principal. Los activos de equipo, productos, novedades y promoción quedan disponibles para Captación. El manifest describe activos; no es otra fuente de contenido de negocio.
@@ -271,13 +271,104 @@ También se ampliaron el JSON, el ensamblaje por plan, el registro, las pruebas 
 
 ### Pendientes
 
-- TODO(Daniel): revisar la fase 2 y sus cambios sin commit antes de avanzar a Captación.
-- TODO(Daniel): implementar en fase 3 las piezas de Captación, edición simulada de textos/imágenes y Bandeja de contactos conectada a `onConsulta`.
+- Fase 2 revisada y confirmada por Daniel; Captación se implementa en la fase siguiente.
 - TODO(Daniel): aportar futuras piezas de la bóveda; revisar sus dependencias y props antes de incorporarlas, sin implementar autenticación real en estas demos.
 
 ### Revisión de estándares
 
 Las piezas nuevas mantienen un archivo por componente, lógica del formulario en un hook, Tailwind sin hojas nuevas ni estilos en línea, y páginas que solo ensamblan. El catálogo y los detalles de plan se fragmentaron al autorizar su conexión con las demos; conservan los precios, contenidos de servicio y consulta existentes. La página preexistente de perfil solo se trasladó: conserva marcado de secciones y más de 150 líneas, sin refactorizarla fuera del alcance autorizado. La única hoja existente sigue siendo [globals.css](./src/app/globals.css).
+
+## Demostración — fase 3
+
+Captación empieza con las cinco secciones de Presencia y añade Novedades, Catálogo sin compra, Cotización por pasos, Sedes y Promoción destacada: diez en total. Equipo queda disponible como sustitución, junto con Galería, Preguntas frecuentes y Ubicación y horarios. WhatsApp, redes y pie siguen fuera del cupo.
+
+El control **Admin / Visita** de la botonera alterna el panel. Permite cambiar textos, precios e imágenes, elegir secciones y probar una bandeja de contactos. Formularios de Contacto y Cotización notifican al contenedor mediante `onConsulta`; sus mensajes se pueden marcar como leídos o eliminar. **No existe un backend funcional:** no hay autenticación, base de datos, API, envío ni persistencia. Los cambios se pierden al recargar; «Restablecer demo» descarta contenido, selección, formularios y mensajes.
+
+La cotización por pasos es una pieza funcional de la bóveda en `/componentes/cotizacion-pasos/`. Las secciones comerciales no se mezclan con ella. El panel y la bandeja son infraestructura de la demostración, no dependencias de los componentes que se copian a clientes.
+
+### Archivos incorporados
+
+```text
+src/
+  demo/administracion.ts
+  infrastructure/componentes/
+    base/
+      ImagenContenido/ImagenContenido.tsx
+      CampoContacto/CampoContacto.tsx
+      ResultadoContacto/ResultadoContacto.tsx
+      consulta/{tipos.ts,validacion.ts}
+    boveda/
+      edicion/{campos.ts,actualizar.ts}
+      cotizacion-pasos/
+        FormularioCotizacion.tsx
+        PasosCotizacion.tsx
+        SelectorServicio.tsx
+        useCotizacion.ts
+        validacion.ts
+        tipos.ts
+        ejemplo.ts
+        definicion.ts
+        index.ts
+        README.md
+    secciones/
+      novedades/
+      catalogo-sin-compra/
+      sedes/
+      promocion-destacada/
+      equipo/
+      vista-google/
+    demo/AdministracionDemo/
+      CaptacionDemo.tsx
+      useAdministracion.ts
+      PanelAdministracion.tsx
+      SeleccionSecciones.tsx
+      EditorContenido.tsx
+      CampoEditor.tsx
+      BandejaContactos.tsx
+      MensajeContacto.tsx
+      ControlVista.tsx
+```
+
+Cada nueva sección tiene su presentación, `tipos.ts`, `ejemplo.ts`, `definicion.ts`, `index.ts` y `README.md`; las listas separan sus tarjetas en `TarjetaNovedad.tsx`, `TarjetaProducto.tsx`, `TarjetaSede.tsx` y `TarjetaPersona.tsx`. Campo y resultado de Contacto se movieron a base porque ahora los usan dos formularios.
+
+También se actualizaron [negocio.json](./src/data/demo/negocio.json), el registro único, la selección por plan, el ensamblaje de la ruta, la botonera, las pruebas y los textos de estado del catálogo. El formateador de moneda existente expone un formato CLP sin el prefijo comercial «Desde» para los productos; no cambia las tarifas del portal.
+
+### Decisiones de implementación
+
+- Estado exclusivo de React, sin almacenamiento del navegador ni escrituras en servidor.
+- Props tipadas vinculadas mediante instancias genéricas del registro; el editor no inserta contenido del negocio en los componentes.
+- Imágenes elegibles solo entre los recursos propios del registro. Cambiar imagen actualiza fuente, texto alternativo y dimensiones conjuntamente.
+- Se editan textos y precios, no identificadores, destinos de enlaces, niveles de encabezado ni dimensiones individuales.
+- Portada y Contacto permanecen fijos **solo en esta demo** para conservar un h1 y destinos válidos. Las piezas copiadas no tienen esa restricción.
+- Catálogo y promoción apuntan a Contacto, incluso si se desactiva la cotización por pasos.
+- Vista Google es una maqueta editable del panel, fuera del cupo. No consulta Google ni promete posicionamiento; no cambia los metadatos reales.
+- Presencia conserva el ensamblaje de servidor. Captación necesita un contenedor cliente para reflejar los cambios; las secciones siguen sin declarar `use client`, con interactividad propia únicamente en los formularios.
+- La botonera se compacta cuando incluye Admin; conserva colores, iconos, escala de hover y respeto al movimiento reducido.
+- Sin nuevas dependencias, hojas de estilo, estilos en línea, modificaciones al home/perfil ni commits.
+
+### Validación de fase 3
+
+57 pruebas aprobadas, lint sin advertencias, build de producción correcto y `git diff --check` sin errores. Se comprobó en navegador:
+
+- Edición de título, imagen y precio reflejada en el sitio; texto vacío y precio negativo muestran errores sin reemplazar el último contenido válido.
+- Límite de diez, aviso al intentar una undécima sección e intercambio de Novedades por Equipo.
+- Validación de los pasos, conservación de valores al volver, éxito local y foco del resultado.
+- Contacto y Cotización generan dos consultas en la bandeja; marcar, eliminar y restablecer funcionan.
+- Recargar devuelve el contenido original, diez secciones y bandeja vacía. Restablecer también limpia borradores y errores del editor.
+- Cero peticiones XHR/fetch/POST durante ambos envíos simulados.
+- Un h1 y sin desbordamiento horizontal a 360, 768 y 1440 px en visitante, administrador y Presencia. Campo enfocado a 360 px entre el aviso y la botonera fijos.
+- Rutas de demos, bóveda y cotización aislada con HTTP 200.
+
+El navegador compartido está oculto: no se pudo confirmar allí la activación nativa por Enter/Espacio ni la decodificación visual de todas las imágenes diferidas. No se cambiaron los controles nativos ni se forzó carga eager para sortear esa limitación; la semántica, el foco y la existencia/dimensiones declaradas de los recursos se verificaron por separado.
+
+### Revisión y pendientes
+
+Las pruebas verifican fragmentación hasta 150 líneas, ausencia de `any` y de textos de negocio en presentación, Tailwind y páginas que solo ensamblan. La hoja global preexistente no se modificó. Los componentes tienen documentación de props y dependencias para copiarlos sin ejemplos ni definiciones del registro.
+
+- TODO(Daniel): revisar la fase 3 y realizar el commit cuando estés conforme.
+- TODO(Daniel): aportar las próximas piezas funcionales de la bóveda.
+- TODO(Daniel): definir por separado el backend real y sus contratos si se decide implementarlo; esta simulación no lo reemplaza.
+- TODO(Daniel): aportar los archivos locales de Poppins; se mantiene el fallback de sistema compartido con el portal.
 
 ## Datos
 
@@ -298,7 +389,7 @@ Las descripciones de paquetes son contenido del catálogo, no funcionalidades im
 
 El catálogo organiza los cuatro planes de [tarifas.md](./tarifas.md), con precios desde en CLP, un resumen por opción y vistas de detalle para su alcance, reuniones, capacitación, exclusiones y consideraciones según corresponda. Los servicios y costos adicionales aparecen al final del catálogo general. Los contenidos públicos se mantienen en los JSON; al actualizar las tarifas, sincroniza esos datos con el documento. Las pruebas verifican que los precios y el detalle de cada plan coincidan con la fuente. El catálogo está habilitado mediante `catalogoHabilitado` en [sitio.json](./src/data/sitio.json): el menú y la tarjeta de inicio usan sus enlaces existentes, sin modificar el home.
 
-La sección «Explora antes de cotizar» diferencia dos recorridos: catálogo → detalle del plan → demo del sitio correspondiente, y catálogo → bóveda → componente aislado. Presencia Digital (`landing`) abre `/demo/presencia/`; Captación de Clientes (`portal`) abre `/demo/captacion/`. La relación con los planes del catálogo vive en el JSON de la demo y se consulta con `getDemoPaquete`; Automatización y Comercio Electrónico no muestran demos que aún no existen. El detalle ofrece también acceso a la bóveda y un aviso de funciones pendientes para no presentar como terminado el panel ni otras funcionalidades de Captación. Los textos de este recorrido están en [catalogo.json](./src/data/catalogo.json).
+La sección «Explora antes de cotizar» diferencia dos recorridos: catálogo → detalle del plan → demo del sitio correspondiente, y catálogo → bóveda → componente aislado. Presencia Digital (`landing`) abre `/demo/presencia/`; Captación de Clientes (`portal`) abre `/demo/captacion/`. La relación con los planes del catálogo vive en el JSON de la demo y se consulta con `getDemoPaquete`; Automatización y Comercio Electrónico no muestran demos que aún no existen. El detalle ofrece también acceso a la bóveda y explica qué funcionalidades son simuladas, sin presentar el panel como un backend real. Los textos de este recorrido están en [catalogo.json](./src/data/catalogo.json).
 
 Los archivos de página del catálogo solo ensamblan. Su presentación se separa en [Catalogo](./src/infrastructure/componentes/Catalogo) (presentación, filosofía, exploración, lista y tarjeta de planes, alcance, principios y adicionales) y [DetallePaquete](./src/infrastructure/componentes/DetallePaquete) (presentación, detalle existente, enlaces y consulta). Son componentes de servidor con props tipadas y clases Tailwind, sin hojas de estilo nuevas.
 

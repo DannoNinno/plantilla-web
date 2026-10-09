@@ -2,8 +2,8 @@
 
 import {useId} from 'react';
 import Boton from '../../base/Boton/Boton';
-import CampoContacto from './CampoContacto';
-import ResultadoContacto from './ResultadoContacto';
+import CampoContacto from '../../base/CampoContacto/CampoContacto';
+import ResultadoContacto from '../../base/ResultadoContacto/ResultadoContacto';
 import {useFormularioContacto} from './useFormularioContacto';
 import type {FormularioContactoProps} from './tipos';
 
