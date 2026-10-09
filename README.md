@@ -50,18 +50,25 @@ Para Workers Builds conectado a GitHub:
 ```text
 src/
   app/                       Rutas, vistas y estilos globales
+    (portal)/                Marco actual de dannotech; conserva sus URLs
   data/                      Datos públicos en JSON
+    demo/negocio.json        Fuente única del negocio ficticio Café Aurora
+  demo/                      Adaptadores tipados y ensamblaje de ejemplos
   domain/
     casos-de-uso/             Selección local de componentes
     servicios/               Mensajes y enlaces de contacto
     types/                   Tipos de contenido y props del frontend
   infrastructure/
     componentes/<nombre>/    Componentes visuales
+    componentes/base/        Piezas visuales compartidas
+    componentes/boveda/      Componentes agnósticos y registro único
     configuracion/           Configuración de Next.js
     handlers/datos.ts        Funciones simples que leen los JSON
 ```
 
 Los [handlers de datos](./src/infrastructure/handlers/datos.ts) son funciones, no clases ni repositorios. Los JSON se importan directamente; no se consulta ninguna API para cargarlos. Los tipos del frontend permiten verificar su estructura durante la compilación.
+
+El lint utiliza ESLint 9 con [configuración plana](./eslint.config.mjs); no se agregaron dependencias. `npm run lint` verifica también las pruebas y falla ante advertencias. La bóveda es independiente del antiguo configurador del catálogo.
 
 ## Datos
 

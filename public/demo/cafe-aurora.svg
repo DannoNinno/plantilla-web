@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720">
+  <rect width="960" height="720" rx="48" fill="#E8EDDE"/>
+  <circle cx="720" cy="170" r="105" fill="#FFF8EF"/>
+  <path d="M80 620Q480 460 880 620V720H80Z" fill="#28604C"/>
+  <ellipse cx="490" cy="532" rx="260" ry="46" fill="#30261F" opacity=".12"/>
+  <ellipse cx="460" cy="495" rx="200" ry="34" fill="#FFF8EF"/>
+  <path d="M320 275h280v155q0 85-140 85t-140-85Z" fill="#FFF8EF"/>
+  <path d="M600 315h40q80 0 80 65t-80 65h-40" fill="none" stroke="#FFF8EF" stroke-width="30"/>
+  <ellipse cx="460" cy="275" rx="140" ry="28" fill="#30261F"/>
+  <ellipse cx="460" cy="275" rx="106" ry="18" fill="#80583F"/>
+  <path d="M410 215q-25-35 0-70t0-70m65 140q-25-35 0-70t0-70m65 140q-25-35 0-70t0-70" fill="none" stroke="#28604C" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="220" cy="550" rx="24" ry="36" transform="rotate(-35 220 550)" fill="#30261F"/>
+  <path d="m207 522 25 55" stroke="#FFF8EF" stroke-width="5"/>
+  <ellipse cx="710" cy="535" rx="24" ry="36" transform="rotate(35 710 535)" fill="#30261F"/>
+  <path d="m721 507-23 55" stroke="#FFF8EF" stroke-width="5"/>
+</svg>

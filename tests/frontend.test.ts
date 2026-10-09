@@ -52,15 +52,16 @@ function fuentes(directorio: string): string[] {
   return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
     const ruta = path.join(directorio, entrada.name);
     if (entrada.isDirectory()) return fuentes(ruta);
-    return /\.(ts|tsx|mjs)$/.test(entrada.name) ? [ruta] : [];
+    return /\.(ts|tsx|mjs|json)$/.test(entrada.name) ? [ruta] : [];
   });
 }
 
 test('la estructura conserva las capas y todos los datos son JSON', () => {
-  assert.deepEqual(readdirSync('src').sort(), ['app', 'data', 'domain', 'infrastructure']);
+  assert.deepEqual(readdirSync('src').sort(), ['app', 'data', 'demo', 'domain', 'infrastructure']);
   assert.deepEqual(readdirSync('src/data').sort(), [
     'catalogo.json',
     'componentes.json',
+    'demo',
     'navegacion.json',
     'paquetes.json',
     'perfil.json',
@@ -170,7 +171,7 @@ test('los casos y contextos preservan la privacidad y el perfil separa audiencia
     'El sistema necesitaba una base más estable y mantenible.',
   );
   assert.doesNotMatch(JSON.stringify(perfil.experiencia), /PAES|fallas|proveedores/i);
-  const pagina = readFileSync('src/app/perfil/page.tsx', 'utf8');
+  const pagina = readFileSync('src/app/(portal)/perfil/page.tsx', 'utf8');
   assert.ok(pagina.indexOf('<FotoPerfil />') < pagina.indexOf('id="detalle-tecnico-titulo"'));
   assert.ok(
     pagina.indexOf('aria-labelledby="ficha-titulo"') < pagina.indexOf('id="detalle-tecnico"'),
@@ -266,7 +267,7 @@ test('la oferta presenta a dannotech como marca personal en primera persona', ()
     JSON.stringify(getPaquetes()),
     sitio.descripcion,
     getPerfil().presentacion,
-    readFileSync('src/app/catalogo/page.tsx', 'utf8'),
+    readFileSync('src/app/(portal)/catalogo/page.tsx', 'utf8'),
     readFileSync('tarifas.md', 'utf8'),
   ];
   for (const texto of textos) {
@@ -316,7 +317,7 @@ test('el hover de todas las capacidades comparte trazos y brillo acotados sin bu
   for (const nombre of ['perfil-icono', 'capacidad-trazo', 'capacidad-brillo'] as const) {
     assert.doesNotMatch(animaciones[nombre], /infinite/);
   }
-  const perfil = readFileSync('src/app/perfil/page.tsx', 'utf8');
+  const perfil = readFileSync('src/app/(portal)/perfil/page.tsx', 'utf8');
   assert.match(perfil, /fine-pointer:hover:bg-brand-sky\/\[0\.12\]/);
   assert.match(perfil, /motion-safe:fine-pointer:group-hover\/capacidad:animate-perfil-icono/);
   assert.match(perfil, /motion-safe:fine-pointer:group-hover\/capacidad:animate-capacidad-brillo/);
@@ -346,7 +347,7 @@ test('las capacidades, formacion, idiomas y titulo comparten efectos simples y a
         : {transform: 'translateX(0)'},
     );
   }
-  const perfil = readFileSync('src/app/perfil/page.tsx', 'utf8');
+  const perfil = readFileSync('src/app/(portal)/perfil/page.tsx', 'utf8');
   assert.equal(
     perfil.match(/motion-safe:fine-pointer:group-hover\/capacidad:animate-perfil-icono/g)?.length,
     1,
@@ -421,12 +422,20 @@ test('la home revela sus cuatro bloques con una sola transicion ligera por conte
   assert.equal(html.match(/motion-safe:animate-intro/g)?.length, 1);
   assert.doesNotMatch(html, /(?:^|\s)animate-intro/);
   const css = readFileSync('src/app/globals.css', 'utf8');
-  assert.match(css, /\.entrada-ligera\.entrada-visible\s*>\s*div\s*\{[^}]*transition: opacity 250ms ease-out/);
-  assert.match(css, /\.entrada-ligera\.entrada-preparada:not\(\.entrada-visible\)\s*>\s*div\s*\{[^}]*opacity: 0/);
+  assert.match(
+    css,
+    /\.entrada-ligera\.entrada-visible\s*>\s*div\s*\{[^}]*transition: opacity 250ms ease-out/,
+  );
+  assert.match(
+    css,
+    /\.entrada-ligera\.entrada-preparada:not\(\.entrada-visible\)\s*>\s*div\s*\{[^}]*opacity: 0/,
+  );
   assert.match(css, /\.entrada-ligera\.entrada-visible\s*\{[^}]*transition: none/);
   for (const pagina of ['perfil', 'catalogo', 'catalogo/[paquete]']) {
     assert.ok(
-      readFileSync(path.join('src', 'app', pagina, 'page.tsx'), 'utf8').includes('EntradaScroll'),
+      readFileSync(path.join('src', 'app', '(portal)', pagina, 'page.tsx'), 'utf8').includes(
+        'EntradaScroll',
+      ),
     );
   }
 });
@@ -512,10 +521,7 @@ test('las definiciones ausentes, duplicadas y circulares se reportan', () => {
 
 test('los correos oficiales solo se definen en la configuracion y no se expone Gmail', () => {
   const configuracion = path.join('src', 'domain', 'configuracion', 'contacto.ts');
-  for (const ruta of [
-    ...fuentes('src'),
-    ...readdirSync('src/data').map((nombre) => path.join('src', 'data', nombre)),
-  ]) {
+  for (const ruta of fuentes('src')) {
     const contenido = readFileSync(ruta, 'utf8');
     assert.doesNotMatch(contenido, /@gmail\.com/i, ruta);
     if (ruta !== configuracion) assert.doesNotMatch(contenido, /@dannotech\.cl/i, ruta);

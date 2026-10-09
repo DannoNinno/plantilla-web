@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
-    "test:frontend": "tsc -p tsconfig.tests.json && node --test .test-build/tests/frontend.test.js",
+    "lint": "eslint src tests tailwind.config.ts --max-warnings=0",
+    "lint:fix": "eslint src tests tailwind.config.ts --fix",
+    "test:frontend": "tsc -p tsconfig.tests.json && node --test .test-build/tests/frontend.test.js .test-build/tests/boveda.test.js",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"

@@ -23,6 +23,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        seccion: {
+          fondo: '#FFF8EF',
+          tinta: '#30261F',
+          acento: '#28604C',
+          suave: '#E8EDDE',
+        },
         brand: {
           ...coloresMarca,
           'sky-profile': `color-mix(in srgb, ${coloresMarca['sky-text']} 85%, ${coloresMarca.ink})`,
@@ -36,11 +42,17 @@ export default {
       spacing: {
         header: alturaCabecera.base,
         'header-lg': alturaCabecera.amplia,
+        'demo-herramientas': '14rem',
+        'demo-herramientas-lg': '8rem',
+        'demo-ancla': '2rem',
       },
+      outlineWidth: {foco: '3px'},
+      zIndex: {salto: '60'},
       minHeight: {
         intro: `calc(100svh - ${alturaCabecera.base})`,
         'intro-lg': `calc(100svh - ${alturaCabecera.amplia})`,
         puerta: '65svh',
+        'demo-portada': '70svh',
       },
       backgroundImage: {
         intro: `radial-gradient(ellipse at 85% 20%, rgb(${rgb(coloresMarca.sky)} / 0.18), transparent 60%), ${fondoAzul}`,

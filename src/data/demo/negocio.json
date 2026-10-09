@@ -1,0 +1,121 @@
+{
+  "nombre": "Café Aurora",
+  "descripcion": "Cafetería y tostaduría ficticia. Un lugar para hacer una pausa, descubrir nuevos sabores y compartir un buen café.",
+  "portada": {
+    "id": "portada",
+    "etiqueta": "Cafetería y tostaduría",
+    "titulo": "Un buen café cambia tu mañana.",
+    "descripcion": "En Café Aurora tostamos en pequeñas partidas y preparamos cada taza con calma. Ven por tu favorito, descubre algo nuevo y quédate un rato.",
+    "accion": {"texto": "Conversemos", "href": "#contacto"},
+    "imagen": {
+      "src": "/demo/cafe-aurora.svg",
+      "alt": "Ilustración de una taza de café y granos, creada para el negocio ficticio Café Aurora.",
+      "width": 960,
+      "height": 720
+    }
+  },
+  "contacto": {
+    "id": "contacto",
+    "titulo": "Te estamos escuchando.",
+    "descripcion": "¿Quieres conocer nuestros cafés o preparar un encuentro? Déjanos tu consulta. Este formulario es una simulación y no envía información.",
+    "campos": {
+      "nombre": {
+        "etiqueta": "Tu nombre",
+        "placeholder": "Cómo te llamas",
+        "error": "Escribe tu nombre."
+      },
+      "correo": {
+        "etiqueta": "Tu correo",
+        "placeholder": "nombre@ejemplo.invalid",
+        "error": "Escribe un correo válido."
+      },
+      "mensaje": {
+        "etiqueta": "Tu mensaje",
+        "placeholder": "Cuéntanos qué tienes en mente",
+        "error": "Escribe un mensaje de al menos 10 caracteres."
+      }
+    },
+    "textos": {
+      "enviar": "Simular envío",
+      "aviso": "Demostración: no se envía nada ni se guarda información al recargar.",
+      "exito": "Consulta simulada recibida. No se ha enviado ningún mensaje.",
+      "reiniciar": "Escribir otra consulta",
+      "errorGeneral": "Revisa los campos señalados antes de continuar.",
+      "limite": "El texto supera el límite permitido."
+    }
+  },
+  "productos": [
+    {
+      "id": "amanecer",
+      "nombre": "Mezcla Amanecer",
+      "descripcion": "Café de perfil suave, con notas de cacao.",
+      "precio": 8900
+    },
+    {
+      "id": "altura",
+      "nombre": "Tostado de Altura",
+      "descripcion": "Café de perfil frutal para preparar con filtro.",
+      "precio": 9900
+    }
+  ],
+  "novedades": [
+    {
+      "id": "cata",
+      "titulo": "Una mañana para descubrir café",
+      "descripcion": "Ejemplo ficticio de una cata guiada en nuestra tostaduría."
+    }
+  ],
+  "sedes": [
+    {
+      "id": "jardin",
+      "nombre": "Sede Jardín",
+      "direccion": "Paseo del Alba 120, Ciudad Aurora (dirección ficticia)",
+      "horarios": "Lunes a viernes, 08:00 a 18:00"
+    },
+    {
+      "id": "tostaduria",
+      "nombre": "Sede Tostaduría",
+      "direccion": "Camino del Tueste 45, Ciudad Aurora (dirección ficticia)",
+      "horarios": "Martes a sábado, 09:00 a 17:00"
+    }
+  ],
+  "interfaz": {
+    "salto": "Ir al contenido",
+    "aviso": "Sitio de demostración",
+    "detalleAviso": "Café Aurora es un negocio ficticio. Ningún formulario realiza envíos.",
+    "herramientas": "Herramientas de la demostración",
+    "portal": {"texto": "Volver al portal", "href": "/"},
+    "cotizacion": {"texto": "Volver a la cotización", "href": "/contacto?paquete=landing"},
+    "selector": "Cambiar plan de demostración",
+    "fase": "Fase 1: Portada y Formulario de contacto. Las secciones restantes y el panel simulado se incorporarán en las siguientes fases.",
+    "planes": {
+      "presencia": {
+        "nombre": "Presencia Digital",
+        "descripcion": "Una página para presentar el negocio y facilitar el primer contacto.",
+        "limite": 5
+      },
+      "captacion": {
+        "nombre": "Captación de Clientes",
+        "descripcion": "En las siguientes fases sumará contenido ampliado, formularios avanzados y administración simulada.",
+        "limite": 10
+      }
+    },
+    "boveda": {
+      "titulo": "Bóveda de componentes",
+      "descripcion": "Piezas reutilizables, con props tipadas y ejemplos de Café Aurora. Explora cada componente o visita la página ensamblada.",
+      "ver": "Ver componente",
+      "demo": "Ver demostración",
+      "vacio": "Los componentes exclusivos de este plan llegarán en la fase 3.",
+      "incluido": "Disponible desde",
+      "cuenta": "Cuenta para el límite de secciones",
+      "noCuenta": "No cuenta para el límite",
+      "volver": "Volver a la bóveda",
+      "props": "Props del componente",
+      "columnas": ["Prop", "Tipo", "Requerida", "Descripción"],
+      "si": "Sí",
+      "no": "No",
+      "aislado": "Ejemplo aislado",
+      "verPagina": "Ver página completa"
+    }
+  }
+}
