@@ -1,17 +1,29 @@
 {
-  "presentacion": {
+  "textos": {
     "etiqueta": "Mis servicios",
     "titulo": "Te ayudo a hacer crecer tu negocio.",
-    "introduccion": "Soy {persona}, y {marca} es mi marca personal. Trabajo directamente contigo para mejorar tu presencia digital y captar clientes.",
-    "revision": "TODO(Daniel): Revisar la presentación breve del catálogo enfocada en los planes activos."
-  },
-  "planes": {
-    "titulo": "Elige tu punto de partida",
-    "precios": "Precios referenciales. Defino contigo el alcance y te cotizo antes de comenzar.",
-    "avisoSinPagos": "Cotizo según lo que necesita tu negocio. No hay pagos ni compras en este sitio."
+    "identidad": "Soy {persona}, y {marca} es mi marca personal.",
+    "presentacion": "Trabajo directamente contigo para mejorar tu presencia digital, captar clientes, automatizar procesos o llevar tus productos a una tienda online.",
+    "planes": "Elige tu punto de partida",
+    "precios": "Los valores son precios desde. Defino contigo el alcance y preparo tu cotización antes de comenzar.",
+    "plan": "Plan",
+    "detalle": "Ver detalle de",
+    "verDetalles": "Ver detalles",
+    "cotizarPlan": "Cotizar este plan",
+    "cotizacion": "Cotizo según lo que necesita tu negocio. No hay pagos ni compras en este sitio.",
+    "alcance": "Gestión de alcance",
+    "principios": "Mis compromisos contigo",
+    "adicionales": "Servicios y costos adicionales",
+    "detalleAdicionales": "Si necesitas horas adicionales o soporte fuera de lo contratado, te explico el costo y espero tu aprobación antes de avanzar.",
+    "volver": "Volver al catálogo",
+    "verAlcance": "Gestión de alcance y mis compromisos",
+    "verAdicionales": "Consultar costos adicionales",
+    "verBase": "Ver la base incluida de Presencia Digital",
+    "consulta": "Conversemos sobre tu proyecto",
+    "proximamente": "Próximamente"
   },
   "comparacion": {
-    "titulo": "Compara los planes",
+    "titulo": "Planes de servicios",
     "secciones": "Cantidad de secciones",
     "cantidadSecciones": "Hasta {cantidad} vistas o secciones.",
     "panelAdministracion": "Panel de administración",
@@ -20,31 +32,14 @@
     "plazoEntrega": "Plazo de entrega",
     "reuniones": "Reuniones incluidas",
     "capacitacion": "Capacitación incluida",
-    "caracteristica": "Qué incluye",
-    "proximamente": "Próximamente",
-    "noDisponible": "—",
-    "verPlan": "Ver plan",
     "anterior": "Plan anterior",
     "siguiente": "Plan siguiente",
-    "ayudaCarrusel": "Desliza o usa las flechas para comparar los cuatro planes."
+    "ayudaCarrusel": "Recorre los planes con las flechas o los indicadores. También puedes enfocar el carrusel y usar las teclas de dirección.",
+    "carrusel": "carrusel",
+    "diapositiva": "diapositiva",
+    "irAlPlan": "Ver plan {numero}: {nombre}",
+    "posicion": "Plan {actual} de {total}"
   },
-  "detalle": {
-    "revision": "TODO(Daniel): Revisar los textos de las acciones de cotización al inicio y al final del plan.",
-    "volver": "Volver a ver planes",
-    "contactoCargando": "Cargando formulario de contacto…",
-    "planNoDisponible": "El plan solicitado no está disponible. Puedes hacer una consulta o elegir uno de los planes habilitados.",
-    "inicio": {
-      "etiqueta": "Acciones al inicio del plan",
-      "descripcion": "¿Este es el punto de partida para tu negocio?",
-      "cotizar": "Empieza tu proyecto"
-    },
-    "final": {
-      "etiqueta": "Acciones al final del plan",
-      "descripcion": "Ya conoces lo que incluye. Conversemos sobre lo que necesitas.",
-      "cotizar": "Cotiza este plan"
-    }
-  },
-  "tituloAdicionales": "Servicios y costos adicionales",
   "vitrina": {
     "titulo": "Componentes para tu sitio",
     "descripcion": "Conoce los componentes que puede incluir el sitio de tu negocio y desde qué plan están disponibles.",
@@ -60,11 +55,6 @@
       "disponibleSinPlan": "Disponible en un plan superior",
       "componenteClave": "Componente clave"
     }
-  },
-  "tarjetasPlan": {
-    "etiqueta": "Plan",
-    "verDetalle": "Ver detalle de",
-    "proximamente": "Próximamente"
   },
   "filosofia": {
     "titulo": "No solo desarrollo páginas web.",

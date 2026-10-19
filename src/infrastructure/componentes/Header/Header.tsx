@@ -28,6 +28,18 @@ const Header: React.FC<HeaderProps> = ({links = defaultLinks}) => {
         </Link>
         <nav aria-label="Navegación principal" className="flex items-center gap-1 sm:gap-8">
           {links.map((link) => {
+            if (link.href === '/catalogo' && !sitio.catalogoHabilitado) {
+              return (
+                <span
+                  key={link.href}
+                  aria-disabled="true"
+                  className="inline-flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-lg px-1.5 py-2 text-xs leading-tight text-white/50 sm:text-sm"
+                >
+                  <span>{link.label}</span>
+                  <span className="text-[10px] sm:text-xs">Próximamente</span>
+                </span>
+              );
+            }
             const activo = esEnlaceActivo(pathname, link.href);
             return (
               <Link

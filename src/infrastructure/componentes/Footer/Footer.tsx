@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
             href={enlaceCorreo(CONTACT_EMAIL)}
             className="inline-flex min-h-12 items-center transition-colors duration-200 focus-visible:text-brand-sky fine-pointer:hover:text-brand-sky"
           >
-            Escríbeme por correo
+            {CONTACT_EMAIL}
           </a>
         </div>
       </div>

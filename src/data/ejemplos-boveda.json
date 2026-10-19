@@ -407,11 +407,7 @@
       "siguiente": "Siguiente paso",
       "anterior": "Paso anterior",
       "paso": "Paso {actual} de {total}",
-      "pasos": [
-        "Elige un servicio",
-        "Describe tu solicitud",
-        "Tus datos de contacto"
-      ],
+      "pasos": ["Elige un servicio", "Describe tu solicitud", "Tus datos de contacto"],
       "enviar": "Simular solicitud",
       "exito": "Solicitud simulada recibida. No se ha enviado información."
     }

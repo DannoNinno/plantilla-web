@@ -38,7 +38,7 @@ Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecn
 * Diseño adaptable a dispositivos móviles.
 * Configuración técnica básica.
 
-### Reuniones incluidas
+### Reuniones Incluidas
 
 * 1 reunión de levantamiento (máximo 2 horas).
 * 1 reunión de revisión y entrega (máximo 2 horas).
@@ -52,7 +52,7 @@ Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecn
 
 * 1 sesión de capacitación incluida (máximo 1 hora).
 
-### No incluye
+### No Incluye
 
 * Panel de administración.
 * Gestión de usuarios.
@@ -91,7 +91,7 @@ Incluyo todo lo del Plan Presencia Digital más:
 * Formularios avanzados.
 * Optimización básica para motores de búsqueda (SEO).
 
-### Reuniones incluidas
+### Reuniones Incluidas
 
 * Reunión de levantamiento.
 * Revisión intermedia.
@@ -111,7 +111,7 @@ Incluyo todo lo del Plan Presencia Digital más:
 
 * Hasta 2 rondas de correcciones.
 
-### No incluye
+### No Incluye
 
 * E-commerce.
 * Integraciones empresariales complejas.

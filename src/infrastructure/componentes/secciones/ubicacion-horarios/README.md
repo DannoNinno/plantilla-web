@@ -16,4 +16,4 @@ Dirección semántica, horario e imagen opcional. Presencia Digital; cuenta como
 
 Los datos faltantes no generan etiquetas vacías. La imagen requiere dimensiones y alt. El ejemplo toma dirección y horario de la primera sede del JSON, sin duplicarlos. Sus datos son ficticios y no enlazan a un lugar real.
 
-Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, y las piezas `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`. Dependencias: React, Next.js, lucide-react, Tailwind 3. Tokens: `seccion`, `fontFamily.sans`, `spacing.demo-ancla`. Sin JavaScript cliente ni iframes.
+Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, y las piezas `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`. Dependencias: React, Next.js, lucide-react, Tailwind 3. Tokens: `seccion`, `fontFamily.sans`, `spacing.boveda-ancla`. Sin JavaScript cliente ni iframes.

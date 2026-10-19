@@ -11,4 +11,4 @@ Lista de servicios con tarjetas independientes. Presencia Digital; cuenta como u
 
 Cada servicio tiene `id`, `titulo` y `descripcion` opcional. Una lista vacía no genera tarjetas; los textos largos se ajustan al ancho disponible.
 
-Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, `base/MarcoSeccion`, `base/Contenedor` y `base/TituloSeccion`. Dependencias: React, lucide-react y Tailwind 3. Tokens: `seccion`, `fontFamily.sans` y `spacing.demo-ancla`. No requiere JavaScript cliente, CSS propio ni datos de Café Aurora.
+Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, `base/MarcoSeccion`, `base/Contenedor` y `base/TituloSeccion`. Dependencias: React, lucide-react y Tailwind 3. Tokens: `seccion`, `fontFamily.sans` y `spacing.boveda-ancla`. No requiere JavaScript cliente, CSS propio ni datos de Café Aurora.

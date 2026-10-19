@@ -1,69 +1,57 @@
-# Estado de la reforma UX y la biblioteca
+# Estado del diseño y la biblioteca
 
-La reforma UX sustituye las demos anteriores por una vitrina descriptiva.
-Este documento reemplaza el estado historico del 9 de octubre de 2026; los
-pendientes de aquella demo y su restriccion temporal de commits ya no aplican.
+## Referencia
 
-## Alcance integrado
+El diseño de `restore-point` (`8f384f3`, 9 de octubre de 2026) es la base de
+`fix/recuperar-diseno`. La reforma se aplica sobre esa base sin merge ni commit.
+`main`, `dev` y `restore-point` no se modifican.
 
-- Presencia Digital y Captacion de Clientes habilitados; los otros dos planes
-  permanecen como Proximamente, sin precio, enlace ni posibilidad de cotizacion.
-- Vitrina informativa de 19 componentes, sin controles ni vistas interactivas.
-- Home, catalogo, detalles y perfil reorganizados para orientar a clientes Pyme.
-- Catalogo reducido a un cuadro comparativo en carrusel con los cuatro planes
-  y los servicios de costo adicional, sin bloques de presentacion comercial.
-- Grillas de detalle alineadas y panel de administracion a todo el ancho,
-  con informacion ampliada sobre edicion de contenido y capacitacion.
-- Cada detalle tiene acciones al inicio y al final, con mensajes distintos
-  para cotizar y volver a ver planes. El formulario queda solo en Contacto.
-- Contacto disponible en el pie y desde las acciones de cada plan; preselecciona
-  el plan habilitado del enlace e informa si no esta disponible. Prepara un
-  correo local, sin enviar ni guardar solicitudes.
-- Biblioteca de [boveda](./src/infrastructure/componentes/boveda),
-  [secciones](./src/infrastructure/componentes/secciones) y bases conservada.
-- Ejemplos tipados con datos ficticios en
-  [ejemplos-boveda.json](./src/data/ejemplos-boveda.json) e ilustraciones originales
-  en [public/ejemplos-boveda](./public/ejemplos-boveda).
-- Registro, validaciones y edicion inmutable reutilizables, independientes de
-  las rutas y herramientas de demo retiradas.
-- Sin rutas de demo, fichas interactivas, selector, editor administrativo
-  publico ni bandeja de mensajes. No hay API, base de datos, login o backend.
+## Integración
 
-## Validacion de la integracion
+- Home: se conservan las cuatro secciones, ilustraciones, puertas, animaciones
+  y degradados. Solo se retira «cuatro» de la tarjeta del catálogo y se separan
+  explícitamente las líneas del título.
+- Catálogo: presentación, un carrusel que integra tarjetas y comparación,
+  enlace a componentes, condiciones compactas y adicionales. El carrusel muestra
+  un solo plan a la vez en todos los tamaños, sin scroll horizontal, con flechas,
+  indicadores, navegación por teclado y acciones de cotizar o ver detalles.
+  Filosofía, alcance y compromisos comparten una superficie con todo el contenido
+  visible; se mantiene el ancla de alcance y las animaciones de entrada.
+- Planes: Presencia Digital y Captación de Clientes habilitados; Automatización
+  y Comercio Electrónico aparecen como «Próximamente», sin precio ni enlace.
+  Sus detalles responden 404 y no se ofrecen en Contacto.
+- Detalle: plazo junto al precio, vitrina en lugar de la demo y formulario final
+  integrado con el plan preseleccionado.
+- Perfil: versión de referencia con foto, introducción, enlaces y detalle técnico.
+  Solo se retira el bloque de demos; no se incorpora `BeneficiosPyme`.
+- Se conservan `EntradaScroll`, su CSS, los atributos de animación,
+  `SaltoContenido`, el interruptor del catálogo y el correo visible en el footer.
 
-La integracion paso `npm run lint` sin advertencias, las 56 pruebas de
-`npm run test:frontend`, `npm run build` y la comprobacion en navegador de las
-siete rutas publicas a 360, 768 y 1440 px.
+## Biblioteca conservada
 
-Las 21 vistas conservaron un h1 y no tuvieron desbordamiento horizontal ni
-errores JavaScript; se verificaron 198 enlaces con foco visible. Las rutas
-retiradas de demo y fichas, y los dos planes desactivados, respondieron 404.
-Las descripciones breves de la vitrina se conservan; el panel agrega tres
-puntos de informacion. El formulario
-permitio 200 palabras y bloqueo 201, ofreciendo solo Consulta y los planes
-habilitados. No se probaron envios de correo externos ni dispositivos fisicos.
+Las piezas de [boveda](./src/infrastructure/componentes/boveda/) y
+[secciones](./src/infrastructure/componentes/secciones/) siguen siendo reutilizables
+por props. Sus ejemplos consumen
+[ejemplos-boveda.json](./src/data/ejemplos-boveda.json), y los activos viven en
+[public/ejemplos-boveda](./public/ejemplos-boveda/).
 
-El carrusel se recorrio mediante flechas en los tres anchos, incluido el
-teclado y el respeto al movimiento reducido. Se verificaron filas alineadas,
-panel a todo el ancho y ambas acciones de cotizacion de cada plan, con la
-seleccion correcta en Contacto. Los parametros de planes desactivados o
-inexistentes muestran un aviso y permiten una Consulta.
+Se retiran las rutas de demo, fichas individuales de componentes, configurador
+y herramientas de administración simulada. Los formularios de la biblioteca
+conservan sus callbacks opcionales; no incorporan envío real ni persistencia.
+La página pública `/componentes/` es una vitrina descriptiva, no un entorno
+interactivo para ejecutar los ejemplos.
 
-La suite incluye la reforma UX y las pruebas de componentes, ejemplos,
-validaciones e instancias de la biblioteca. Las pruebas exclusivas de las
-demos retiradas ya no forman parte del alcance.
+## Pendientes de contenido
 
-## Pendientes de contenido y trabajos separados
+- Revisar las propuestas marcadas con `TODO(Daniel)` en los datos de la vitrina;
+  esas notas no se muestran al visitante.
+- Aportar los archivos locales de Poppins si se desea reemplazar el fallback
+  del sistema. No se descargan fuentes externas.
+- Cualquier envío real de los formularios reutilizables requiere una integración
+  definida por separado; el formulario del portal prepara un correo local.
 
-- TODO(Daniel): revisar los textos editoriales marcados en los JSON.
-- TODO(Daniel): aportar los archivos locales de Poppins si se quiere usar
-  la fuente real; actualmente se conserva el fallback de sistema.
-- TODO(Daniel): probar en dispositivos fisicos y otros navegadores.
-- TODO(Daniel): priorizar futuras piezas de la biblioteca antes de ampliarla.
+## Verificación
 
-Un backend, autenticacion, almacenamiento de consultas, envio de mensajes o
-integracion real con WhatsApp requieren una aprobacion y un trabajo separados.
-No deben inferirse de las descripciones de la vitrina ni de los callbacks de
-las piezas reutilizables.
-
-La organizacion y los comandos vigentes estan en [README.md](./README.md).
+Ejecutar `npm run lint`, `npm run test:frontend` y `npm run build`.
+Comparar home, catálogo, detalle y perfil a 360, 768 y 1440 px contra la referencia,
+incluyendo entrada por scroll, foco, hover y movimiento reducido.

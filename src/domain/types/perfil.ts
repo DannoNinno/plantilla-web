@@ -15,7 +15,6 @@ export interface Capacidad {
   enfoque: string;
   tecnologias: string[];
   contexto: string;
-  revisionContexto?: string;
 }
 
 export interface Experiencia {
@@ -40,12 +39,6 @@ export interface Perfil {
   especialidad: string;
   presentacion: string;
   principio: string;
-  revisionPrincipio: string;
-  contactoEtiqueta: string;
-  beneficiosPyme: {
-    titulo: string;
-    puntos: {texto: string; revision: string}[];
-  };
   experiencia: Experiencia[];
   capacidades: Capacidad[];
   competencias: string[];

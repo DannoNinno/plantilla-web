@@ -39,7 +39,7 @@
         ]
       },
       {
-        "titulo": "Reuniones incluidas",
+        "titulo": "Reuniones Incluidas",
         "elementos": [
           "1 reunión de levantamiento (máximo 2 horas).",
           "1 reunión de revisión y entrega (máximo 2 horas)."
@@ -57,7 +57,7 @@
         "elementos": ["1 sesión de capacitación incluida (máximo 1 hora)."]
       },
       {
-        "titulo": "No incluye",
+        "titulo": "No Incluye",
         "elementos": [
           "Panel de administración.",
           "Gestión de usuarios.",
@@ -119,7 +119,7 @@
         ]
       },
       {
-        "titulo": "Reuniones incluidas",
+        "titulo": "Reuniones Incluidas",
         "elementos": [
           "Reunión de levantamiento.",
           "Revisión intermedia.",
@@ -143,7 +143,7 @@
         "elementos": ["Hasta 2 rondas de correcciones."]
       },
       {
-        "titulo": "No incluye",
+        "titulo": "No Incluye",
         "elementos": [
           "E-commerce.",
           "Integraciones empresariales complejas.",

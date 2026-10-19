@@ -17,6 +17,6 @@ Los cambios de paso enfocan su encabezado; los errores enfocan el primer campo i
 
 ## Copiar
 
-Copiar la carpeta sin `ejemplo.ts` ni `definicion.ts`, `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`, `base/Boton`, `base/CampoContacto`, `base/ResultadoContacto`, `base/consulta` y `Boton/estilos.ts`. Mantener rutas relativas. React y Tailwind 3 son necesarios; no hay dependencias nuevas. Usa tokens `brand`, `seccion`, `fontFamily.sans`, `outlineWidth.foco`, `spacing.demo-ancla` y la variante `fine-pointer`.
+Copiar la carpeta sin `ejemplo.ts` ni `definicion.ts`, `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`, `base/Boton`, `base/CampoContacto`, `base/ResultadoContacto`, `base/consulta` y `Boton/estilos.ts`. Mantener rutas relativas. React y Tailwind 3 son necesarios; no hay dependencias nuevas. Usa tokens `brand`, `seccion`, `fontFamily.sans`, `outlineWidth.foco`, `spacing.boveda-ancla` y la variante `fine-pointer`.
 
-La bandeja y la edición pertenecen al contenedor de demostración, no a esta pieza. TODO(Daniel): conectar `onConsulta` a un servicio real solo cuando se defina esa integración.
+La antigua bandeja de demostración fue retirada; la edición reutilizable sigue en la biblioteca. TODO(Daniel): conectar `onConsulta` a un servicio real solo cuando se defina esa integración.

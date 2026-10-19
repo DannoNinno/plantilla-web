@@ -1,16 +1,28 @@
 import type {TextosTarjetaComponente} from './componentes';
 
 export interface CatalogoServicios {
-  presentacion: {
+  textos: {
     etiqueta: string;
     titulo: string;
-    introduccion: string;
-    revision: string;
-  };
-  planes: {
-    titulo: string;
+    identidad: string;
+    presentacion: string;
+    planes: string;
     precios: string;
-    avisoSinPagos: string;
+    plan: string;
+    detalle: string;
+    verDetalles: string;
+    cotizarPlan: string;
+    cotizacion: string;
+    alcance: string;
+    principios: string;
+    adicionales: string;
+    detalleAdicionales: string;
+    volver: string;
+    verAlcance: string;
+    verAdicionales: string;
+    verBase: string;
+    consulta: string;
+    proximamente: string;
   };
   comparacion: {
     titulo: string;
@@ -22,23 +34,14 @@ export interface CatalogoServicios {
     plazoEntrega: string;
     reuniones: string;
     capacitacion: string;
-    caracteristica: string;
-    proximamente: string;
-    noDisponible: string;
-    verPlan: string;
     anterior: string;
     siguiente: string;
     ayudaCarrusel: string;
+    carrusel: string;
+    diapositiva: string;
+    irAlPlan: string;
+    posicion: string;
   };
-  detalle: {
-    revision: string;
-    volver: string;
-    contactoCargando: string;
-    planNoDisponible: string;
-    inicio: {etiqueta: string; descripcion: string; cotizar: string};
-    final: {etiqueta: string; descripcion: string; cotizar: string};
-  };
-  tituloAdicionales: string;
   vitrina: {
     titulo: string;
     descripcion: string;
@@ -48,11 +51,6 @@ export interface CatalogoServicios {
     sumaPlan: string;
     verTodos: string;
     etiquetas: TextosTarjetaComponente;
-  };
-  tarjetasPlan: {
-    etiqueta: string;
-    verDetalle: string;
-    proximamente: string;
   };
   filosofia: {
     titulo: string;
