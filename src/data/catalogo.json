@@ -34,7 +34,7 @@
     "capacitacion": "Capacitación incluida",
     "anterior": "Plan anterior",
     "siguiente": "Plan siguiente",
-    "ayudaCarrusel": "Recorre los planes con las flechas o los indicadores. También puedes enfocar el carrusel y usar las teclas de dirección.",
+    "ayudaCarrusel": "Recorre los planes con las flechas, selecciona una tarjeta lateral o desliza en móvil. Con el carrusel enfocado también puedes usar las teclas de dirección.",
     "carrusel": "carrusel",
     "diapositiva": "diapositiva",
     "irAlPlan": "Ver plan {numero}: {nombre}",

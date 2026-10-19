@@ -2,7 +2,7 @@ import type {Paquete} from '@/domain/types/paquete';
 import type {CatalogoServicios} from '@/domain/types/catalogo';
 import EntradaScroll from '../EntradaScroll/EntradaScroll';
 import TarjetaPlan from './TarjetaPlan';
-import CarruselPlanes from './CarruselPlanes';
+import CoverflowCarousel from '../Carousel/CoverflowCarousel';
 import Link from 'next/link';
 
 export interface PlanesCatalogoProps {
@@ -13,19 +13,32 @@ export interface PlanesCatalogoProps {
 export default function PlanesCatalogo({paquetes, catalogo}: PlanesCatalogoProps) {
   const {textos, comparacion, vitrina} = catalogo;
   return (
-    <EntradaScroll id="planes" aria-labelledby="planes-titulo" className="mt-12 scroll-mt-28">
+    <EntradaScroll
+      id="planes"
+      aria-labelledby="planes-titulo"
+      className="-mx-6 mt-12 scroll-mt-28 border-y-2 border-b-brand-coral/50 border-t-brand-sky-text/40 bg-gradient-to-br from-brand-sky/40 via-white/60 to-brand-coral/35 px-6 py-10 sm:py-12"
+    >
       <h2 id="planes-titulo" data-entrada-elemento="titulo" className="text-2xl font-bold">
         {textos.planes}
       </h2>
       <p data-entrada-elemento="texto" className="mt-3 max-w-2xl leading-relaxed text-brand-ink/70">
         {textos.precios}
       </p>
-      <CarruselPlanes
-        textos={comparacion}
-        planes={paquetes.map((paquete, index) => ({
+      <CoverflowCarousel
+        labels={{
+          title: comparacion.titulo,
+          carousel: comparacion.carrusel,
+          slide: comparacion.diapositiva,
+          previous: comparacion.anterior,
+          next: comparacion.siguiente,
+          help: comparacion.ayudaCarrusel,
+          selection: comparacion.irAlPlan,
+          position: comparacion.posicion,
+        }}
+        items={paquetes.map((paquete, index) => ({
           id: paquete.id,
-          nombre: paquete.nombre,
-          contenido: (
+          label: paquete.nombre,
+          content: (
             <TarjetaPlan
               paquete={paquete}
               numero={index + 1}

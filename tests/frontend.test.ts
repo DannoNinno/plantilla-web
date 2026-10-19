@@ -30,7 +30,7 @@ import TarjetaComponente from '../src/infrastructure/componentes/Vitrina/Tarjeta
 import PaginaCatalogo from '../src/infrastructure/componentes/Catalogo/PaginaCatalogo';
 import PaginaPaquete from '../src/infrastructure/componentes/DetallePaquete/PaginaPaquete';
 import TarjetaPlan from '../src/infrastructure/componentes/Catalogo/TarjetaPlan';
-import CarruselPlanes from '../src/infrastructure/componentes/Catalogo/CarruselPlanes';
+import CoverflowCarousel from '../src/infrastructure/componentes/Carousel/CoverflowCarousel';
 import CondicionesCatalogo from '../src/infrastructure/componentes/Catalogo/CondicionesCatalogo';
 import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
 import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
@@ -630,7 +630,9 @@ test('el catalogo integra tarjetas y comparacion en un solo carrusel sin tabla n
   assert.doesNotMatch(html, /<table\b|overflow-x-auto|comparacion-titulo/);
   assert.equal(html.match(/aria-roledescription="carrusel"/g)?.length, 1);
   assert.equal(html.match(/aria-roledescription="diapositiva"/g)?.length, 4);
-  assert.equal(html.match(/hidden=""/g)?.length, 3);
+  assert.equal(html.match(/inert=""/g)?.length, 5);
+  assert.match(html, /border-y-2 border-b-brand-coral\/50 border-t-brand-sky-text\/40/);
+  assert.match(html, /from-brand-sky\/40 via-white\/60 to-brand-coral\/35/);
   assert.equal(html.match(/data-entrada="true"/g)?.length, 4);
   assert.doesNotMatch(html, /href="\/demo\//);
   for (const paquete of getPaquetes().filter((item) => !item.habilitado)) {
@@ -638,37 +640,83 @@ test('el catalogo integra tarjetas y comparacion en un solo carrusel sin tabla n
   }
 });
 
-test('el carrusel presenta una sola diapositiva y controles accesibles sin avance automatico', () => {
+test('el coverflow conserva controles y aisla el contenido de las tarjetas no seleccionadas', () => {
   const textos = getCatalogo().comparacion;
-  const planes = getPaquetes().map((paquete) => ({
+  const items = getPaquetes().map((paquete) => ({
     id: paquete.id,
-    nombre: paquete.nombre,
-    contenido: createElement('p', null, paquete.nombre),
+    label: paquete.nombre,
+    content: createElement('a', {href: `#${paquete.id}`}, paquete.nombre),
   }));
-  const html = renderToStaticMarkup(createElement(CarruselPlanes, {planes, textos}));
-  assert.equal(html.match(/<button\b/g)?.length, 6);
+  const labels = {
+    title: textos.titulo,
+    carousel: textos.carrusel,
+    slide: textos.diapositiva,
+    previous: textos.anterior,
+    next: textos.siguiente,
+    help: textos.ayudaCarrusel,
+    selection: textos.irAlPlan,
+    position: textos.posicion,
+  };
+  const html = renderToStaticMarkup(createElement(CoverflowCarousel, {items, labels}));
+  assert.equal(html.match(/<button\b/g)?.length, 3);
   assert.equal(html.match(/disabled=""/g)?.length, 1);
-  assert.equal(html.match(/aria-current="true"/g)?.length, 1);
+  assert.doesNotMatch(html, /aria-current=|>0[1-4]<\/button>/);
   assert.match(html, /aria-live="polite" aria-atomic="true"/);
   assert.match(html, /Plan 1 de 4/);
-  assert.equal(html.match(/hidden=""/g)?.length, 3);
-  for (const [indice, plan] of planes.entries()) {
-    assert.ok(
-      html.includes(
-        textos.irAlPlan.replace('{numero}', String(indice + 1)).replace('{nombre}', plan.nombre),
-      ),
-    );
-  }
+  assert.equal(html.match(/inert=""/g)?.length, 5);
+  assert.equal(html.match(/<div[^>]*aria-hidden="true"/g)?.length, 5);
+  assert.match(html, /class="sr-only"/);
+  assert.match(html, /transition-\[transform,opacity\] duration-\[400ms\] ease-out/);
+  assert.match(html, /motion-reduce:transition-none/);
+  assert.match(html, /pointer-events-none absolute inset-y-0 left-1\/2/);
+  assert.doesNotMatch(html, /\shidden=""|overflow-x-auto/);
+  assert.ok(
+    html.includes(textos.irAlPlan.replace('{numero}', '2').replace('{nombre}', items[1].label)),
+  );
   const unico = renderToStaticMarkup(
-    createElement(CarruselPlanes, {planes: planes.slice(0, 1), textos}),
+    createElement(CoverflowCarousel, {
+      items: [{id: 'galeria', label: 'Galeria', content: createElement('p', null, 'Fotos')}],
+      labels: {...labels, position: 'Elemento {actual} de {total}'},
+    }),
   );
-  assert.match(unico, /Plan 1 de 1/);
+  assert.match(unico, /Elemento 1 de 1/);
+  assert.match(unico, /Fotos/);
   assert.equal(unico.match(/disabled=""/g)?.length, 2);
-  assert.doesNotMatch(unico, /hidden=""/);
+  assert.doesNotMatch(unico, /inert=""|<div[^>]*aria-hidden="true"/);
   assert.throws(
-    () => renderToStaticMarkup(createElement(CarruselPlanes, {planes: [], textos})),
-    /al menos un plan/,
+    () => renderToStaticMarkup(createElement(CoverflowCarousel, {items: [], labels})),
+    /al menos un elemento/,
   );
+});
+
+test('las tarjetas de plan apilan detalles y dejan las acciones al final sin cambiar contenido', () => {
+  const catalogo = getCatalogo();
+  for (const paquete of getPaquetesHabilitados()) {
+    const html = renderToStaticMarkup(
+      createElement(TarjetaPlan, {
+        paquete,
+        numero: 1,
+        textos: catalogo.textos,
+        comparacion: catalogo.comparacion,
+      }),
+    );
+    assert.doesNotMatch(html, /grid-cols-|col-span-|border-l/);
+    const orden = [
+      '<h3',
+      precioDesdeCLP(paquete.precioDesde),
+      paquete.resumen,
+      catalogo.comparacion.secciones,
+      catalogo.comparacion.plazoEntrega,
+      catalogo.comparacion.panelAdministracion,
+      catalogo.comparacion.capacitacion,
+      catalogo.comparacion.reuniones,
+      `href="/contacto?paquete=${paquete.id}"`,
+      `href="/catalogo/${paquete.id}"`,
+    ];
+    for (let index = 1; index < orden.length; index++) {
+      assert.ok(html.indexOf(orden[index - 1]) < html.indexOf(orden[index]), orden[index]);
+    }
+  }
 });
 
 test('las tarjetas habilitadas requieren los datos completos de comparacion', () => {
