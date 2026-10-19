@@ -39,6 +39,7 @@ El archivo local `.dev.vars` contiene `NEXTJS_ENV=development`; si clonas el pro
 Para Workers Builds conectado a GitHub:
 
 - Usa Node.js 24 LTS para compilar.
+- Cloudflare detecta pnpm e instala con `pnpm install --frozen-lockfile`. [pnpm-workspace.yaml](./pnpm-workspace.yaml) declara el proyecto raíz como único paquete; conserva `packages` para que pnpm 9 pueda leer la configuración y mantén [pnpm-lock.yaml](./pnpm-lock.yaml) sincronizado con las dependencias.
 - El archivo versionado [.env.production](./.env.production) define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl`; Next.js lo carga en los builds de producción para resolver los metadatos. No contiene secretos; los archivos `.env.local`, `.env*.local` y `.dev.vars` siguen excluidos de Git. Evita variables del entorno de build con otro valor, ya que tienen prioridad sobre este archivo.
 - Comando de build: `npx opennextjs-cloudflare build`.
 - Comando de despliegue, ejecutado por Cloudflare: `npx opennextjs-cloudflare deploy`.
