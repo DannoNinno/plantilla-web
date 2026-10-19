@@ -30,6 +30,8 @@ import TarjetaComponente from '../src/infrastructure/componentes/Vitrina/Tarjeta
 import PaginaCatalogo from '../src/infrastructure/componentes/Catalogo/PaginaCatalogo';
 import PaginaPaquete from '../src/infrastructure/componentes/DetallePaquete/PaginaPaquete';
 import TarjetaPlan from '../src/infrastructure/componentes/Catalogo/TarjetaPlan';
+import CarruselPlanes from '../src/infrastructure/componentes/Catalogo/CarruselPlanes';
+import CondicionesCatalogo from '../src/infrastructure/componentes/Catalogo/CondicionesCatalogo';
 import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
 import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
 import Entrada from '../src/infrastructure/componentes/Entrada/Entrada';
@@ -576,13 +578,25 @@ test('solo los primeros dos planes tienen rutas y tarjetas navegables', () => {
   );
   for (const [index, paquete] of getPaquetes().entries()) {
     const html = renderToStaticMarkup(
-      createElement(TarjetaPlan, {paquete, numero: index + 1, textos: getCatalogo().textos}),
+      createElement(TarjetaPlan, {
+        paquete,
+        numero: index + 1,
+        textos: getCatalogo().textos,
+        comparacion: getCatalogo().comparacion,
+      }),
     );
     assert.ok(html.includes(paquete.nombre));
     if (paquete.habilitado) {
       assert.ok(html.includes(precioDesdeCLP(paquete.precioDesde)));
       assert.ok(html.includes(`href="/catalogo/${paquete.id}"`));
+      assert.ok(html.includes(`href="/contacto?paquete=${paquete.id}"`));
       assert.ok(paquete.comparacion);
+      const datos = paquete.comparacion;
+      assert.ok(html.includes(datos.plazoEntrega));
+      assert.ok(html.includes(datos.capacitacion));
+      assert.ok(html.includes(String(datos.seccionesMaximas)));
+      for (const reunion of datos.reunionesIncluidas) assert.ok(html.includes(reunion));
+      assert.equal(html.match(/<dt\b/g)?.length, 5);
     } else {
       assert.equal(getPaquete(paquete.id), undefined);
       assert.match(html, /aria-disabled="true"/);
@@ -595,7 +609,7 @@ test('solo los primeros dos planes tienen rutas y tarjetas navegables', () => {
   assert.equal(ruta.match(/if \(!paquete\) notFound\(\)/g)?.length, 2);
 });
 
-test('el catalogo conserva su composicion y suma comparacion despues de las tarjetas', () => {
+test('el catalogo integra tarjetas y comparacion en un solo carrusel sin tabla ni scroll', () => {
   const catalogo = getCatalogo();
   const html = renderToStaticMarkup(
     createElement(PaginaCatalogo, {catalogo, paquetes: getPaquetes(), sitio: getSitio()}),
@@ -603,7 +617,6 @@ test('el catalogo conserva su composicion y suma comparacion despues de las tarj
   const orden = [
     'catalogo-titulo',
     'planes-titulo',
-    'comparacion-titulo',
     '>Ver todos los componentes</a>',
     'filosofia-titulo',
     'alcance-titulo',
@@ -614,11 +627,86 @@ test('el catalogo conserva su composicion y suma comparacion despues de las tarj
   }
   assert.equal(html.match(/<h1\b/g)?.length, 1);
   assert.match(html, /Mis compromisos contigo/);
-  assert.match(html, /<table\b/);
+  assert.doesNotMatch(html, /<table\b|overflow-x-auto|comparacion-titulo/);
+  assert.equal(html.match(/aria-roledescription="carrusel"/g)?.length, 1);
+  assert.equal(html.match(/aria-roledescription="diapositiva"/g)?.length, 4);
+  assert.equal(html.match(/hidden=""/g)?.length, 3);
+  assert.equal(html.match(/data-entrada="true"/g)?.length, 4);
   assert.doesNotMatch(html, /href="\/demo\//);
   for (const paquete of getPaquetes().filter((item) => !item.habilitado)) {
     assert.ok(!html.includes(`href="/catalogo/${paquete.id}"`));
   }
+});
+
+test('el carrusel presenta una sola diapositiva y controles accesibles sin avance automatico', () => {
+  const textos = getCatalogo().comparacion;
+  const planes = getPaquetes().map((paquete) => ({
+    id: paquete.id,
+    nombre: paquete.nombre,
+    contenido: createElement('p', null, paquete.nombre),
+  }));
+  const html = renderToStaticMarkup(createElement(CarruselPlanes, {planes, textos}));
+  assert.equal(html.match(/<button\b/g)?.length, 6);
+  assert.equal(html.match(/disabled=""/g)?.length, 1);
+  assert.equal(html.match(/aria-current="true"/g)?.length, 1);
+  assert.match(html, /aria-live="polite" aria-atomic="true"/);
+  assert.match(html, /Plan 1 de 4/);
+  assert.equal(html.match(/hidden=""/g)?.length, 3);
+  for (const [indice, plan] of planes.entries()) {
+    assert.ok(
+      html.includes(
+        textos.irAlPlan.replace('{numero}', String(indice + 1)).replace('{nombre}', plan.nombre),
+      ),
+    );
+  }
+  const unico = renderToStaticMarkup(
+    createElement(CarruselPlanes, {planes: planes.slice(0, 1), textos}),
+  );
+  assert.match(unico, /Plan 1 de 1/);
+  assert.equal(unico.match(/disabled=""/g)?.length, 2);
+  assert.doesNotMatch(unico, /hidden=""/);
+  assert.throws(
+    () => renderToStaticMarkup(createElement(CarruselPlanes, {planes: [], textos})),
+    /al menos un plan/,
+  );
+});
+
+test('las tarjetas habilitadas requieren los datos completos de comparacion', () => {
+  const paquete = {...getPaquetes()[0], comparacion: undefined};
+  assert.throws(
+    () =>
+      renderToStaticMarkup(
+        createElement(TarjetaPlan, {
+          paquete,
+          numero: 1,
+          textos: getCatalogo().textos,
+          comparacion: getCatalogo().comparacion,
+        }),
+      ),
+    /no tiene una comparacion habilitada/,
+  );
+});
+
+test('filosofia, alcance y compromisos comparten una sola seccion sin perder contenido', () => {
+  const catalogo = getCatalogo();
+  const html = renderToStaticMarkup(createElement(CondicionesCatalogo, {catalogo}));
+  assert.equal(html.match(/<section\b/g)?.length, 1);
+  assert.equal(html.match(/data-entrada="true"/g)?.length, 1);
+  assert.equal(html.match(/<h2\b/g)?.length, 1);
+  assert.equal(html.match(/<h3\b/g)?.length, 2);
+  assert.match(html, /id="alcance" tabindex="-1"/);
+  for (const texto of [
+    catalogo.filosofia.titulo,
+    catalogo.filosofia.introduccion,
+    catalogo.filosofia.conclusion,
+    ...catalogo.filosofia.objetivos,
+    catalogo.textos.alcance,
+    catalogo.alcance.introduccion,
+    ...catalogo.alcance.condiciones,
+    catalogo.textos.principios,
+    ...catalogo.principios,
+  ])
+    assert.ok(html.includes(texto), texto);
 });
 
 test('el detalle mantiene el formulario final preseleccionado y agrega vitrina y plazo', () => {

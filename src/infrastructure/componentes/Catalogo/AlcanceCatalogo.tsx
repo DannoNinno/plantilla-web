@@ -1,5 +1,4 @@
 import type {CatalogoServicios} from '@/domain/types/catalogo';
-import EntradaScroll from '../EntradaScroll/EntradaScroll';
 
 export interface AlcanceCatalogoProps {
   titulo: string;
@@ -8,25 +7,26 @@ export interface AlcanceCatalogoProps {
 
 export default function AlcanceCatalogo({titulo, alcance}: AlcanceCatalogoProps) {
   return (
-    <EntradaScroll
+    <div
       id="alcance"
+      tabIndex={-1}
       aria-labelledby="alcance-titulo"
-      className="scroll-mt-28 rounded-2xl border border-brand-ink/10 bg-white p-6 sm:p-8"
+      className="min-w-0 scroll-mt-28"
     >
-      <h2 id="alcance-titulo" data-entrada-elemento="titulo" className="text-2xl font-bold">
+      <h3 id="alcance-titulo" data-entrada-elemento="titulo" className="text-lg font-bold">
         {titulo}
-      </h2>
-      <p data-entrada-elemento="texto" className="mt-4 leading-relaxed text-brand-ink/70">
+      </h3>
+      <p data-entrada-elemento="texto" className="mt-3 text-sm leading-relaxed text-brand-ink/70">
         {alcance.introduccion}
       </p>
       <ul
         data-entrada-elemento="texto"
-        className="mt-4 list-disc space-y-3 pl-5 leading-relaxed text-brand-ink/70"
+        className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-brand-ink/70"
       >
         {alcance.condiciones.map((condicion) => (
           <li key={condicion}>{condicion}</li>
         ))}
       </ul>
-    </EntradaScroll>
+    </div>
   );
 }

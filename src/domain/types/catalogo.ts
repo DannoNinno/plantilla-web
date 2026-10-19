@@ -10,6 +10,8 @@ export interface CatalogoServicios {
     precios: string;
     plan: string;
     detalle: string;
+    verDetalles: string;
+    cotizarPlan: string;
     cotizacion: string;
     alcance: string;
     principios: string;
@@ -32,13 +34,13 @@ export interface CatalogoServicios {
     plazoEntrega: string;
     reuniones: string;
     capacitacion: string;
-    caracteristica: string;
-    proximamente: string;
-    noDisponible: string;
-    verPlan: string;
     anterior: string;
     siguiente: string;
     ayudaCarrusel: string;
+    carrusel: string;
+    diapositiva: string;
+    irAlPlan: string;
+    posicion: string;
   };
   vitrina: {
     titulo: string;

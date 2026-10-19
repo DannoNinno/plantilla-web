@@ -11,8 +11,12 @@ El diseño de `restore-point` (`8f384f3`, 9 de octubre de 2026) es la base de
 - Home: se conservan las cuatro secciones, ilustraciones, puertas, animaciones
   y degradados. Solo se retira «cuatro» de la tarjeta del catálogo y se separan
   explícitamente las líneas del título.
-- Catálogo: presentación, tarjetas, comparación, enlace a componentes,
-  filosofía, alcance, compromisos y adicionales. Los componentes siguen separados.
+- Catálogo: presentación, un carrusel que integra tarjetas y comparación,
+  enlace a componentes, condiciones compactas y adicionales. El carrusel muestra
+  un solo plan a la vez en todos los tamaños, sin scroll horizontal, con flechas,
+  indicadores, navegación por teclado y acciones de cotizar o ver detalles.
+  Filosofía, alcance y compromisos comparten una superficie con todo el contenido
+  visible; se mantiene el ancla de alcance y las animaciones de entrada.
 - Planes: Presencia Digital y Captación de Clientes habilitados; Automatización
   y Comercio Electrónico aparecen como «Próximamente», sin precio ni enlace.
   Sus detalles responden 404 y no se ofrecen en Contacto.

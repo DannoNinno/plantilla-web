@@ -8,6 +8,8 @@
     "precios": "Los valores son precios desde. Defino contigo el alcance y preparo tu cotización antes de comenzar.",
     "plan": "Plan",
     "detalle": "Ver detalle de",
+    "verDetalles": "Ver detalles",
+    "cotizarPlan": "Cotizar este plan",
     "cotizacion": "Cotizo según lo que necesita tu negocio. No hay pagos ni compras en este sitio.",
     "alcance": "Gestión de alcance",
     "principios": "Mis compromisos contigo",
@@ -21,7 +23,7 @@
     "proximamente": "Próximamente"
   },
   "comparacion": {
-    "titulo": "Compara los planes",
+    "titulo": "Planes de servicios",
     "secciones": "Cantidad de secciones",
     "cantidadSecciones": "Hasta {cantidad} vistas o secciones.",
     "panelAdministracion": "Panel de administración",
@@ -30,13 +32,13 @@
     "plazoEntrega": "Plazo de entrega",
     "reuniones": "Reuniones incluidas",
     "capacitacion": "Capacitación incluida",
-    "caracteristica": "Qué incluye",
-    "proximamente": "Próximamente",
-    "noDisponible": "—",
-    "verPlan": "Ver plan",
     "anterior": "Plan anterior",
     "siguiente": "Plan siguiente",
-    "ayudaCarrusel": "Desliza o usa las flechas para comparar los cuatro planes."
+    "ayudaCarrusel": "Recorre los planes con las flechas o los indicadores. También puedes enfocar el carrusel y usar las teclas de dirección.",
+    "carrusel": "carrusel",
+    "diapositiva": "diapositiva",
+    "irAlPlan": "Ver plan {numero}: {nombre}",
+    "posicion": "Plan {actual} de {total}"
   },
   "vitrina": {
     "titulo": "Componentes para tu sitio",
