@@ -19,8 +19,32 @@
     "panelNoIncluido": "No incluido",
     "plazoEntrega": "Plazo de entrega",
     "reuniones": "Reuniones incluidas",
-    "capacitacion": "Capacitación incluida"
+    "capacitacion": "Capacitación incluida",
+    "caracteristica": "Qué incluye",
+    "proximamente": "Próximamente",
+    "noDisponible": "—",
+    "verPlan": "Ver plan",
+    "anterior": "Plan anterior",
+    "siguiente": "Plan siguiente",
+    "ayudaCarrusel": "Desliza o usa las flechas para comparar los cuatro planes."
   },
+  "detalle": {
+    "revision": "TODO(Daniel): Revisar los textos de las acciones de cotización al inicio y al final del plan.",
+    "volver": "Volver a ver planes",
+    "contactoCargando": "Cargando formulario de contacto…",
+    "planNoDisponible": "El plan solicitado no está disponible. Puedes hacer una consulta o elegir uno de los planes habilitados.",
+    "inicio": {
+      "etiqueta": "Acciones al inicio del plan",
+      "descripcion": "¿Este es el punto de partida para tu negocio?",
+      "cotizar": "Empieza tu proyecto"
+    },
+    "final": {
+      "etiqueta": "Acciones al final del plan",
+      "descripcion": "Ya conoces lo que incluye. Conversemos sobre lo que necesitas.",
+      "cotizar": "Cotiza este plan"
+    }
+  },
+  "tituloAdicionales": "Servicios y costos adicionales",
   "vitrina": {
     "titulo": "Componentes para tu sitio",
     "descripcion": "Conoce los componentes que puede incluir el sitio de tu negocio y desde qué plan están disponibles.",

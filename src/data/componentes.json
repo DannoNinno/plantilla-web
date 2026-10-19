@@ -103,9 +103,14 @@
     "nombre": "Panel de administración",
     "icono": "LayoutDashboard",
     "descripcion": "Actualiza los textos y las imágenes de tu sitio.",
+    "detalles": [
+      "Edita textos e imágenes sin modificar el código del sitio.",
+      "Gestiona el contenido de las vistas o secciones incluidas en tu plan.",
+      "Incluye una capacitación inicial de 1 hora para aprender a administrarlo."
+    ],
     "planMinimo": "portal",
     "destacado": true,
-    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Panel de administración."
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción y detalles de Panel de administración."
   },
   {
     "id": "novedades",

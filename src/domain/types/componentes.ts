@@ -30,6 +30,7 @@ export interface ComponenteVitrina {
   nombre: string;
   icono: NombreIcono;
   descripcion: string;
+  detalles?: string[];
   planMinimo: PlanVitrina;
   destacado: boolean;
   revisionDescripcion: string;

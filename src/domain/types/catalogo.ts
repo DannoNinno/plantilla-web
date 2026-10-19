@@ -22,7 +22,23 @@ export interface CatalogoServicios {
     plazoEntrega: string;
     reuniones: string;
     capacitacion: string;
+    caracteristica: string;
+    proximamente: string;
+    noDisponible: string;
+    verPlan: string;
+    anterior: string;
+    siguiente: string;
+    ayudaCarrusel: string;
   };
+  detalle: {
+    revision: string;
+    volver: string;
+    contactoCargando: string;
+    planNoDisponible: string;
+    inicio: {etiqueta: string; descripcion: string; cotizar: string};
+    final: {etiqueta: string; descripcion: string; cotizar: string};
+  };
+  tituloAdicionales: string;
   vitrina: {
     titulo: string;
     descripcion: string;

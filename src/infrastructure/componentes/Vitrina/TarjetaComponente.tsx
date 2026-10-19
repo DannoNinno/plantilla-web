@@ -26,13 +26,13 @@ export default function TarjetaComponente({
   return (
     <article
       aria-labelledby={tituloId}
-      className={`min-w-0 rounded-2xl border p-6 ${
+      className={`flex h-full min-w-0 flex-col rounded-2xl border p-6 ${
         componente.destacado
-          ? 'border-brand-sky-text/40 bg-brand-sky/10 md:col-span-2'
+          ? 'border-brand-sky-text/40 bg-brand-sky/10 md:col-span-2 lg:col-span-3'
           : 'border-brand-ink/10 bg-white'
       } ${incluido ? '' : 'opacity-60'}`}
     >
-      <span className="inline-flex rounded-xl bg-brand-sky/15 p-3 text-brand-sky-text">
+      <span className="inline-flex self-start rounded-xl bg-brand-sky/15 p-3 text-brand-sky-text">
         <Icono size={24} aria-hidden="true" />
       </span>
       {componente.destacado && (
@@ -44,7 +44,14 @@ export default function TarjetaComponente({
         {componente.nombre}
       </h3>
       <p className="mt-3 leading-relaxed text-brand-ink/70">{componente.descripcion}</p>
-      <p className="mt-4 text-sm font-semibold text-brand-sky-text">{etiqueta}</p>
+      {componente.detalles && (
+        <ul className="mt-4 list-disc space-y-2 pl-5 leading-relaxed text-brand-ink/70">
+          {componente.detalles.map((detalle) => (
+            <li key={detalle}>{detalle}</li>
+          ))}
+        </ul>
+      )}
+      <p className="mt-auto pt-6 text-sm font-semibold text-brand-sky-text">{etiqueta}</p>
     </article>
   );
 }

@@ -10,8 +10,15 @@ pendientes de aquella demo y su restriccion temporal de commits ya no aplican.
   permanecen como Proximamente, sin precio, enlace ni posibilidad de cotizacion.
 - Vitrina informativa de 19 componentes, sin controles ni vistas interactivas.
 - Home, catalogo, detalles y perfil reorganizados para orientar a clientes Pyme.
-- Contacto disponible en el pie; formularios comerciales preparan un correo
-  local, sin enviar ni guardar solicitudes.
+- Catalogo reducido a un cuadro comparativo en carrusel con los cuatro planes
+  y los servicios de costo adicional, sin bloques de presentacion comercial.
+- Grillas de detalle alineadas y panel de administracion a todo el ancho,
+  con informacion ampliada sobre edicion de contenido y capacitacion.
+- Cada detalle tiene acciones al inicio y al final, con mensajes distintos
+  para cotizar y volver a ver planes. El formulario queda solo en Contacto.
+- Contacto disponible en el pie y desde las acciones de cada plan; preselecciona
+  el plan habilitado del enlace e informa si no esta disponible. Prepara un
+  correo local, sin enviar ni guardar solicitudes.
 - Biblioteca de [boveda](./src/infrastructure/componentes/boveda),
   [secciones](./src/infrastructure/componentes/secciones) y bases conservada.
 - Ejemplos tipados con datos ficticios en
@@ -24,16 +31,23 @@ pendientes de aquella demo y su restriccion temporal de commits ya no aplican.
 
 ## Validacion de la integracion
 
-La integracion paso `npm run lint` sin advertencias, las 54 pruebas de
+La integracion paso `npm run lint` sin advertencias, las 56 pruebas de
 `npm run test:frontend`, `npm run build` y la comprobacion en navegador de las
 siete rutas publicas a 360, 768 y 1440 px.
 
 Las 21 vistas conservaron un h1 y no tuvieron desbordamiento horizontal ni
-errores JavaScript; se verificaron 183 enlaces con foco visible. Las rutas
+errores JavaScript; se verificaron 198 enlaces con foco visible. Las rutas
 retiradas de demo y fichas, y los dos planes desactivados, respondieron 404.
-Las descripciones de la vitrina ocuparon como maximo dos lineas. El formulario
+Las descripciones breves de la vitrina se conservan; el panel agrega tres
+puntos de informacion. El formulario
 permitio 200 palabras y bloqueo 201, ofreciendo solo Consulta y los planes
 habilitados. No se probaron envios de correo externos ni dispositivos fisicos.
+
+El carrusel se recorrio mediante flechas en los tres anchos, incluido el
+teclado y el respeto al movimiento reducido. Se verificaron filas alineadas,
+panel a todo el ancho y ambas acciones de cotizacion de cada plan, con la
+seleccion correcta en Contacto. Los parametros de planes desactivados o
+inexistentes muestran un aviso y permiten una Consulta.
 
 La suite incluye la reforma UX y las pruebas de componentes, ejemplos,
 validaciones e instancias de la biblioteca. Las pruebas exclusivas de las

@@ -2,11 +2,15 @@ import type {Paquete} from '../../../domain/types/paquete';
 
 export default function DetallePaquete({paquete}: {paquete: Paquete}) {
   return (
-    <div className="mt-10 grid items-start gap-6 md:grid-cols-2">
-      {paquete.secciones.map((seccion) => (
+    <div className="mt-10 grid items-stretch gap-6 md:grid-cols-2">
+      {paquete.secciones.map((seccion, indice) => (
         <section
           key={seccion.titulo}
-          className="rounded-2xl border border-brand-ink/10 bg-white p-6 sm:p-8"
+          className={`min-w-0 rounded-2xl border border-brand-ink/10 bg-white p-6 sm:p-8 ${
+            indice === paquete.secciones.length - 1 && paquete.secciones.length % 2 !== 0
+              ? 'md:col-span-2'
+              : ''
+          }`}
         >
           <h2 className="text-xl font-bold">{seccion.titulo}</h2>
           {seccion.descripcion && (
