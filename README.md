@@ -18,7 +18,7 @@ npm run build
 
 En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambiar la política de ejecución. OpenNext no garantiza soporte completo de Windows; ante problemas exclusivos de esa plataforma, usa WSL o Linux. No ejecutes builds sobre una carpeta `.next` utilizada por otro proceso.
 
-`npm run lint` usa ESLint CLI sobre `src` y `tests`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier mediante `FlatCompat`; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance.
+`npm run lint` usa ESLint CLI sobre `src`, `tests` y `tailwind.config.ts`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier mediante `FlatCompat`; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance.
 
 ## Cloudflare Workers
 
@@ -73,6 +73,7 @@ Los [handlers de datos](./src/infrastructure/handlers/datos.ts) son funciones, n
 | [paquetes.json](./src/data/paquetes.json) | Paquetes y sus descripciones |
 | [catalogo.json](./src/data/catalogo.json) | Filosofía de servicio, alcance, principios y costos adicionales |
 | [componentes.json](./src/data/componentes.json) | 19 componentes descriptivos, icono, plan mínimo y revisión pendiente |
+| [ejemplos-boveda.json](./src/data/ejemplos-boveda.json) | Contenido ficticio para los ejemplos tipados de la biblioteca, no para el sitio público |
 | [navegacion.json](./src/data/navegacion.json) | Enlaces de cabecera y pie |
 
 Edita estos archivos para cambiar el contenido y vuelve a construir al publicar. Todo lo que incluyas es público: no agregues credenciales ni datos privados.
@@ -116,6 +117,14 @@ La página `/contacto/` contiene el formulario compartido, con nombre, correo, u
 En los planes se preselecciona el plan correspondiente. Consulta prepara un `mailto:` a `CONTACT_EMAIL`; un plan prepara uno a `QUOTES_EMAIL`, con el nombre del plan en el asunto y los datos del formulario en el cuerpo. El usuario debe tener un programa de correo configurado, revisar el borrador y enviarlo desde allí. El sitio no envía ni almacena solicitudes, no muestra confirmaciones de envío y no integra SMTP ni APIs de correo. El backend y el panel administrativo para gestionar solicitudes quedan pendientes, sin diseñarlos en esta etapa.
 
 Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/` y `/componentes/`. La vitrina tiene título y descripción propios para buscadores; se accede desde el enlace posterior a los planes del catálogo. No se publican detalles de componentes ni rutas de demo. Las rutas `/api` y `/admin` ya no existen. Los planes desconocidos o desactivados no generan páginas y devuelven 404.
+
+## Biblioteca reutilizable
+
+Se conservan [boveda](./src/infrastructure/componentes/boveda), [secciones](./src/infrastructure/componentes/secciones) y sus [bases compartidas](./src/infrastructure/componentes/base), incorporadas en el historial remoto. Son independientes de la vitrina comercial: esta solo describe la oferta y no monta piezas interactivas.
+
+El [registro](./src/infrastructure/componentes/boveda/registro.ts) mantiene tipos, documentación de props, ejemplos e instancias editables en memoria. Los ejemplos consumen [ejemplos-boveda.json](./src/data/ejemplos-boveda.json) mediante un proveedor propio; las ilustraciones originales están en [public/ejemplos-boveda](./public/ejemplos-boveda). No dependen de módulos ni rutas de demo. Los tokens `seccion`, `canal`, `boveda-ancla` y `boveda-portada` de Tailwind pertenecen a esas piezas y no sustituyen la paleta del sitio.
+
+Los formularios reutilizables validan sus props y entregan consultas mediante callbacks opcionales, sin conectar servicios externos. Los ejemplos usan datos ficticios y enlaces internos, nunca números ni perfiles reales. No hay administración pública, bandeja, persistencia ni backend. `npm run test:frontend` ejecuta tanto las pruebas de la reforma UX como las de la biblioteca; se retiran únicamente las verificaciones específicas de las demos eliminadas.
 
 ## Docker anterior
 

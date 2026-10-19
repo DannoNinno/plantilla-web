@@ -1,0 +1,419 @@
+{
+  "nombre": "Café Aurora",
+  "descripcion": "Cafetería y tostaduría ficticia. Un lugar para hacer una pausa, descubrir nuevos sabores y compartir un buen café.",
+  "portada": {
+    "id": "portada",
+    "logo": {
+      "src": "/ejemplos-boveda/cafe-aurora/logos/cafe-aurora-logo.svg",
+      "alt": "Café Aurora, cafetería y tostaduría",
+      "width": 700,
+      "height": 200
+    },
+    "etiqueta": "Cafetería y tostaduría",
+    "titulo": "Un buen café cambia tu mañana.",
+    "descripcion": "En Café Aurora tostamos en pequeñas partidas y preparamos cada taza con calma. Ven por tu favorito, descubre algo nuevo y quédate un rato.",
+    "accion": {
+      "texto": "Conversemos",
+      "href": "#contacto"
+    },
+    "imagen": {
+      "src": "/ejemplos-boveda/cafe-aurora/portada/portada.svg",
+      "alt": "Amanecer ilustrado sobre una plantación de café.",
+      "width": 1600,
+      "height": 900
+    }
+  },
+  "contacto": {
+    "id": "contacto",
+    "titulo": "Te estamos escuchando.",
+    "descripcion": "¿Quieres conocer nuestros cafés o preparar un encuentro? Déjanos tu consulta. Este formulario es una simulación y no envía información.",
+    "campos": {
+      "nombre": {
+        "etiqueta": "Tu nombre",
+        "placeholder": "Cómo te llamas",
+        "error": "Escribe tu nombre."
+      },
+      "correo": {
+        "etiqueta": "Tu correo",
+        "placeholder": "nombre@ejemplo.invalid",
+        "error": "Escribe un correo válido."
+      },
+      "mensaje": {
+        "etiqueta": "Tu mensaje",
+        "placeholder": "Cuéntanos qué tienes en mente",
+        "error": "Escribe un mensaje de al menos 10 caracteres."
+      }
+    },
+    "textos": {
+      "enviar": "Simular envío",
+      "aviso": "ejemplo: no se envía nada ni se guarda información al recargar.",
+      "exito": "Consulta simulada recibida. No se ha enviado ningún mensaje.",
+      "reiniciar": "Escribir otra consulta",
+      "errorGeneral": "Revisa los campos señalados antes de continuar.",
+      "limite": "El texto supera el límite permitido.",
+      "sinJavascript": "Activa JavaScript para probar el formulario simulado. No se realizará ningún envío."
+    }
+  },
+  "productos": [
+    {
+      "id": "amanecer",
+      "nombre": "Mezcla Amanecer",
+      "descripcion": "Café de perfil suave, con notas de cacao.",
+      "precio": 8900,
+      "imagen": {
+        "src": "/ejemplos-boveda/cafe-aurora/productos/producto-01.svg",
+        "alt": "Bolsa ilustrada de café Mezcla Amanecer.",
+        "width": 800,
+        "height": 800
+      }
+    },
+    {
+      "id": "altura",
+      "nombre": "Origen Sur",
+      "descripcion": "Café de perfil frutal para preparar con filtro.",
+      "precio": 9900,
+      "imagen": {
+        "src": "/ejemplos-boveda/cafe-aurora/productos/producto-02.svg",
+        "alt": "Bolsa ilustrada de café Origen Sur.",
+        "width": 800,
+        "height": 800
+      }
+    }
+  ],
+  "servicios": {
+    "id": "servicios",
+    "titulo": "Tu pausa, a tu manera.",
+    "descripcion": "Desde una taza preparada al momento hasta café recién tostado para disfrutar en casa.",
+    "elementos": [
+      {
+        "id": "barra",
+        "titulo": "Café en nuestra barra",
+        "descripcion": "Espresso, filtrados y preparaciones de temporada, acompañados de algo rico."
+      },
+      {
+        "id": "grano",
+        "titulo": "Granos para llevar",
+        "descripcion": "Pequeñas partidas tostadas con cuidado. Te ayudamos a elegir el perfil y la molienda."
+      },
+      {
+        "id": "encuentros",
+        "titulo": "Catas y encuentros",
+        "descripcion": "Experiencias para explorar aromas, métodos y sabores con tu grupo."
+      }
+    ]
+  },
+  "nosotros": {
+    "id": "quienes-somos",
+    "titulo": "Un lugar para bajar el ritmo.",
+    "descripcion": "Café Aurora nació de una idea sencilla: un buen café sabe mejor cuando hay tiempo para compartirlo.",
+    "parrafos": [
+      "Somos una cafetería y tostaduría de barrio imaginaria. Nos gusta conocer lo que hay detrás de cada grano y prepararlo sin apuro.",
+      "En esta historia ficticia, la barra, las plantas y el aroma del tueste reciben a quienes vienen a trabajar, conversar o hacer una pausa."
+    ],
+    "imagen": {
+      "src": "/ejemplos-boveda/cafe-aurora/nosotros/nosotros.svg",
+      "alt": "Fachada ilustrada de la cafetería ficticia Café Aurora.",
+      "width": 1200,
+      "height": 900
+    }
+  },
+  "galeria": {
+    "id": "galeria",
+    "titulo": "Así se siente Aurora.",
+    "descripcion": "Ilustraciones originales de nuestros sabores y espacios ficticios.",
+    "imagenes": [
+      {
+        "id": "tazas",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-01.svg",
+        "alt": "Tazas ilustradas con arte latte sobre una mesa.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Una taza para comenzar."
+      },
+      {
+        "id": "granos",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-02.svg",
+        "alt": "Granos de café tostado ilustrados.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "El aroma del tueste."
+      },
+      {
+        "id": "bolsas",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-03.svg",
+        "alt": "Bolsas ilustradas de café en una repisa.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Aurora también en casa."
+      },
+      {
+        "id": "fachada",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-04.svg",
+        "alt": "Fachada ilustrada del local al anochecer.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "La última pausa del día."
+      },
+      {
+        "id": "galletas",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-05.svg",
+        "alt": "Galletas y una taza de café ilustradas.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Algo rico para acompañar."
+      },
+      {
+        "id": "rincon",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-06.svg",
+        "alt": "Rincón ilustrado con plantas y café de grano.",
+        "width": 1200,
+        "height": 900,
+        "leyenda": "Tu rincón favorito."
+      }
+    ]
+  },
+  "testimonios": {
+    "id": "testimonios",
+    "titulo": "Historias de una buena pausa.",
+    "descripcion": "Opiniones ficticias escritas solo para mostrar cómo funciona esta sección. No son reseñas reales.",
+    "elementos": [
+      {
+        "id": "pausa",
+        "texto": "Me imaginé entrando por un café rápido y quedándome a disfrutar la mañana.",
+        "autor": "Visitante ficticio",
+        "detalle": "Una pausa en la barra"
+      },
+      {
+        "id": "casa",
+        "texto": "La recomendación de molienda hizo más sencilla mi primera preparación en casa.",
+        "autor": "Cliente de ejemplo",
+        "detalle": "Café para llevar"
+      },
+      {
+        "id": "cata",
+        "texto": "El encuentro nos ayudó a descubrir cuánto puede cambiar una taza con otro método.",
+        "autor": "Grupo imaginario",
+        "detalle": "Una cata compartida"
+      }
+    ]
+  },
+  "preguntas": {
+    "id": "preguntas-frecuentes",
+    "titulo": "Antes de tu próxima taza.",
+    "descripcion": "Respuestas de ejemplo para conocer nuestra cafetería ficticia.",
+    "elementos": [
+      {
+        "id": "molienda",
+        "pregunta": "¿Pueden moler el café para mi método?",
+        "respuesta": "Sí, en esta ejemplo ofrecemos molienda para espresso, filtro y prensa francesa. Cuéntanos cómo lo preparas."
+      },
+      {
+        "id": "opciones",
+        "pregunta": "¿Hay alternativas sin leche de origen animal?",
+        "respuesta": "Nuestra carta ficticia incluye opciones vegetales. En un sitio real, aquí se informarían las alternativas y sus alérgenos."
+      },
+      {
+        "id": "encuentros",
+        "pregunta": "¿Cómo consulto por una cata o un encuentro?",
+        "respuesta": "Puedes probar el formulario de contacto. Solo muestra un resultado simulado: no envía mensajes ni reserva actividades."
+      },
+      {
+        "id": "real",
+        "pregunta": "¿Puedo visitar o comprar en Café Aurora?",
+        "respuesta": "No. Café Aurora es un negocio inventado para esta ejemplo. Sus direcciones, productos y actividades no son reales."
+      }
+    ]
+  },
+  "ubicacion": {
+    "id": "ubicacion",
+    "titulo": "Imagina tu próxima visita.",
+    "descripcion": "Este local y su dirección son ficticios. No se muestra un mapa ni una ruta hacia un lugar real.",
+    "etiquetaDireccion": "Dirección de ejemplo",
+    "etiquetaHorarios": "Horario de ejemplo"
+  },
+  "whatsapp": {
+    "texto": "WhatsApp de ejemplo: ir al formulario simulado",
+    "href": "#contacto"
+  },
+  "redes": {
+    "etiqueta": "Redes sociales de ejemplo",
+    "descripcion": "Enlaces de ejemplo: abren el contacto simulado, no perfiles reales.",
+    "enlaces": [
+      {
+        "id": "instagram",
+        "texto": "Instagram",
+        "href": "#contacto"
+      },
+      {
+        "id": "facebook",
+        "texto": "Facebook",
+        "href": "#contacto"
+      }
+    ]
+  },
+  "pie": {
+    "descripcion": "Un buen café, una pausa y una historia por compartir.",
+    "copyright": "Café Aurora · Negocio ficticio. Ilustraciones originales de ejemplo.",
+    "textoVolver": "Volver al inicio",
+    "hrefVolver": "#portada"
+  },
+  "novedades": [
+    {
+      "id": "cata",
+      "titulo": "Una mañana para descubrir café",
+      "descripcion": "Ejemplo ficticio de una cata guiada en nuestra tostaduría.",
+      "fecha": "Actividad de ejemplo",
+      "imagen": {
+        "src": "/ejemplos-boveda/cafe-aurora/novedades/novedad-02.svg",
+        "alt": "Tres tazas ilustradas para una cata ficticia.",
+        "width": 1200,
+        "height": 675
+      }
+    },
+    {
+      "id": "nuevo-blend",
+      "titulo": "Un nuevo aroma en la barra",
+      "descripcion": "Una mezcla imaginaria para mostrar cómo publicar novedades desde el panel.",
+      "fecha": "Novedad ficticia",
+      "imagen": {
+        "src": "/ejemplos-boveda/cafe-aurora/novedades/novedad-03.svg",
+        "alt": "Ilustración del lanzamiento de una mezcla ficticia de café.",
+        "width": 1200,
+        "height": 675
+      }
+    }
+  ],
+  "sedes": [
+    {
+      "id": "centro",
+      "nombre": "Sede Centro",
+      "direccion": "Paseo del Alba 120, Ciudad Aurora (dirección ficticia)",
+      "horarios": "Lunes a viernes, 08:00 a 18:00",
+      "imagen": {
+        "src": "/ejemplos-boveda/cafe-aurora/sedes/sede-01.svg",
+        "alt": "Ilustración de la sede Centro de Café Aurora, un local ficticio.",
+        "width": 1200,
+        "height": 800
+      }
+    },
+    {
+      "id": "barrio-sur",
+      "nombre": "Sede Barrio Sur",
+      "direccion": "Camino del Tueste 45, Ciudad Aurora (dirección ficticia)",
+      "horarios": "Martes a sábado, 09:00 a 17:00",
+      "imagen": {
+        "src": "/ejemplos-boveda/cafe-aurora/sedes/sede-02.svg",
+        "alt": "Ilustración de la sede Barrio Sur de Café Aurora, un local ficticio.",
+        "width": 1200,
+        "height": 800
+      }
+    }
+  ],
+  "seccionNovedades": {
+    "id": "novedades",
+    "titulo": "Lo que está pasando en Aurora.",
+    "descripcion": "Noticias de ejemplo: puedes editar sus textos e imágenes durante esta visita."
+  },
+  "catalogo": {
+    "id": "catalogo",
+    "titulo": "Un poquito de Aurora en casa.",
+    "descripcion": "Catálogo ficticio, sin carrito ni compras. Consultar por WhatsApp abre el contacto simulado y no envía mensajes.",
+    "textoConsulta": "Consultar por WhatsApp",
+    "hrefConsulta": "#contacto"
+  },
+  "seccionSedes": {
+    "id": "sedes",
+    "titulo": "Más de un lugar para hacer una pausa.",
+    "descripcion": "Locales imaginarios y direcciones ficticias. No son destinos reales.",
+    "etiquetaDireccion": "Dirección de ejemplo",
+    "etiquetaHorarios": "Horario de ejemplo"
+  },
+  "promocion": {
+    "id": "promocion",
+    "etiqueta": "Promoción ficticia",
+    "titulo": "La tarde también merece un buen café.",
+    "descripcion": "Un ejemplo de promoción destacada que puedes adaptar desde el panel. No corresponde a un descuento ni beneficio real.",
+    "accion": {
+      "texto": "Consultar la promoción",
+      "href": "#contacto"
+    },
+    "imagen": {
+      "src": "/ejemplos-boveda/cafe-aurora/promociones/promocion.svg",
+      "alt": "Banner ilustrado de una promoción ficticia con una taza de café.",
+      "width": 1600,
+      "height": 600
+    }
+  },
+  "equipo": {
+    "id": "equipo",
+    "titulo": "Detrás de cada taza.",
+    "descripcion": "Personajes e ilustraciones ficticios, sin personas reales.",
+    "personas": [
+      {
+        "id": "barra",
+        "nombre": "Barista ficticia",
+        "rol": "Preparación y barra",
+        "imagen": {
+          "src": "/ejemplos-boveda/cafe-aurora/equipo/equipo-01.svg",
+          "alt": "Retrato ilustrado de una barista ficticia.",
+          "width": 600,
+          "height": 600
+        }
+      },
+      {
+        "id": "tueste",
+        "nombre": "Tostador de ejemplo",
+        "rol": "Tueste y selección",
+        "imagen": {
+          "src": "/ejemplos-boveda/cafe-aurora/equipo/equipo-02.svg",
+          "alt": "Retrato ilustrado de un tostador ficticio.",
+          "width": 600,
+          "height": 600
+        }
+      },
+      {
+        "id": "local",
+        "nombre": "Encargada imaginaria",
+        "rol": "Encuentros y atención",
+        "imagen": {
+          "src": "/ejemplos-boveda/cafe-aurora/equipo/equipo-03.svg",
+          "alt": "Retrato ilustrado de una encargada ficticia.",
+          "width": 600,
+          "height": 600
+        }
+      }
+    ]
+  },
+  "google": {
+    "etiqueta": "Vista previa en Google",
+    "url": "cafe-aurora.ejemplo.invalid",
+    "nota": "Simulación visual: no consulta Google ni garantiza cómo aparecerá un resultado real."
+  },
+  "cotizacionPasos": {
+    "id": "cotizacion",
+    "titulo": "Imaginemos tu próximo encuentro.",
+    "descripcion": "Prueba una solicitud por pasos. No calcula un precio real ni envía información.",
+    "servicio": {
+      "etiqueta": "Qué te interesa",
+      "placeholder": "Elige una opción",
+      "error": "Selecciona un servicio disponible."
+    },
+    "mensaje": {
+      "etiqueta": "Cuéntanos lo que necesitas",
+      "placeholder": "Describe tu encuentro o consulta",
+      "error": "Escribe al menos 10 caracteres."
+    },
+    "textos": {
+      "siguiente": "Siguiente paso",
+      "anterior": "Paso anterior",
+      "paso": "Paso {actual} de {total}",
+      "pasos": [
+        "Elige un servicio",
+        "Describe tu solicitud",
+        "Tus datos de contacto"
+      ],
+      "enviar": "Simular solicitud",
+      "exito": "Solicitud simulada recibida. No se ha enviado información."
+    }
+  }
+}

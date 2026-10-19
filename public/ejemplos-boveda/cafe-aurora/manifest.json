@@ -1,0 +1,175 @@
+{
+  "negocio": "Café Aurora (ficticio)",
+  "paleta": {
+    "crema": "#F6EDE0",
+    "cafe": "#3B2418",
+    "terracota": "#C8643C",
+    "amanecer": "#F2A65A",
+    "verde": "#5C7A5A",
+    "rosa": "#E9B8A0"
+  },
+  "archivos": [
+    {
+      "archivo": "logos/cafe-aurora-logo.svg",
+      "ancho": 700,
+      "alto": 200,
+      "alt": "Logo de Café Aurora"
+    },
+    {
+      "archivo": "logos/cafe-aurora-logo-claro.svg",
+      "ancho": 700,
+      "alto": 200,
+      "alt": "Logo de Café Aurora en versión clara, para fondos oscuros"
+    },
+    {
+      "archivo": "logos/cafe-aurora-isotipo.svg",
+      "ancho": 200,
+      "alto": 200,
+      "alt": "Isotipo de Café Aurora: taza con sol naciente"
+    },
+    {
+      "archivo": "logos/favicon.svg",
+      "ancho": 200,
+      "alto": 200,
+      "alt": "Ícono de Café Aurora"
+    },
+    {
+      "archivo": "portada/portada.svg",
+      "ancho": 1600,
+      "alto": 900,
+      "alt": "Amanecer sobre una plantación de café"
+    },
+    {
+      "archivo": "nosotros/nosotros.svg",
+      "ancho": 1200,
+      "alto": 900,
+      "alt": "Fachada de la cafetería Café Aurora"
+    },
+    {
+      "archivo": "galeria/galeria-01.svg",
+      "ancho": 1200,
+      "alto": 900,
+      "alt": "Tazas de café con arte latte sobre una mesa"
+    },
+    {
+      "archivo": "galeria/galeria-02.svg",
+      "ancho": 1200,
+      "alto": 900,
+      "alt": "Granos de café tostado"
+    },
+    {
+      "archivo": "galeria/galeria-03.svg",
+      "ancho": 1200,
+      "alto": 900,
+      "alt": "Bolsas de café en una repisa"
+    },
+    {
+      "archivo": "galeria/galeria-04.svg",
+      "ancho": 1200,
+      "alto": 900,
+      "alt": "Fachada del local de noche"
+    },
+    {
+      "archivo": "galeria/galeria-05.svg",
+      "ancho": 1200,
+      "alto": 900,
+      "alt": "Galletas y café para acompañar"
+    },
+    {
+      "archivo": "galeria/galeria-06.svg",
+      "ancho": 1200,
+      "alto": 900,
+      "alt": "Rincón con plantas y café de grano"
+    },
+    {
+      "archivo": "productos/producto-01.svg",
+      "ancho": 800,
+      "alto": 800,
+      "alt": "Bolsa de café Blend Amanecer"
+    },
+    {
+      "archivo": "productos/producto-02.svg",
+      "ancho": 800,
+      "alto": 800,
+      "alt": "Bolsa de café Origen Sur"
+    },
+    {
+      "archivo": "productos/producto-03.svg",
+      "ancho": 800,
+      "alto": 800,
+      "alt": "Bolsa de café descafeinado"
+    },
+    {
+      "archivo": "productos/producto-04.svg",
+      "ancho": 800,
+      "alto": 800,
+      "alt": "Capuchino servido en taza"
+    },
+    {
+      "archivo": "productos/producto-05.svg",
+      "ancho": 800,
+      "alto": 800,
+      "alt": "Galletas de la casa"
+    },
+    {
+      "archivo": "productos/producto-06.svg",
+      "ancho": 800,
+      "alto": 800,
+      "alt": "Prensa francesa"
+    },
+    {
+      "archivo": "equipo/equipo-01.svg",
+      "ancho": 600,
+      "alto": 600,
+      "alt": "Retrato ilustrado de una barista"
+    },
+    {
+      "archivo": "equipo/equipo-02.svg",
+      "ancho": 600,
+      "alto": 600,
+      "alt": "Retrato ilustrado de un tostador"
+    },
+    {
+      "archivo": "equipo/equipo-03.svg",
+      "ancho": 600,
+      "alto": 600,
+      "alt": "Retrato ilustrado de una encargada de local"
+    },
+    {
+      "archivo": "novedades/novedad-01.svg",
+      "ancho": 1200,
+      "alto": 675,
+      "alt": "Nueva sede de Café Aurora"
+    },
+    {
+      "archivo": "novedades/novedad-02.svg",
+      "ancho": 1200,
+      "alto": 675,
+      "alt": "Tres tazas preparadas para un taller de cata"
+    },
+    {
+      "archivo": "novedades/novedad-03.svg",
+      "ancho": 1200,
+      "alto": 675,
+      "alt": "Lanzamiento de un nuevo blend de café"
+    },
+    {
+      "archivo": "sedes/sede-01.svg",
+      "ancho": 1200,
+      "alto": 800,
+      "alt": "Sede Centro de Café Aurora"
+    },
+    {
+      "archivo": "sedes/sede-02.svg",
+      "ancho": 1200,
+      "alto": 800,
+      "alt": "Sede Barrio Sur de Café Aurora"
+    },
+    {
+      "archivo": "promociones/promocion.svg",
+      "ancho": 1600,
+      "alto": 600,
+      "alt": "Banner de promoción con taza de café; el lado izquierdo queda libre para texto"
+    }
+  ]
+}

@@ -121,7 +121,7 @@ Incluyo todo lo del Plan Presencia Digital más:
 
 # Plan 3 - Automatización de Procesos
 
-## Desde $800.000 CLP
+## Desde $500.000 CLP
 
 ### Ideal para
 
@@ -155,7 +155,7 @@ Evalúo tu proyecto y lo cotizo según su alcance.
 
 # Plan 4 - Comercio Electrónico
 
-## Desde $1.200.000 CLP
+## Desde $700.000 CLP
 
 ### Ideal para
 

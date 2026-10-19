@@ -52,6 +52,7 @@ test('la estructura conserva las capas y todos los datos son JSON', () => {
   assert.deepEqual(readdirSync('src/data').sort(), [
     'catalogo.json',
     'componentes.json',
+    'ejemplos-boveda.json',
     'navegacion.json',
     'paquetes.json',
     'perfil.json',
@@ -183,7 +184,7 @@ test('los cuatro planes conservan precios y todo el detalle de tarifas.md', () =
 test('los precios desde se muestran en pesos chilenos sin decimales', () => {
   assert.deepEqual(
     getPaquetes().map((paquete) => precioDesdeCLP(paquete.precioDesde)),
-    ['Desde $150.000 CLP', 'Desde $350.000 CLP', 'Desde $800.000 CLP', 'Desde $1.200.000 CLP'],
+    ['Desde $150.000 CLP', 'Desde $350.000 CLP', 'Desde $500.000 CLP', 'Desde $700.000 CLP'],
   );
 });
 
@@ -424,7 +425,7 @@ test('Tailwind es la unica fuente de la paleta y las animaciones', () => {
   assert.equal(coloresMarca.sky, '#22C3F5');
   assert.equal(coloresMarca.coral, '#FF6B4A');
   assert.equal(tailwindConfig.theme.extend.colors.brand.ink, coloresMarca.ink);
-  assert.equal(tailwindConfig.theme.extend.animation.intro, 'entrada 650ms ease-out both');
+  assert.equal(tailwindConfig.theme.extend.animation.intro, 'entrada 450ms ease-out both');
   assert.equal(tailwindConfig.theme.extend.animation.pagina, 'entrada 300ms ease-out both');
   assert.deepEqual(tailwindConfig.theme.extend.fontFamily.sans, [
     'Poppins',
@@ -539,6 +540,11 @@ test('la navegacion no apunta a administracion ni a endpoints eliminados', () =>
   for (const link of [...navegacion.principal, ...navegacion.pie]) {
     assert.doesNotMatch(link.href, /^\/(admin|api)(\/|$)/);
   }
+});
+
+test('el catalogo no conserva la redireccion temporal que ocultaba sus rutas', () => {
+  const configuracion = readFileSync('src/infrastructure/configuracion/next.mjs', 'utf8');
+  assert.doesNotMatch(configuracion, /catalogoHabilitado|source:\s*['"]\/catalogo/);
 });
 
 test('el navbar marca la seccion actual y sus rutas hijas sin confundir prefijos', () => {

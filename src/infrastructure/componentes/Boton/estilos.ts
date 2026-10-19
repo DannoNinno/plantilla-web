@@ -2,6 +2,8 @@ const base =
   'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 py-3 text-center text-sm font-semibold transition-[background-color,color,border-color,box-shadow,transform] duration-200 focus-visible:outline-brand-sky-text focus-visible:shadow-md fine-pointer:hover:shadow-md motion-safe:focus-visible:-translate-y-0.5 motion-safe:fine-pointer:hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none disabled:shadow-none disabled:fine-pointer:hover:transform-none disabled:fine-pointer:hover:shadow-none [&_svg]:shrink-0';
 
 const variantes = {
+  seccion:
+    'bg-seccion-acento text-white focus-visible:bg-seccion-tinta fine-pointer:hover:bg-seccion-tinta disabled:fine-pointer:hover:bg-seccion-acento',
   coral:
     'bg-brand-coral text-brand-ink focus-visible:bg-brand-coral-dark fine-pointer:hover:bg-brand-coral-dark disabled:fine-pointer:hover:bg-brand-coral',
   sky: 'bg-brand-sky text-brand-ink focus-visible:bg-brand-sky/90 fine-pointer:hover:bg-brand-sky/90 disabled:fine-pointer:hover:bg-brand-sky',
