@@ -1,4 +1,47 @@
 {
+  "presentacion": {
+    "etiqueta": "Mis servicios",
+    "titulo": "Te ayudo a hacer crecer tu negocio.",
+    "introduccion": "Soy {persona}, y {marca} es mi marca personal. Trabajo directamente contigo para mejorar tu presencia digital y captar clientes.",
+    "revision": "TODO(Daniel): Revisar la presentación breve del catálogo enfocada en los planes activos."
+  },
+  "planes": {
+    "titulo": "Elige tu punto de partida",
+    "precios": "Precios referenciales. Defino contigo el alcance y te cotizo antes de comenzar.",
+    "avisoSinPagos": "Cotizo según lo que necesita tu negocio. No hay pagos ni compras en este sitio."
+  },
+  "comparacion": {
+    "titulo": "Compara los planes",
+    "secciones": "Cantidad de secciones",
+    "cantidadSecciones": "Hasta {cantidad} vistas o secciones.",
+    "panelAdministracion": "Panel de administración",
+    "panelIncluido": "Incluido",
+    "panelNoIncluido": "No incluido",
+    "plazoEntrega": "Plazo de entrega",
+    "reuniones": "Reuniones incluidas",
+    "capacitacion": "Capacitación incluida"
+  },
+  "vitrina": {
+    "titulo": "Componentes para tu sitio",
+    "descripcion": "Conoce los componentes que puede incluir el sitio de tu negocio y desde qué plan están disponibles.",
+    "tituloDetalle": "Qué puede incluir tu sitio",
+    "introduccionDetalle": "Defino contigo cuáles necesita tu negocio, dentro del alcance de tu plan.",
+    "revisionDetalle": "TODO(Daniel): Revisar introducción de la vitrina y alcance de los componentes.",
+    "sumaPlan": "Suma {plan}",
+    "verTodos": "Ver todos los componentes",
+    "etiquetas": {
+      "incluidoEn": "Incluido en {plan}",
+      "incluidoSinPlan": "Incluido en tu plan",
+      "disponibleDesde": "Disponible desde {plan}",
+      "disponibleSinPlan": "Disponible en un plan superior",
+      "componenteClave": "Componente clave"
+    }
+  },
+  "tarjetasPlan": {
+    "etiqueta": "Plan",
+    "verDetalle": "Ver detalle de",
+    "proximamente": "Próximamente"
+  },
   "filosofia": {
     "titulo": "No solo desarrollo páginas web.",
     "introduccion": "Te ayudo a:",

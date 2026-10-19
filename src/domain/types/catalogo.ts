@@ -1,4 +1,43 @@
+import type {TextosTarjetaComponente} from './componentes';
+
 export interface CatalogoServicios {
+  presentacion: {
+    etiqueta: string;
+    titulo: string;
+    introduccion: string;
+    revision: string;
+  };
+  planes: {
+    titulo: string;
+    precios: string;
+    avisoSinPagos: string;
+  };
+  comparacion: {
+    titulo: string;
+    secciones: string;
+    cantidadSecciones: string;
+    panelAdministracion: string;
+    panelIncluido: string;
+    panelNoIncluido: string;
+    plazoEntrega: string;
+    reuniones: string;
+    capacitacion: string;
+  };
+  vitrina: {
+    titulo: string;
+    descripcion: string;
+    tituloDetalle: string;
+    introduccionDetalle: string;
+    revisionDetalle: string;
+    sumaPlan: string;
+    verTodos: string;
+    etiquetas: TextosTarjetaComponente;
+  };
+  tarjetasPlan: {
+    etiqueta: string;
+    verDetalle: string;
+    proximamente: string;
+  };
   filosofia: {
     titulo: string;
     introduccion: string;

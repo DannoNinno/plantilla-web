@@ -10,7 +10,26 @@
   "cargo": "Desarrollador Full Stack",
   "especialidad": "Arquitectura e integraciones",
   "presentacion": "dannotech es mi marca personal. Detrás de cada proyecto están mi experiencia y mi forma de trabajar: considero el sistema completo y sus dependencias, no solo el componente aislado. Mi foco es construir soluciones mantenibles y sostenibles en el tiempo.",
-  "principio": "Siempre hay espacio para especializarme y crecer.",
+  "principio": "Valido integraciones y despliegues en QA y producción.",
+  "revisionPrincipio": "TODO(Daniel): Revisar la frase concreta que reemplaza el principio anterior.",
+  "contactoEtiqueta": "Hablemos",
+  "beneficiosPyme": {
+    "titulo": "Qué significa para tu negocio",
+    "puntos": [
+      {
+        "texto": "Tratas directamente conmigo, desde la primera conversación hasta la entrega.",
+        "revision": "TODO(Daniel): Revisar el beneficio de atención directa."
+      },
+      {
+        "texto": "Defino contigo qué necesita tu sitio y cuánto costará antes de comenzar.",
+        "revision": "TODO(Daniel): Revisar el beneficio de alcance y costos claros."
+      },
+      {
+        "texto": "Te explico cómo usar tu sitio para que puedas aprovecharlo en tu negocio.",
+        "revision": "TODO(Daniel): Revisar el beneficio de acompañamiento en el uso del sitio."
+      }
+    ]
+  },
   "competencias": [
     "Visión arquitectónica",
     "Liderazgo en momentos críticos",
@@ -44,7 +63,8 @@
       "nombre": "Bases de datos",
       "enfoque": "Relacionales y NoSQL",
       "tecnologias": ["MySQL", "MongoDB", "Oracle", "PostgreSQL"],
-      "contexto": "Conocimientos en motores relacionales y documentales declarados en mi currículum."
+      "contexto": "Conocimientos en motores relacionales y documentales: MySQL, MongoDB, Oracle y PostgreSQL.",
+      "revisionContexto": "TODO(Daniel): Revisar la descripción concreta de conocimientos en bases de datos."
     },
     {
       "id": "infraestructura",

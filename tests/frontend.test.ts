@@ -10,43 +10,34 @@ import {
   getNavegacion,
   getPaquete,
   getPaquetes,
+  getPaquetesHabilitados,
   getPerfil,
   getSitio,
 } from '../src/infrastructure/handlers/datos';
 import {
-  resolverSeleccion,
-  seleccionInicial,
-  validarRegistro,
-} from '../src/domain/casos-de-uso/componentes/seleccion';
-import {
   contarPalabras,
   enlaceCorreo,
   enlaceCotizacion,
-  mensajeSeleccion,
   prepararCorreoContacto,
   validarMensaje,
 } from '../src/domain/servicios/contacto';
 import {CONTACT_EMAIL, MAX_MESSAGE_WORDS, QUOTES_EMAIL} from '../src/domain/configuracion/contacto';
-import type {DefinicionComponente} from '../src/domain/types/componentes';
 import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
 import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
+import TarjetaPlan from '../src/infrastructure/componentes/Catalogo/TarjetaPlan';
+import ComparacionPlanes from '../src/infrastructure/componentes/Catalogo/ComparacionPlanes';
+import BeneficiosPyme from '../src/infrastructure/componentes/Perfil/BeneficiosPyme';
+import TarjetaComponente from '../src/infrastructure/componentes/Vitrina/TarjetaComponente';
+import GrillaComponentes from '../src/infrastructure/componentes/Vitrina/GrillaComponentes';
+import {iconos} from '../src/infrastructure/componentes/Vitrina/iconos';
+import {nombresIconos} from '../src/domain/types/componentes';
+import {seleccionarComponentes} from '../src/domain/casos-de-uso/componentes/seleccion';
 import Entrada from '../src/infrastructure/componentes/Entrada/Entrada';
 import Footer from '../src/infrastructure/componentes/Footer/Footer';
 import {clasesBoton} from '../src/infrastructure/componentes/Boton/estilos';
 import {esEnlaceActivo} from '../src/infrastructure/componentes/Header/navegacion';
 import {precioDesdeCLP} from '../src/domain/servicios/precio';
 import tailwindConfig, {coloresMarca} from '../tailwind.config';
-
-const definiciones: DefinicionComponente[] = [
-  {id: 'base', nombre: 'Base', descripcionCorta: '', paquetes: {portal: 'base'}, dependencias: []},
-  {
-    id: 'extra',
-    nombre: 'Extra',
-    descripcionCorta: '',
-    paquetes: {portal: 'opcional'},
-    dependencias: ['base'],
-  },
-];
 
 function fuentes(directorio: string): string[] {
   return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
@@ -116,6 +107,46 @@ test('los datos conservan identidad, perfil y paquetes', () => {
   assert.equal(getPaquete('sistema-web-a-medida'), undefined);
 });
 
+test('solo los dos planes habilitados se pueden consultar por id', () => {
+  assert.deepEqual(
+    getPaquetesHabilitados().map((paquete) => paquete.id),
+    ['landing', 'portal'],
+  );
+  assert.deepEqual(
+    getPaquetes().map((paquete) => paquete.habilitado),
+    [true, true, false, false],
+  );
+  assert.equal(getPaquete('automatizacion'), undefined);
+  assert.equal(getPaquete('comercio-electronico'), undefined);
+});
+
+test('las tarjetas bloqueadas no muestran precio, enlaces ni controles interactivos', () => {
+  const tarjetas = getPaquetes().map((paquete, index) => {
+    const html = renderToStaticMarkup(
+      createElement(TarjetaPlan, {
+        paquete,
+        numero: index + 1,
+        textos: getCatalogo().tarjetasPlan,
+      }),
+    );
+    assert.ok(html.includes(paquete.nombre));
+    if (paquete.habilitado) {
+      assert.ok(html.includes(`href="/catalogo/${paquete.id}"`));
+      assert.ok(html.includes(precioDesdeCLP(paquete.precioDesde)));
+      assert.doesNotMatch(html, /aria-disabled|Próximamente/);
+    } else {
+      assert.match(html, /<article aria-disabled="true"/);
+      assert.match(html, /opacity-50/);
+      assert.match(html, /lucide-lock-keyhole/);
+      assert.ok(html.includes(getCatalogo().tarjetasPlan.proximamente));
+      assert.doesNotMatch(html, /<a\b|<button\b|tabindex=|Desde|\$|CLP/);
+    }
+    return html;
+  });
+  assert.equal((tarjetas.join('').match(/<a\b/g) ?? []).length, 2);
+  assert.equal((tarjetas.join('').match(/aria-disabled="true"/g) ?? []).length, 2);
+});
+
 test('los cuatro planes conservan precios y todo el detalle de tarifas.md', () => {
   const bloques = readFileSync('tarifas.md', 'utf8')
     .split(/^# /m)
@@ -165,14 +196,16 @@ test('los primeros dos planes incluyen hasta cinco dias habiles y las reuniones 
   }
   for (const id of ['automatizacion', 'comercio-electronico']) {
     assert.equal(
-      getPaquete(id)?.secciones.some((seccion) => seccion.titulo === 'Plazo de entrega'),
+      getPaquetes()
+        .find((paquete) => paquete.id === id)
+        ?.secciones.some((seccion) => seccion.titulo === 'Plazo de entrega'),
       false,
     );
   }
 });
 
 test('cada vista de detalle muestra todas las secciones de su plan', () => {
-  for (const paquete of getPaquetes()) {
+  for (const paquete of getPaquetesHabilitados()) {
     const html = renderToStaticMarkup(createElement(DetallePaquete, {paquete}));
     for (const seccion of paquete.secciones) {
       assert.ok(html.includes(`<h2 class="text-xl font-bold">${seccion.titulo}</h2>`));
@@ -216,7 +249,8 @@ test('la oferta presenta a dannotech como marca personal en primera persona', ()
   const html = renderToStaticMarkup(createElement(Entrada));
   assert.ok(html.includes(`Soy ${sitio.persona}, y ${sitio.nombre} es mi marca personal.`));
   assert.ok(html.includes('Tu negocio, mi experiencia.'));
-  assert.ok(html.includes('Conoce mis cuatro planes de servicios.'));
+  assert.ok(html.includes(sitio.descripcionCatalogo));
+  assert.doesNotMatch(html, /cuatro planes/);
   assert.match(getPerfil().presentacion, /^dannotech es mi marca personal\./);
   assert.match(sitio.descripcion, /^Te ayudo a /);
   assert.match(catalogo.filosofia.titulo, /^No solo desarrollo /);
@@ -237,6 +271,135 @@ test('la oferta presenta a dannotech como marca personal en primera persona', ()
   for (const texto of textos) {
     assert.doesNotMatch(texto, /\b(vendemos|ayudamos|nuestros|cotizamos|definimos)\b/i);
   }
+});
+
+test('el home dirige a planes y contacto y explica para quien trabajo', () => {
+  const {inicio} = getSitio();
+  const html = renderToStaticMarkup(createElement(Entrada));
+  const titulo = html.match(/<h1\b[^>]*>(.*?)<\/h1>/s)?.[1].replace(/<[^>]+>/g, '');
+  assert.equal(titulo, `${inicio.tituloHero} ${inicio.subtituloHero}`);
+  assert.match(html, /href="\/catalogo"[^>]*>Ver planes /);
+  assert.doesNotMatch(html, /Explorar el sitio/);
+  assert.ok(html.includes(inicio.queHagoTitulo));
+  assert.ok(html.includes(inicio.paraQuien));
+  assert.match(
+    inicio.paraQuien,
+    /emprendedores, profesionales independientes y negocios que aún no tienen sitio web/,
+  );
+  assert.match(inicio.revisionParaQuien, /TODO\(Daniel\)/);
+  assert.ok(html.includes(inicio.cotizar));
+  assert.ok(html.indexOf(inicio.cotizar) > html.indexOf('Conocer a Daniel'));
+  assert.match(html, /href="\/contacto"[^>]*>¿Ya sabes lo que necesitas\? Cotiza aquí<\/a>/);
+  assert.doesNotMatch(html, /TODO\(Daniel\)/);
+});
+
+test('los datos de comparacion coinciden con el alcance de los planes activos', () => {
+  for (const paquete of getPaquetesHabilitados()) {
+    const datos = paquete.comparacion;
+    assert.ok(datos);
+    assert.equal(datos.seccionesMaximas, paquete.id === 'landing' ? 5 : 10);
+    assert.ok(
+      paquete.secciones
+        .find((item) => item.titulo === 'Incluye')
+        ?.elementos?.includes(`Hasta ${datos.seccionesMaximas} vistas o secciones.`),
+    );
+    assert.equal(datos.panelAdministracion, paquete.id === 'portal');
+    assert.ok(
+      paquete.secciones
+        .find((item) => item.titulo === (datos.panelAdministracion ? 'Incluye' : 'No incluye'))
+        ?.elementos?.includes('Panel de administración.'),
+    );
+    assert.equal(
+      datos.plazoEntrega,
+      paquete.secciones.find((item) => item.titulo === 'Plazo de entrega')?.elementos?.[0],
+    );
+    assert.deepEqual(
+      datos.reunionesIncluidas,
+      paquete.secciones.find((item) => item.titulo === 'Reuniones incluidas')?.elementos,
+    );
+    assert.equal(
+      datos.capacitacion,
+      paquete.secciones.find((item) => item.titulo === 'Capacitación')?.elementos?.[0],
+    );
+    assert.ok(paquete.secciones.some((item) => item.titulo === 'No incluye'));
+    assert.ok(
+      !paquete.secciones.some((item) =>
+        ['Reuniones Incluidas', 'No Incluye'].includes(item.titulo),
+      ),
+    );
+  }
+});
+
+test('la comparacion presenta los cinco criterios sin planes desactivados ni datos inventados', () => {
+  const textos = getCatalogo().comparacion;
+  const paquetes = getPaquetesHabilitados();
+  const html = renderToStaticMarkup(createElement(ComparacionPlanes, {paquetes, textos}));
+  assert.equal((html.match(/<article\b/g) ?? []).length, 2);
+  assert.equal((html.match(/<dt\b/g) ?? []).length, 10);
+  assert.match(html, /md:grid-cols-2/);
+  for (const paquete of paquetes) {
+    assert.ok(html.includes(paquete.nombre));
+    const datos = paquete.comparacion;
+    assert.ok(datos);
+    assert.ok(
+      html.includes(textos.cantidadSecciones.replace('{cantidad}', String(datos.seccionesMaximas))),
+    );
+    assert.ok(html.includes(datos.plazoEntrega));
+    assert.ok(html.includes(datos.capacitacion));
+    for (const reunion of datos.reunionesIncluidas) assert.ok(html.includes(reunion));
+  }
+  assert.ok(html.includes(textos.panelIncluido));
+  assert.ok(html.includes(textos.panelNoIncluido));
+  assert.doesNotMatch(html, /Automatización de Procesos|Comercio Electrónico/);
+  const landing = getPaquete('landing');
+  assert.ok(landing);
+  assert.throws(
+    () =>
+      renderToStaticMarkup(
+        createElement(ComparacionPlanes, {
+          paquetes: [{...landing, comparacion: undefined}],
+          textos,
+        }),
+      ),
+    /no tiene una comparacion habilitada/,
+  );
+  assert.throws(
+    () =>
+      renderToStaticMarkup(
+        createElement(ComparacionPlanes, {
+          paquetes: getPaquetes(),
+          textos,
+        }),
+      ),
+    /no tiene una comparacion habilitada/,
+  );
+  assert.equal(
+    getCatalogo().planes.precios,
+    'Precios referenciales. Defino contigo el alcance y te cotizo antes de comenzar.',
+  );
+});
+
+test('el perfil presenta tres beneficios para pymes y conserva las propuestas en datos', () => {
+  const perfil = getPerfil();
+  assert.equal(perfil.beneficiosPyme.puntos.length, 3);
+  const html = renderToStaticMarkup(
+    createElement(BeneficiosPyme, {contenido: perfil.beneficiosPyme}),
+  );
+  assert.equal((html.match(/<li\b/g) ?? []).length, 3);
+  assert.ok(html.includes(perfil.beneficiosPyme.titulo));
+  for (const punto of perfil.beneficiosPyme.puntos) {
+    assert.ok(html.includes(punto.texto));
+    assert.match(punto.revision, /TODO\(Daniel\)/);
+  }
+  assert.match(perfil.revisionPrincipio, /TODO\(Daniel\)/);
+  const datos = perfil.capacidades.find((capacidad) => capacidad.id === 'datos');
+  assert.ok(datos);
+  assert.match(datos.revisionContexto ?? '', /TODO\(Daniel\)/);
+  assert.doesNotMatch(
+    JSON.stringify(perfil),
+    /declarados en mi currículum|Siempre hay espacio para especializarme y crecer/,
+  );
+  assert.doesNotMatch(html, /TODO\(Daniel\)/);
 });
 
 test('los botones comparten hover, foco accesible y respeto al movimiento reducido', () => {
@@ -370,7 +533,7 @@ test('la navegacion no apunta a administracion ni a endpoints eliminados', () =>
   const navegacion = getNavegacion();
   assert.deepEqual(
     navegacion.principal.map((link) => link.href),
-    ['/catalogo', '/perfil', '/contacto'],
+    ['/catalogo', '/perfil'],
   );
   assert.deepEqual(navegacion.pie, [{label: 'Contacto', href: '/contacto'}]);
   for (const link of [...navegacion.principal, ...navegacion.pie]) {
@@ -391,24 +554,188 @@ test('el navbar marca la seccion actual y sus rutas hijas sin confundir prefijos
   assert.equal(esEnlaceActivo('/contacto', '/'), false);
 });
 
-test('el registro vacio conserva el estado inicial del configurador', () => {
-  validarRegistro(getComponentes());
-  assert.deepEqual(seleccionInicial(getComponentes(), 'portal'), {ids: [], errores: []});
+test('el sitio no expone la demo ni conserva el configurador interactivo', () => {
+  for (const ruta of fuentes('src')) {
+    const contenido = readFileSync(ruta, 'utf8');
+    assert.doesNotMatch(contenido, /demo|configurador|enDemo/i, ruta);
+    assert.doesNotMatch(contenido, /['"`]\/componentes\//, ruta);
+  }
+  for (const ruta of [
+    'src/app/(demo)',
+    'src/app/(portal)/componentes/[slug]',
+    'src/infrastructure/componentes/demo',
+    'src/infrastructure/componentes/Configurador/Configurador.tsx',
+    'src/infrastructure/componentes/Catalogo/ExploracionCatalogo.tsx',
+    'src/demo',
+    'src/data/demo',
+  ]) {
+    assert.equal(existsSync(ruta), false, ruta);
+  }
+  const catalogo = JSON.parse(readFileSync('src/data/catalogo.json', 'utf8'));
+  assert.equal('fase' in catalogo, false);
+  assert.doesNotMatch(JSON.stringify(catalogo), /demo|exploraci[oó]n/i);
 });
 
-test('la seleccion local conserva bases y dependencias', () => {
-  assert.deepEqual(seleccionInicial(definiciones, 'portal').ids, ['base']);
-  assert.deepEqual(resolverSeleccion(definiciones, 'portal', ['extra']).ids, ['base', 'extra']);
-  assert.equal(resolverSeleccion(definiciones, 'landing', ['extra']).errores.length, 1);
+test('la vitrina conserva los 19 componentes, sus iconos y las descripciones pendientes', () => {
+  const componentes = getComponentes();
+  assert.deepEqual(
+    componentes.map((componente) => componente.id),
+    [
+      'portada',
+      'servicios',
+      'quienes-somos',
+      'galeria',
+      'testimonios',
+      'preguntas-frecuentes',
+      'ubicacion-horarios',
+      'redes-sociales',
+      'whatsapp',
+      'formulario-contacto',
+      'pie-pagina',
+      'panel-administracion',
+      'novedades',
+      'catalogo-sin-compra',
+      'promocion-destacada',
+      'sedes',
+      'equipo',
+      'cotizacion-pasos',
+      'vista-google',
+    ],
+  );
+  assert.deepEqual(Object.keys(iconos), [...nombresIconos]);
+  assert.deepEqual(
+    componentes.map((componente) => componente.icono),
+    [...nombresIconos],
+  );
+  assert.equal(componentes.filter((componente) => componente.planMinimo === 'landing').length, 11);
+  assert.equal(componentes.filter((componente) => componente.planMinimo === 'portal').length, 8);
+  assert.deepEqual(
+    componentes.filter((componente) => componente.destacado).map((componente) => componente.id),
+    ['panel-administracion'],
+  );
+  for (const componente of componentes) {
+    assert.ok(componente.descripcion.length > 0 && componente.descripcion.length <= 65);
+    assert.match(componente.revisionDescripcion, /TODO\(Daniel\)/);
+  }
 });
 
-test('las definiciones ausentes, duplicadas y circulares se reportan', () => {
-  const ausente = resolverSeleccion([definiciones[1]], 'portal', ['extra']);
-  assert.deepEqual(ausente.ids, []);
-  assert.equal(ausente.errores.length, 1);
-  const ciclo = [{...definiciones[0], dependencias: ['extra']}, definiciones[1]];
-  assert.match(resolverSeleccion(ciclo, 'portal', ['extra']).errores.join(' '), /circular/);
-  assert.throws(() => validarRegistro([definiciones[0], definiciones[0]]), /duplicado/);
+test('la seleccion de vitrina hereda landing en portal y destaca el panel primero', () => {
+  const componentes = getComponentes();
+  const original = JSON.stringify(componentes);
+  const landing = seleccionarComponentes(componentes, 'landing', getPaquetes());
+  assert.equal(landing.incluidos.length, 11);
+  assert.equal(landing.noIncluidos.length, 8);
+  assert.ok(
+    landing.incluidos.every((item) => item.incluido && item.componente.planMinimo === 'landing'),
+  );
+  assert.ok(
+    landing.noIncluidos.every((item) => !item.incluido && item.componente.planMinimo === 'portal'),
+  );
+  assert.ok(
+    landing.incluidos.every((item) => item.nombrePlanMinimo === getPaquete('landing')?.nombre),
+  );
+  const portal = seleccionarComponentes(componentes, 'portal', getPaquetes());
+  assert.equal(portal.incluidos.length, 19);
+  assert.equal(portal.noIncluidos.length, 0);
+  assert.equal(portal.incluidos[0].componente.id, 'panel-administracion');
+  assert.ok(portal.incluidos.every((item) => item.incluido));
+  assert.deepEqual(
+    portal.incluidos.slice(1).map((item) => item.componente.id),
+    componentes.filter((item) => !item.destacado).map((item) => item.id),
+  );
+  assert.equal(JSON.stringify(componentes), original);
+  assert.deepEqual(seleccionarComponentes([], 'landing', getPaquetes()), {
+    incluidos: [],
+    noIncluidos: [],
+  });
+});
+
+test('la vitrina excluye componentes cuyo plan minimo esta desactivado', () => {
+  const paquetes = getPaquetes().map((paquete) => ({
+    ...paquete,
+    habilitado: paquete.id === 'landing',
+  }));
+  const seleccion = seleccionarComponentes(getComponentes(), 'landing', paquetes);
+  assert.equal(seleccion.incluidos.length, 11);
+  assert.deepEqual(seleccion.noIncluidos, []);
+  for (const id of ['portal', 'automatizacion', 'comercio-electronico', 'inexistente']) {
+    assert.throws(
+      () => seleccionarComponentes(getComponentes(), id, paquetes),
+      /no esta habilitado/,
+    );
+  }
+  const soloPortal = getPaquetes().map((paquete) => ({
+    ...paquete,
+    habilitado: paquete.id === 'portal',
+  }));
+  const portal = seleccionarComponentes(getComponentes(), 'portal', soloPortal);
+  assert.equal(portal.incluidos.length, 8);
+  assert.ok(portal.incluidos.every((item) => item.componente.planMinimo === 'portal'));
+});
+
+test('las tarjetas de vitrina son articulos accesibles sin interactividad', () => {
+  const textos = getCatalogo().vitrina.etiquetas;
+  for (const componente of getComponentes()) {
+    const html = renderToStaticMarkup(
+      createElement(TarjetaComponente, {
+        componente,
+        textos,
+        nombrePlanMinimo: getPaquete(componente.planMinimo)?.nombre,
+      }),
+    );
+    assert.match(html, /<article aria-labelledby="([^"]+)"/);
+    const id = html.match(/aria-labelledby="([^"]+)"/)?.[1];
+    assert.ok(html.includes(`<h3 id="${id}"`));
+    assert.ok(html.includes(componente.nombre));
+    assert.ok(html.includes(componente.descripcion));
+    assert.match(html, /Incluido en/);
+    assert.doesNotMatch(html, /<a\b|<button\b|<input\b|tabindex=|TODO\(Daniel\)/);
+    if (componente.destacado) {
+      assert.match(html, /md:col-span-2/);
+      assert.ok(html.includes(textos.componenteClave));
+    }
+  }
+  const panel = getComponentes().find((item) => item.id === 'panel-administracion');
+  assert.ok(panel);
+  const bloqueado = renderToStaticMarkup(
+    createElement(TarjetaComponente, {
+      componente: panel,
+      incluido: false,
+      nombrePlanMinimo: 'Captación de Clientes',
+      textos,
+    }),
+  );
+  assert.match(bloqueado, /opacity-60/);
+  assert.ok(bloqueado.includes('Disponible desde Captación de Clientes'));
+  const sinPlan = renderToStaticMarkup(
+    createElement(TarjetaComponente, {componente: panel, textos}),
+  );
+  assert.ok(sinPlan.includes(textos.incluidoSinPlan));
+  const sinPlanBloqueado = renderToStaticMarkup(
+    createElement(TarjetaComponente, {
+      componente: panel,
+      textos,
+      incluido: false,
+    }),
+  );
+  assert.ok(sinPlanBloqueado.includes(textos.disponibleSinPlan));
+});
+
+test('la grilla dibuja la lista recibida en orden sin filtrar variantes no incluidas', () => {
+  const {noIncluidos} = seleccionarComponentes(getComponentes(), 'landing', getPaquetes());
+  const componentes = noIncluidos.slice(0, 2).reverse();
+  const html = renderToStaticMarkup(
+    createElement(GrillaComponentes, {
+      componentes,
+      textos: getCatalogo().vitrina.etiquetas,
+    }),
+  );
+  assert.match(html, /grid-cols-1.*md:grid-cols-2.*lg:grid-cols-3/);
+  assert.equal((html.match(/<article\b/g) ?? []).length, 2);
+  assert.ok(
+    html.indexOf(componentes[0].componente.nombre) < html.indexOf(componentes[1].componente.nombre),
+  );
+  assert.equal((html.match(/opacity-60/g) ?? []).length, 2);
 });
 
 test('los correos oficiales solo se definen en la configuracion y no se expone Gmail', () => {
@@ -462,7 +789,7 @@ const datosContacto = {
 };
 
 test('el formulario prepara consultas y cotizaciones con todos los datos sin enviarlos', () => {
-  for (const opcion of [{id: 'consulta', nombre: 'Consulta'}, ...getPaquetes()]) {
+  for (const opcion of [{id: 'consulta', nombre: 'Consulta'}, ...getPaquetesHabilitados()]) {
     const resultado = prepararCorreoContacto(
       {...datosContacto, paqueteId: opcion.id},
       getPaquetes(),
@@ -480,20 +807,13 @@ test('el formulario prepara consultas y cotizaciones con todos los datos sin env
     assert.ok(cuerpo.includes(datosContacto.correo));
     assert.ok(cuerpo.includes(datosContacto.mensaje));
     assert.ok(cuerpo.includes(`Motivo: ${opcion.nombre}`));
+    assert.doesNotMatch(cuerpo, /configurador|selecci[oó]n/i);
   }
   const limite = prepararCorreoContacto(
     {...datosContacto, mensaje: Array(200).fill('palabra').join(' ')},
     getPaquetes(),
   );
   assert.ok(limite.ok);
-  const resumen = mensajeSeleccion('Presencia Digital', ['Componente de prueba']);
-  const seleccion = prepararCorreoContacto(
-    {...datosContacto, paqueteId: 'landing'},
-    getPaquetes(),
-    resumen,
-  );
-  assert.ok(seleccion.ok);
-  assert.ok(new URL(seleccion.href).searchParams.get('body')?.includes(resumen));
 });
 
 test('el formulario rechaza datos invalidos explicitamente sin generar un mailto', () => {
@@ -506,6 +826,8 @@ test('el formulario rechaza datos invalidos explicitamente sin generar un mailto
     {mensaje: ' '},
     {mensaje: Array(201).fill('palabra').join(' ')},
     {paqueteId: 'sistema-web-a-medida'},
+    {paqueteId: 'automatizacion'},
+    {paqueteId: 'comercio-electronico'},
   ]) {
     const resultado = prepararCorreoContacto({...datosContacto, ...cambio}, getPaquetes());
     assert.equal(resultado.ok, false);
@@ -514,11 +836,10 @@ test('el formulario rechaza datos invalidos explicitamente sin generar un mailto
   }
 });
 
-test('el formulario muestra Consulta y los cuatro planes sin simular un envio exitoso', () => {
+test('el formulario muestra Consulta y solo los planes habilitados sin simular un envio exitoso', () => {
   const html = renderToStaticMarkup(
     createElement(Contacto, {
       paquetes: getPaquetes(),
-      resumen: 'Mi selección',
       mensajeEtiqueta: 'Mi proyecto',
     }),
   );
@@ -526,13 +847,14 @@ test('el formulario muestra Consulta y los cuatro planes sin simular un envio ex
   assert.match(html, /name="nombre"/);
   assert.match(html, /name="correo"/);
   assert.match(html, /name="mensaje"/);
-  assert.match(html, /Mi selección/);
   assert.match(html, /Mi proyecto/);
   assert.match(html, /<select[^>]*name="paquete"/);
   assert.match(html, /<option value="consulta" selected="">Consulta<\/option>/);
-  for (const paquete of getPaquetes()) {
+  for (const paquete of getPaquetesHabilitados()) {
     assert.ok(html.includes(`<option value="${paquete.id}">${paquete.nombre}</option>`));
   }
+  assert.equal((html.match(/<option\b/g) ?? []).length, 3);
+  assert.doesNotMatch(html, /automatizacion|comercio-electronico/);
   assert.match(html, /200.*palabras/);
   assert.match(html, /Preparar consulta/);
   assert.equal((html.match(/<button\b/g) ?? []).length, 1);
@@ -546,4 +868,19 @@ test('el formulario muestra Consulta y los cuatro planes sin simular un envio ex
   assert.ok(cotizacion.includes('<option value="landing" selected="">Presencia Digital</option>'));
   assert.ok(cotizacion.includes('Preparar cotización'));
   assert.doesNotMatch(cotizacion, /mailto:|wa\.me|Ver los canales de contacto/);
+});
+
+test('un plan inicial desactivado se trata igual que uno inexistente en el contacto', () => {
+  for (const paqueteInicial of ['automatizacion', 'comercio-electronico', 'inexistente']) {
+    const html = renderToStaticMarkup(
+      createElement(Contacto, {paquetes: getPaquetes(), paqueteInicial}),
+    );
+    assert.match(html, /<option value="consulta" selected="">Consulta<\/option>/);
+    assert.match(html, /Preparar consulta/);
+    assert.doesNotMatch(html, /automatizacion|comercio-electronico|Preparar cotización/);
+    assert.deepEqual(
+      prepararCorreoContacto({...datosContacto, paqueteId: paqueteInicial}, getPaquetes()),
+      {ok: false, error: 'Elige Consulta o uno de los planes disponibles.'},
+    );
+  }
 });

@@ -17,6 +17,7 @@ import {getPerfil} from '@/infrastructure/handlers/datos';
 import {CONTACT_EMAIL} from '@/domain/configuracion/contacto';
 import {enlaceCorreo} from '@/domain/servicios/contacto';
 import {clasesBoton} from '@/infrastructure/componentes/Boton/estilos';
+import BeneficiosPyme from '@/infrastructure/componentes/Perfil/BeneficiosPyme';
 
 const perfil = getPerfil();
 
@@ -61,13 +62,14 @@ export default function PerfilPage() {
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
               {perfil.presentacion}
             </p>
+            <BeneficiosPyme contenido={perfil.beneficiosPyme} />
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#capacidades" className={clasesBoton('sky')}>
                 Explorar capacidades <ArrowDown size={18} aria-hidden="true" />
               </a>
-              <a href="#contacto" className={clasesBoton('bordeOscuro')}>
-                Hablemos <ArrowUpRight size={18} aria-hidden="true" />
-              </a>
+              <Link href="/contacto" className={clasesBoton('bordeOscuro')}>
+                {perfil.contactoEtiqueta} <ArrowUpRight size={18} aria-hidden="true" />
+              </Link>
             </div>
           </div>
           <aside
@@ -317,10 +319,6 @@ export default function PerfilPage() {
           <h2 id="proyectos-titulo" className="mt-3 text-3xl font-bold sm:text-4xl">
             Del desafío a la solución.
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-brand-ink/70">
-            Una selección de trabajo descrito en mi currículum. Estos casos no cuentan con una demo
-            pública enlazada.
-          </p>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {perfil.proyectos.map((proyecto, index) => (
               <article

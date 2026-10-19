@@ -1,1 +1,173 @@
-[]
+[
+  {
+    "id": "portada",
+    "nombre": "Portada",
+    "icono": "LayoutTemplate",
+    "descripcion": "Presenta tu negocio y cómo contactarte.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Portada."
+  },
+  {
+    "id": "servicios",
+    "nombre": "Servicios",
+    "icono": "BriefcaseBusiness",
+    "descripcion": "Muestra lo que ofreces y cómo puedes ayudar.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Servicios."
+  },
+  {
+    "id": "quienes-somos",
+    "nombre": "Quiénes somos",
+    "icono": "Store",
+    "descripcion": "Cuenta quién está detrás de tu negocio.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Quiénes somos."
+  },
+  {
+    "id": "galeria",
+    "nombre": "Galería",
+    "icono": "Images",
+    "descripcion": "Muestra fotos de tu local, productos o trabajos.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Galería."
+  },
+  {
+    "id": "testimonios",
+    "nombre": "Testimonios",
+    "icono": "MessageSquareQuote",
+    "descripcion": "Comparte las opiniones de tus clientes.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Testimonios."
+  },
+  {
+    "id": "preguntas-frecuentes",
+    "nombre": "Preguntas frecuentes",
+    "icono": "CircleHelp",
+    "descripcion": "Responde las dudas más comunes de tus clientes.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Preguntas frecuentes."
+  },
+  {
+    "id": "ubicacion-horarios",
+    "nombre": "Ubicación y horarios",
+    "icono": "MapPin",
+    "descripcion": "Muestra dónde estás y cuándo atiendes.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Ubicación y horarios."
+  },
+  {
+    "id": "redes-sociales",
+    "nombre": "Redes sociales",
+    "icono": "Share2",
+    "descripcion": "Reúne los enlaces a las redes de tu negocio.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Redes sociales."
+  },
+  {
+    "id": "whatsapp",
+    "nombre": "Botón de WhatsApp",
+    "icono": "MessageCircle",
+    "descripcion": "Facilita que tus clientes te escriban por WhatsApp.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Botón de WhatsApp."
+  },
+  {
+    "id": "formulario-contacto",
+    "nombre": "Formulario de contacto",
+    "icono": "Mail",
+    "descripcion": "Recibe los datos y consultas de tus clientes.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Formulario de contacto."
+  },
+  {
+    "id": "pie-pagina",
+    "nombre": "Pie de página",
+    "icono": "PanelBottom",
+    "descripcion": "Deja tus datos y enlaces importantes a mano.",
+    "planMinimo": "landing",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Pie de página."
+  },
+  {
+    "id": "panel-administracion",
+    "nombre": "Panel de administración",
+    "icono": "LayoutDashboard",
+    "descripcion": "Actualiza los textos y las imágenes de tu sitio.",
+    "planMinimo": "portal",
+    "destacado": true,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Panel de administración."
+  },
+  {
+    "id": "novedades",
+    "nombre": "Novedades",
+    "icono": "Newspaper",
+    "descripcion": "Comparte noticias y avisos de tu negocio.",
+    "planMinimo": "portal",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Novedades."
+  },
+  {
+    "id": "catalogo-sin-compra",
+    "nombre": "Catálogo de productos",
+    "icono": "LayoutGrid",
+    "descripcion": "Muestra tus productos sin compra en línea.",
+    "planMinimo": "portal",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Catálogo de productos."
+  },
+  {
+    "id": "promocion-destacada",
+    "nombre": "Promoción destacada",
+    "icono": "Megaphone",
+    "descripcion": "Destaca una oferta o un anuncio de tu negocio.",
+    "planMinimo": "portal",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Promoción destacada."
+  },
+  {
+    "id": "sedes",
+    "nombre": "Sedes",
+    "icono": "Building2",
+    "descripcion": "Muestra dónde están tus sucursales y cómo llegar.",
+    "planMinimo": "portal",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Sedes."
+  },
+  {
+    "id": "equipo",
+    "nombre": "Equipo",
+    "icono": "Users",
+    "descripcion": "Presenta a las personas que atienden tu negocio.",
+    "planMinimo": "portal",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Equipo."
+  },
+  {
+    "id": "cotizacion-pasos",
+    "nombre": "Cotización por pasos",
+    "icono": "ListChecks",
+    "descripcion": "Guía a tus clientes para explicar qué quieren cotizar.",
+    "planMinimo": "portal",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Cotización por pasos."
+  },
+  {
+    "id": "vista-google",
+    "nombre": "Vista previa en Google",
+    "icono": "Search",
+    "descripcion": "Revisa cómo podría verse tu negocio en Google.",
+    "planMinimo": "portal",
+    "destacado": false,
+    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Vista previa en Google."
+  }
+]

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {ArrowDown, ArrowUpRight, PanelsTopLeft, Sparkles, UserRound} from 'lucide-react';
+import {ArrowUpRight, PanelsTopLeft, Sparkles, UserRound} from 'lucide-react';
 import {getSitio} from '../../handlers/datos';
 import {clasesBoton} from '../Boton/estilos';
 
@@ -14,15 +14,15 @@ export default function Entrada() {
             {sitio.persona} / {sitio.nombre}
           </p>
           <h1 className="max-w-4xl animate-intro text-4xl font-bold leading-tight [animation-delay:100ms] sm:text-6xl lg:text-7xl">
-            Tu negocio, mi experiencia.
-            <span className="block text-brand-sky">Tecnología para avanzar.</span>
+            {sitio.inicio.tituloHero}{' '}
+            <span className="block text-brand-sky">{sitio.inicio.subtituloHero}</span>
           </h1>
           <p className="mt-6 max-w-xl animate-intro text-lg leading-relaxed text-white/75 [animation-delay:200ms]">
             Soy {sitio.persona}, y {sitio.nombre} es mi marca personal. {sitio.descripcion}
           </p>
-          <a href="#entradas" className={clasesBoton('coral', 'mt-8')}>
-            Explorar el sitio <ArrowDown size={18} aria-hidden="true" />
-          </a>
+          <Link href="/catalogo" className={clasesBoton('coral', 'mt-8')}>
+            {sitio.inicio.verPlanes} <ArrowUpRight size={18} aria-hidden="true" />
+          </Link>
           <a
             href="#entradas"
             className="absolute right-6 top-5 text-sm text-white/70 underline underline-offset-4"
@@ -30,6 +30,18 @@ export default function Entrada() {
             Saltar presentación
           </a>
         </div>
+      </section>
+      <section
+        aria-labelledby="que-hago-titulo"
+        className="mx-auto w-full max-w-6xl px-6 py-12 sm:py-16"
+      >
+        <h2 id="que-hago-titulo" className="text-2xl font-bold">
+          {sitio.inicio.queHagoTitulo}
+        </h2>
+        <p className="mt-4 max-w-2xl leading-relaxed text-brand-ink/70">
+          {sitio.inicio.queHagoDescripcion}
+        </p>
+        <p className="mt-3 max-w-2xl leading-relaxed text-brand-ink/70">{sitio.inicio.paraQuien}</p>
       </section>
       <section
         id="entradas"
@@ -60,8 +72,7 @@ export default function Entrada() {
                 id="catalogo-descripcion"
                 className="mt-4 max-w-sm text-lg leading-relaxed text-brand-ink/75 transition-[opacity,color] duration-puerta ease-out group-focus-visible:text-white group-focus-visible:opacity-100 fine-pointer:opacity-0 fine-pointer:group-hover:text-white fine-pointer:group-hover:opacity-100"
               >
-                Conoce mis cuatro planes de servicios. Revisa sus alcances y conversemos sobre lo
-                que necesita tu negocio.
+                {sitio.descripcionCatalogo}
               </p>
             </div>
             <span className="mt-10 flex items-center gap-3 font-semibold text-brand-sky-text transition-colors duration-puerta ease-out group-focus-visible:text-white fine-pointer:group-hover:text-white">
@@ -91,6 +102,11 @@ export default function Entrada() {
             <span className="mt-10 flex items-center gap-3 font-semibold text-brand-ink transition-colors duration-puerta ease-out group-focus-visible:text-white fine-pointer:group-hover:text-white">
               Conocer a Daniel <ArrowUpRight size={20} aria-hidden="true" />
             </span>
+          </Link>
+        </div>
+        <div className="px-6 py-8 text-center">
+          <Link href="/contacto" className={clasesBoton('borde')}>
+            {sitio.inicio.cotizar}
           </Link>
         </div>
       </section>

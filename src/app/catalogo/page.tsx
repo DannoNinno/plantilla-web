@@ -1,8 +1,12 @@
 import Link from 'next/link';
-import {ArrowUpRight} from 'lucide-react';
-import {getCatalogo, getPaquetes, getSitio} from '@/infrastructure/handlers/datos';
-import {precioDesdeCLP} from '@/domain/servicios/precio';
-import {clasesBoton} from '@/infrastructure/componentes/Boton/estilos';
+import {
+  getCatalogo,
+  getPaquetes,
+  getPaquetesHabilitados,
+  getSitio,
+} from '@/infrastructure/handlers/datos';
+import TarjetaPlan from '@/infrastructure/componentes/Catalogo/TarjetaPlan';
+import ComparacionPlanes from '@/infrastructure/componentes/Catalogo/ComparacionPlanes';
 
 export const metadata = {title: 'Catálogo'};
 
@@ -13,16 +17,42 @@ export default function CatalogoPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-12 sm:py-20">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text">
-        Mis servicios
+        {catalogo.presentacion.etiqueta}
       </p>
       <h1 className="mt-4 max-w-3xl text-4xl font-bold sm:text-5xl">
-        Te ayudo a hacer crecer tu negocio.
+        {catalogo.presentacion.titulo}
       </h1>
       <p className="mt-6 max-w-2xl text-lg leading-relaxed text-brand-ink/70">
-        Soy {sitio.persona}, y {sitio.nombre} es mi marca personal. Trabajo directamente contigo
-        para mejorar tu presencia digital, captar clientes, automatizar procesos o llevar tus
-        productos a una tienda online.
+        {catalogo.presentacion.introduccion
+          .replace('{persona}', sitio.persona)
+          .replace('{marca}', sitio.nombre)}
       </p>
+      <section aria-labelledby="planes-titulo" className="mt-12">
+        <h2 id="planes-titulo" className="text-2xl font-bold">
+          {catalogo.planes.titulo}
+        </h2>
+        <p className="mt-3 max-w-2xl leading-relaxed text-brand-ink/70">
+          {catalogo.planes.precios}
+        </p>
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          {getPaquetes().map((paquete, index) => (
+            <TarjetaPlan
+              key={paquete.id}
+              paquete={paquete}
+              numero={index + 1}
+              textos={catalogo.tarjetasPlan}
+            />
+          ))}
+        </div>
+        <ComparacionPlanes paquetes={getPaquetesHabilitados()} textos={catalogo.comparacion} />
+        <p className="mt-8 text-sm text-brand-ink/65">{catalogo.planes.avisoSinPagos}</p>
+      </section>
+      <Link
+        href="/componentes"
+        className="mt-6 inline-flex rounded text-brand-sky-text underline underline-offset-4"
+      >
+        {catalogo.vitrina.verTodos}
+      </Link>
       <section
         aria-labelledby="filosofia-titulo"
         className="mt-10 rounded-2xl bg-brand-ink p-6 text-white sm:p-8"
@@ -38,38 +68,6 @@ export default function CatalogoPage() {
         </ul>
         <p className="mt-6 max-w-3xl leading-relaxed">{catalogo.filosofia.conclusion}</p>
       </section>
-      <section aria-labelledby="planes-titulo" className="mt-12">
-        <h2 id="planes-titulo" className="text-2xl font-bold">
-          Elige tu punto de partida
-        </h2>
-        <p className="mt-3 max-w-2xl leading-relaxed text-brand-ink/70">
-          Los valores son precios desde. Defino contigo el alcance y preparo tu cotización antes de
-          comenzar.
-        </p>
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {getPaquetes().map((paquete, index) => (
-            <article
-              key={paquete.id}
-              className="flex flex-col rounded-2xl border border-brand-ink/10 bg-white p-6 sm:p-8"
-            >
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text">
-                Plan {index + 1}
-              </span>
-              <h3 className="mt-5 text-2xl font-bold">{paquete.nombre}</h3>
-              <p className="mt-3 text-xl font-semibold text-brand-sky-text">
-                {precioDesdeCLP(paquete.precioDesde)}
-              </p>
-              <p className="mt-4 flex-1 leading-relaxed text-brand-ink/70">{paquete.resumen}</p>
-              <Link href={`/catalogo/${paquete.id}`} className={clasesBoton('ink', 'mt-6')}>
-                Ver detalle de {paquete.nombre} <ArrowUpRight size={18} aria-hidden="true" />
-              </Link>
-            </article>
-          ))}
-        </div>
-      </section>
-      <p className="mt-8 text-sm text-brand-ink/65">
-        Cotizo según lo que necesita tu negocio. No hay pagos ni compras en este sitio.
-      </p>
       <div className="mt-12 grid gap-6 md:grid-cols-2">
         <section
           id="alcance"

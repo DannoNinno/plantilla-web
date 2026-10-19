@@ -1,6 +1,18 @@
 {
   "nombre": "dannotech",
   "persona": "Daniel Salamanca",
-  "descripcion": "Te ayudo a mejorar tu presencia digital, automatizar procesos y vender online con soluciones pensadas para tu negocio.",
+  "descripcion": "Te ayudo a dar a conocer tu negocio y captar clientes con un sitio web pensado para lo que necesitas.",
+  "descripcionCatalogo": "Conoce mis planes para pymes. Revisa sus alcances y conversemos sobre lo que necesita tu negocio.",
+  "inicio": {
+    "tituloHero": "Tu negocio, mi experiencia.",
+    "subtituloHero": "Tecnología para avanzar.",
+    "verPlanes": "Ver planes",
+    "queHagoTitulo": "Qué hago y para quién",
+    "queHagoDescripcion": "Diseño y desarrollo sitios web para presentar tu negocio y facilitar que tus clientes te contacten.",
+    "paraQuien": "Para emprendedores, profesionales independientes y negocios que aún no tienen sitio web.",
+    "revisionParaQuien": "TODO(Daniel): Revisar la descripción del público al que se dirige el sitio.",
+    "revisionDescripcion": "TODO(Daniel): Revisar la presentación de los servicios en el home y la descripción general.",
+    "cotizar": "¿Ya sabes lo que necesitas? Cotiza aquí"
+  },
   "logo": "/dannotech-kit/svg/dannotech-imagotipo-horizontal-fondo-oscuro.svg"
 }

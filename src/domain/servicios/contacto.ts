@@ -41,8 +41,7 @@ export function validarMensaje(mensaje: string): string | null {
 
 export function prepararCorreoContacto(
   datos: DatosContacto,
-  paquetes: Pick<Paquete, 'id' | 'nombre'>[],
-  resumen?: string,
+  paquetes: Pick<Paquete, 'id' | 'nombre' | 'habilitado'>[],
 ): {ok: true; href: string} | {ok: false; error: string} {
   const nombre = datos.nombre.trim();
   const correo = datos.correo.trim();
@@ -54,7 +53,7 @@ export function prepararCorreoContacto(
   }
   const errorMensaje = validarMensaje(datos.mensaje);
   if (errorMensaje) return {ok: false, error: errorMensaje};
-  const paquete = paquetes.find((opcion) => opcion.id === datos.paqueteId);
+  const paquete = paquetes.find((opcion) => opcion.habilitado && opcion.id === datos.paqueteId);
   if (datos.paqueteId !== 'consulta' && !paquete) {
     return {ok: false, error: 'Elige Consulta o uno de los planes disponibles.'};
   }
@@ -65,20 +64,9 @@ export function prepararCorreoContacto(
     `Motivo: ${paquete?.nombre ?? 'Consulta'}`,
     '',
     datos.mensaje.trim(),
-    ...(resumen ? ['', `Selección del configurador:\n${resumen}`] : []),
   ].join('\r\n');
   return {
     ok: true,
     href: enlaceCorreo(paquete ? QUOTES_EMAIL : CONTACT_EMAIL, asunto, cuerpo),
   };
-}
-
-export function mensajeSeleccion(paquete: string, componentes: string[]) {
-  return [
-    `Hola, me interesa cotizar el paquete ${paquete}.`,
-    componentes.length > 0
-      ? `Componentes seleccionados: ${componentes.join(', ')}.`
-      : 'Aún no he seleccionado componentes adicionales.',
-    'Me gustaría conversar sobre lo que necesita mi negocio.',
-  ].join('\n');
 }

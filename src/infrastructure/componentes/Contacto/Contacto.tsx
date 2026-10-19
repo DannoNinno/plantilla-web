@@ -14,17 +14,18 @@ import {
 export default function Contacto({
   paquetes,
   paqueteInicial = 'consulta',
-  resumen,
   mensajeEtiqueta = 'Cuéntame sobre tu negocio',
 }: ContactoProps) {
   const id = useId();
-  const [paqueteId, setPaqueteId] = useState(paqueteInicial);
+  const disponibles = paquetes.filter((opcion) => opcion.habilitado);
+  const [paqueteId, setPaqueteId] = useState(
+    disponibles.some((opcion) => opcion.id === paqueteInicial) ? paqueteInicial : 'consulta',
+  );
   const [mensaje, setMensaje] = useState('');
   const [error, setError] = useState<string | null>(null);
   const palabras = contarPalabras(mensaje);
   const excedido = palabras > MAX_MESSAGE_WORDS;
-  const paquete = paquetes.find((opcion) => opcion.id === paqueteId);
-  const resumenActual = paqueteId === paqueteInicial ? resumen : undefined;
+  const paquete = disponibles.find((opcion) => opcion.id === paqueteId);
 
   function prepararCorreo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,7 +38,6 @@ export default function Contacto({
         mensaje,
       },
       paquetes,
-      resumenActual,
     );
     if (!resultado.ok) {
       setError(resultado.error);
@@ -49,9 +49,6 @@ export default function Contacto({
 
   return (
     <form onSubmit={prepararCorreo} className="mt-6 max-w-2xl space-y-5">
-      {resumenActual && (
-        <p className="whitespace-pre-line rounded-xl bg-white p-4 text-sm">{resumenActual}</p>
-      )}
       <label className="block text-sm">
         Motivo de tu contacto
         <select
@@ -64,7 +61,7 @@ export default function Contacto({
           className="mt-2 w-full rounded-xl border border-brand-ink/20 bg-white px-4 py-3 text-brand-ink"
         >
           <option value="consulta">Consulta</option>
-          {paquetes.map((opcion) => (
+          {disponibles.map((opcion) => (
             <option key={opcion.id} value={opcion.id}>
               {opcion.nombre}
             </option>

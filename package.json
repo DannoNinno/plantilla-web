@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint src tests --max-warnings=0",
+    "lint:fix": "eslint src tests --fix --max-warnings=0",
     "test:frontend": "tsc -p tsconfig.tests.json && node --test .test-build/tests/frontend.test.js",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
@@ -20,6 +20,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

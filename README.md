@@ -1,6 +1,6 @@
 # dannotech
 
-Frontend en desarrollo con Next.js, React, TypeScript y Tailwind. Conserva la portada, perfil, catálogo, configurador local y estética de marca. Todo el contenido estructurado se obtiene de JSON locales; no hay API, autenticación, base de datos, administración ni procesamiento de Excel.
+Frontend en desarrollo con Next.js, React, TypeScript y Tailwind. Conserva la portada, perfil, catálogo y estética de marca. Todo el contenido estructurado se obtiene de JSON locales; no hay API, autenticación, base de datos, administración ni procesamiento de Excel.
 
 ## Desarrollo
 
@@ -17,6 +17,8 @@ npm run build
 `npm run build` compila Next.js en `.next`. Ya no se usa `output: 'export'` ni se genera `out`: el despliegue está preparado para Cloudflare Workers con OpenNext.
 
 En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambiar la política de ejecución. OpenNext no garantiza soporte completo de Windows; ante problemas exclusivos de esa plataforma, usa WSL o Linux. No ejecutes builds sobre una carpeta `.next` utilizada por otro proceso.
+
+`npm run lint` usa ESLint CLI sobre `src` y `tests`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier mediante `FlatCompat`; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance.
 
 ## Cloudflare Workers
 
@@ -52,7 +54,6 @@ src/
   app/                       Rutas, vistas y estilos globales
   data/                      Datos públicos en JSON
   domain/
-    casos-de-uso/             Selección local de componentes
     servicios/               Mensajes y enlaces de contacto
     types/                   Tipos de contenido y props del frontend
   infrastructure/
@@ -71,18 +72,26 @@ Los [handlers de datos](./src/infrastructure/handlers/datos.ts) son funciones, n
 | [perfil.json](./src/data/perfil.json) | Identidad, experiencia, capacidades, formación, idiomas y proyectos |
 | [paquetes.json](./src/data/paquetes.json) | Paquetes y sus descripciones |
 | [catalogo.json](./src/data/catalogo.json) | Filosofía de servicio, alcance, principios y costos adicionales |
-| [componentes.json](./src/data/componentes.json) | Definiciones del configurador; actualmente vacío |
+| [componentes.json](./src/data/componentes.json) | 19 componentes descriptivos, icono, plan mínimo y revisión pendiente |
 | [navegacion.json](./src/data/navegacion.json) | Enlaces de cabecera y pie |
 
 Edita estos archivos para cambiar el contenido y vuelve a construir al publicar. Todo lo que incluyas es público: no agregues credenciales ni datos privados.
 
 La voz de dannotech es la de Daniel Salamanca, su marca personal: los textos de presentación y oferta se escriben en primera persona singular y se dirigen al cliente de tú. Evita presentar la marca como una agencia o un equipo; conserva los precios, límites y condiciones al ajustar el tono.
 
-Las descripciones de paquetes son contenido del catálogo, no funcionalidades implementadas. El registro de componentes permanece vacío, sin inventar demostraciones. Las futuras definiciones pueden mostrar su nombre y descripción en la vista previa; no cargan datos del servidor ni módulos administrativos.
+Las descripciones de paquetes y componentes son contenido del catálogo, no funcionalidades implementadas. La vitrina de `/componentes` contiene únicamente artículos informativos, sin enlaces, controles ni funciones activas dentro de las tarjetas. Describir WhatsApp, formularios o administración no activa esas funciones en este sitio.
 
-El catálogo organiza los cuatro planes de [tarifas.md](./tarifas.md), con precios desde en CLP, un resumen por opción y vistas de detalle para su alcance, reuniones, capacitación, exclusiones y consideraciones según corresponda. Los servicios y costos adicionales aparecen al final del catálogo general. Los contenidos públicos se mantienen en los JSON; al actualizar las tarifas, sincroniza esos datos con el documento. Las pruebas verifican que los precios y el detalle de cada plan coincidan con la fuente.
+La [selección de vitrina](./src/domain/casos-de-uso/componentes/seleccion.ts) aplica la herencia de `landing` en `portal`, excluye los componentes cuyo plan mínimo está desactivado y ordena primero los destacados. Presencia Digital muestra sus 11 componentes y el panel atenuado al final; Captación de Clientes muestra los 19 con el panel primero. La página general agrupa los componentes por plan mínimo, sin duplicados. La grilla solo dibuja la lista seleccionada por cada página.
 
-Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación de Clientes, respectivamente. Ambos planes tienen un plazo de hasta 5 días hábiles, con las reuniones incluidas dentro de ese período. El configurador se muestra solo si el plan tiene componentes definidos; de lo contrario, se presenta el detalle y el formulario, sin una demostración vacía ni canales de contacto adicionales dentro del plan.
+Los [iconos de vitrina](./src/infrastructure/componentes/Vitrina/iconos.ts) usan imports explícitos y claves estrictas; el handler rechaza iconos o planes mínimos inválidos del JSON. Cada descripción propuesta incluye un `TODO(Daniel)` en `revisionDescripcion`, visible en los datos pero no en la interfaz. La introducción también queda pendiente de revisión en `catalogo.json`; las etiquetas de disponibilidad no cambian los límites del plan.
+
+El catálogo conserva los cuatro planes de [tarifas.md](./tarifas.md). El campo `habilitado` de [paquetes.json](./src/data/paquetes.json) controla su disponibilidad: Presencia Digital y Captación de Clientes están activos; Automatización de Procesos y Comercio Electrónico aparecen atenuados como «Próximamente», sin precio ni enlace. `getPaquetes()` conserva todos los datos para el catálogo; `getPaquetesHabilitados()` y `getPaquete()` solo exponen los activos para detalles, rutas estáticas y contacto. Los planes desactivados responden 404 y no se pueden cotizar en el formulario. Los servicios y costos adicionales aparecen al final del catálogo general. Al actualizar las tarifas, sincroniza los JSON con el documento; las pruebas conservan la verificación de precios y detalle de los cuatro planes.
+
+Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación de Clientes, respectivamente. Ambos planes tienen un plazo de hasta 5 días hábiles, con las reuniones incluidas dentro de ese período. Cada detalle presenta el alcance del plan y el formulario de contacto, sin vista previa interactiva.
+
+El home dirige a los planes desde el hero, explica qué hago y para quién y ofrece un enlace secundario a contacto debajo de sus dos tarjetas. El perfil agrega tres beneficios para pymes al inicio y su botón «Hablemos» lleva a `/contacto`. Los textos propuestos conservan `TODO(Daniel)` en los JSON, sin exponer esas notas al visitante. El menú principal ofrece Catálogo y Perfil; Contacto se mantiene en el footer y en los botones de contacto, no en la cabecera.
+
+El catálogo presenta primero los planes y su comparación, luego el enlace a componentes, la filosofía, las condiciones y los adicionales. La comparación usa el resumen estructurado `comparacion` de cada plan activo en [paquetes.json](./src/data/paquetes.json): límite de secciones, panel de administración, entrega, reuniones y capacitación. El detalle reutiliza ese plazo junto al precio. Las pruebas verifican que el resumen coincida con las secciones completas y que no se comparen planes desactivados; los encabezados de reuniones y exclusiones usan mayúscula inicial también en [tarifas.md](./tarifas.md).
 
 Los correos oficiales se centralizan en [contacto.ts](./src/domain/configuracion/contacto.ts): `CONTACT_EMAIL` para contacto general y `QUOTES_EMAIL` para cotizaciones. No se guardan direcciones en los JSON ni se repiten en componentes. El footer, el perfil y los metadatos usan esta configuración; los enlaces se construyen como `mailto:` con asuntos codificados.
 
@@ -100,15 +109,13 @@ El navbar identifica la sección actual con texto celeste, un subrayado fino y `
 
 Las capacidades del perfil resaltan su fondo, acento lateral e icono al hacer hover. Todas comparten el mismo movimiento breve del icono, dibujo de trazos y destello. Los iconos de formación e idiomas mantienen la inclinación y elevación; el título principal tiene un desplazamiento horizontal suave que vuelve a su posición original. Los efectos no usan bucles ni JavaScript y los movimientos solo se activan con puntero preciso y cuando no se solicita movimiento reducido.
 
-## Formularios y selección
+## Formularios
 
-La página `/contacto/` contiene el formulario compartido, con nombre, correo, un selector de los cuatro planes y la opción Consulta, y un mensaje de hasta 200 palabras. Tiene una única acción principal y no muestra la dirección destinataria ni enlaces de correo adicionales dentro del formulario. El footer mantiene el enlace `mailto:` con el texto «Escríbeme por correo». El límite se valida por palabras (separadas por espacios, tabulaciones o saltos de línea), no por caracteres; al excederlo se informa el error y se bloquea la preparación del correo.
+La página `/contacto/` contiene el formulario compartido, con nombre, correo, un selector de los dos planes habilitados y la opción Consulta, y un mensaje de hasta 200 palabras. Tiene una única acción principal y no muestra la dirección destinataria ni enlaces de correo adicionales dentro del formulario. El footer mantiene el enlace `mailto:` con el texto «Escríbeme por correo». El límite se valida por palabras (separadas por espacios, tabulaciones o saltos de línea), no por caracteres; al excederlo se informa el error y se bloquea la preparación del correo.
 
 En los planes se preselecciona el plan correspondiente. Consulta prepara un `mailto:` a `CONTACT_EMAIL`; un plan prepara uno a `QUOTES_EMAIL`, con el nombre del plan en el asunto y los datos del formulario en el cuerpo. El usuario debe tener un programa de correo configurado, revisar el borrador y enviarlo desde allí. El sitio no envía ni almacena solicitudes, no muestra confirmaciones de envío y no integra SMTP ni APIs de correo. El backend y el panel administrativo para gestionar solicitudes quedan pendientes, sin diseñarlos en esta etapa.
 
-El configurador mantiene su selección y resolución de dependencias únicamente en memoria del navegador. No persiste datos al salir ni modifica el sitio.
-
-Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/`, `/catalogo/automatizacion/` y `/catalogo/comercio-electronico/`. Las rutas `/api` y `/admin` ya no existen. Los planes desconocidos no generan páginas y devuelven 404.
+Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/` y `/componentes/`. La vitrina tiene título y descripción propios para buscadores; se accede desde el enlace posterior a los planes del catálogo. No se publican detalles de componentes ni rutas de demo. Las rutas `/api` y `/admin` ya no existen. Los planes desconocidos o desactivados no generan páginas y devuelven 404.
 
 ## Docker anterior
 
