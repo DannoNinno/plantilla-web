@@ -22,7 +22,7 @@ export default function Entrada() {
         <h3 className="text-4xl font-bold sm:text-5xl">Catálogo</h3>
         <p className="mt-4 max-w-sm text-lg leading-relaxed text-brand-ink/75 group-focus-visible:text-white fine-pointer:group-hover:text-white">
           {sitio.catalogoHabilitado
-            ? 'Conoce mis cuatro planes de servicios y encuentra un punto de partida para tu negocio.'
+            ? 'Conoce mis planes de servicios y encuentra un punto de partida para tu negocio.'
             : 'Estoy preparando mis planes de servicios. Este espacio todavía no está disponible.'}
         </p>
       </div>
@@ -50,7 +50,7 @@ export default function Entrada() {
             {sitio.persona} / {sitio.nombre}
           </p>
           <h1 className="max-w-4xl text-4xl font-bold leading-tight motion-safe:animate-intro sm:text-6xl lg:text-7xl">
-            Tu negocio, mi experiencia.
+            Tu negocio, mi experiencia.{' '}
             <span className="block text-brand-sky">Tecnología para avanzar.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">

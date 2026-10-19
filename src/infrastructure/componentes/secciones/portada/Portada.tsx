@@ -17,7 +17,7 @@ export default function Portada({
   return (
     <section id={id} className="bg-seccion-fondo py-16 text-seccion-tinta sm:py-24">
       <Contenedor>
-        <div className="grid min-h-demo-portada items-center gap-12 lg:grid-cols-2">
+        <div className="grid min-h-boveda-portada items-center gap-12 lg:grid-cols-2">
           <div className="min-w-0 space-y-8">
             {logo && (
               <Image {...logo} alt={logo.alt} sizes="288px" className="h-auto w-72 max-w-full" />

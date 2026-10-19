@@ -4,7 +4,7 @@
   "portada": {
     "id": "portada",
     "logo": {
-      "src": "/demo/cafe-aurora-demo/demo/logos/cafe-aurora-logo.svg",
+      "src": "/ejemplos-boveda/cafe-aurora/logos/cafe-aurora-logo.svg",
       "alt": "Café Aurora, cafetería y tostaduría",
       "width": 700,
       "height": 200
@@ -12,9 +12,12 @@
     "etiqueta": "Cafetería y tostaduría",
     "titulo": "Un buen café cambia tu mañana.",
     "descripcion": "En Café Aurora tostamos en pequeñas partidas y preparamos cada taza con calma. Ven por tu favorito, descubre algo nuevo y quédate un rato.",
-    "accion": {"texto": "Conversemos", "href": "#contacto"},
+    "accion": {
+      "texto": "Conversemos",
+      "href": "#contacto"
+    },
     "imagen": {
-      "src": "/demo/cafe-aurora-demo/demo/portada/portada.svg",
+      "src": "/ejemplos-boveda/cafe-aurora/portada/portada.svg",
       "alt": "Amanecer ilustrado sobre una plantación de café.",
       "width": 1600,
       "height": 900
@@ -43,7 +46,7 @@
     },
     "textos": {
       "enviar": "Simular envío",
-      "aviso": "Demostración: no se envía nada ni se guarda información al recargar.",
+      "aviso": "ejemplo: no se envía nada ni se guarda información al recargar.",
       "exito": "Consulta simulada recibida. No se ha enviado ningún mensaje.",
       "reiniciar": "Escribir otra consulta",
       "errorGeneral": "Revisa los campos señalados antes de continuar.",
@@ -58,7 +61,7 @@
       "descripcion": "Café de perfil suave, con notas de cacao.",
       "precio": 8900,
       "imagen": {
-        "src": "/demo/cafe-aurora-demo/demo/productos/producto-01.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/productos/producto-01.svg",
         "alt": "Bolsa ilustrada de café Mezcla Amanecer.",
         "width": 800,
         "height": 800
@@ -70,7 +73,7 @@
       "descripcion": "Café de perfil frutal para preparar con filtro.",
       "precio": 9900,
       "imagen": {
-        "src": "/demo/cafe-aurora-demo/demo/productos/producto-02.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/productos/producto-02.svg",
         "alt": "Bolsa ilustrada de café Origen Sur.",
         "width": 800,
         "height": 800
@@ -108,7 +111,7 @@
       "En esta historia ficticia, la barra, las plantas y el aroma del tueste reciben a quienes vienen a trabajar, conversar o hacer una pausa."
     ],
     "imagen": {
-      "src": "/demo/cafe-aurora-demo/demo/nosotros/nosotros.svg",
+      "src": "/ejemplos-boveda/cafe-aurora/nosotros/nosotros.svg",
       "alt": "Fachada ilustrada de la cafetería ficticia Café Aurora.",
       "width": 1200,
       "height": 900
@@ -121,7 +124,7 @@
     "imagenes": [
       {
         "id": "tazas",
-        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-01.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-01.svg",
         "alt": "Tazas ilustradas con arte latte sobre una mesa.",
         "width": 1200,
         "height": 900,
@@ -129,7 +132,7 @@
       },
       {
         "id": "granos",
-        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-02.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-02.svg",
         "alt": "Granos de café tostado ilustrados.",
         "width": 1200,
         "height": 900,
@@ -137,7 +140,7 @@
       },
       {
         "id": "bolsas",
-        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-03.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-03.svg",
         "alt": "Bolsas ilustradas de café en una repisa.",
         "width": 1200,
         "height": 900,
@@ -145,7 +148,7 @@
       },
       {
         "id": "fachada",
-        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-04.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-04.svg",
         "alt": "Fachada ilustrada del local al anochecer.",
         "width": 1200,
         "height": 900,
@@ -153,7 +156,7 @@
       },
       {
         "id": "galletas",
-        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-05.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-05.svg",
         "alt": "Galletas y una taza de café ilustradas.",
         "width": 1200,
         "height": 900,
@@ -161,7 +164,7 @@
       },
       {
         "id": "rincon",
-        "src": "/demo/cafe-aurora-demo/demo/galeria/galeria-06.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/galeria/galeria-06.svg",
         "alt": "Rincón ilustrado con plantas y café de grano.",
         "width": 1200,
         "height": 900,
@@ -202,7 +205,7 @@
       {
         "id": "molienda",
         "pregunta": "¿Pueden moler el café para mi método?",
-        "respuesta": "Sí, en esta demo ofrecemos molienda para espresso, filtro y prensa francesa. Cuéntanos cómo lo preparas."
+        "respuesta": "Sí, en esta ejemplo ofrecemos molienda para espresso, filtro y prensa francesa. Cuéntanos cómo lo preparas."
       },
       {
         "id": "opciones",
@@ -217,7 +220,7 @@
       {
         "id": "real",
         "pregunta": "¿Puedo visitar o comprar en Café Aurora?",
-        "respuesta": "No. Café Aurora es un negocio inventado para esta demostración. Sus direcciones, productos y actividades no son reales."
+        "respuesta": "No. Café Aurora es un negocio inventado para esta ejemplo. Sus direcciones, productos y actividades no son reales."
       }
     ]
   },
@@ -229,20 +232,28 @@
     "etiquetaHorarios": "Horario de ejemplo"
   },
   "whatsapp": {
-    "texto": "WhatsApp de demostración: ir al formulario simulado",
+    "texto": "WhatsApp de ejemplo: ir al formulario simulado",
     "href": "#contacto"
   },
   "redes": {
-    "etiqueta": "Redes sociales de demostración",
+    "etiqueta": "Redes sociales de ejemplo",
     "descripcion": "Enlaces de ejemplo: abren el contacto simulado, no perfiles reales.",
     "enlaces": [
-      {"id": "instagram", "texto": "Instagram", "href": "#contacto"},
-      {"id": "facebook", "texto": "Facebook", "href": "#contacto"}
+      {
+        "id": "instagram",
+        "texto": "Instagram",
+        "href": "#contacto"
+      },
+      {
+        "id": "facebook",
+        "texto": "Facebook",
+        "href": "#contacto"
+      }
     ]
   },
   "pie": {
     "descripcion": "Un buen café, una pausa y una historia por compartir.",
-    "copyright": "Café Aurora · Negocio ficticio. Ilustraciones originales de demostración.",
+    "copyright": "Café Aurora · Negocio ficticio. Ilustraciones originales de ejemplo.",
     "textoVolver": "Volver al inicio",
     "hrefVolver": "#portada"
   },
@@ -253,7 +264,7 @@
       "descripcion": "Ejemplo ficticio de una cata guiada en nuestra tostaduría.",
       "fecha": "Actividad de ejemplo",
       "imagen": {
-        "src": "/demo/cafe-aurora-demo/demo/novedades/novedad-02.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/novedades/novedad-02.svg",
         "alt": "Tres tazas ilustradas para una cata ficticia.",
         "width": 1200,
         "height": 675
@@ -265,7 +276,7 @@
       "descripcion": "Una mezcla imaginaria para mostrar cómo publicar novedades desde el panel.",
       "fecha": "Novedad ficticia",
       "imagen": {
-        "src": "/demo/cafe-aurora-demo/demo/novedades/novedad-03.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/novedades/novedad-03.svg",
         "alt": "Ilustración del lanzamiento de una mezcla ficticia de café.",
         "width": 1200,
         "height": 675
@@ -279,7 +290,7 @@
       "direccion": "Paseo del Alba 120, Ciudad Aurora (dirección ficticia)",
       "horarios": "Lunes a viernes, 08:00 a 18:00",
       "imagen": {
-        "src": "/demo/cafe-aurora-demo/demo/sedes/sede-01.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/sedes/sede-01.svg",
         "alt": "Ilustración de la sede Centro de Café Aurora, un local ficticio.",
         "width": 1200,
         "height": 800
@@ -291,7 +302,7 @@
       "direccion": "Camino del Tueste 45, Ciudad Aurora (dirección ficticia)",
       "horarios": "Martes a sábado, 09:00 a 17:00",
       "imagen": {
-        "src": "/demo/cafe-aurora-demo/demo/sedes/sede-02.svg",
+        "src": "/ejemplos-boveda/cafe-aurora/sedes/sede-02.svg",
         "alt": "Ilustración de la sede Barrio Sur de Café Aurora, un local ficticio.",
         "width": 1200,
         "height": 800
@@ -322,9 +333,12 @@
     "etiqueta": "Promoción ficticia",
     "titulo": "La tarde también merece un buen café.",
     "descripcion": "Un ejemplo de promoción destacada que puedes adaptar desde el panel. No corresponde a un descuento ni beneficio real.",
-    "accion": {"texto": "Consultar la promoción", "href": "#contacto"},
+    "accion": {
+      "texto": "Consultar la promoción",
+      "href": "#contacto"
+    },
     "imagen": {
-      "src": "/demo/cafe-aurora-demo/demo/promociones/promocion.svg",
+      "src": "/ejemplos-boveda/cafe-aurora/promociones/promocion.svg",
       "alt": "Banner ilustrado de una promoción ficticia con una taza de café.",
       "width": 1600,
       "height": 600
@@ -340,7 +354,7 @@
         "nombre": "Barista ficticia",
         "rol": "Preparación y barra",
         "imagen": {
-          "src": "/demo/cafe-aurora-demo/demo/equipo/equipo-01.svg",
+          "src": "/ejemplos-boveda/cafe-aurora/equipo/equipo-01.svg",
           "alt": "Retrato ilustrado de una barista ficticia.",
           "width": 600,
           "height": 600
@@ -351,7 +365,7 @@
         "nombre": "Tostador de ejemplo",
         "rol": "Tueste y selección",
         "imagen": {
-          "src": "/demo/cafe-aurora-demo/demo/equipo/equipo-02.svg",
+          "src": "/ejemplos-boveda/cafe-aurora/equipo/equipo-02.svg",
           "alt": "Retrato ilustrado de un tostador ficticio.",
           "width": 600,
           "height": 600
@@ -362,7 +376,7 @@
         "nombre": "Encargada imaginaria",
         "rol": "Encuentros y atención",
         "imagen": {
-          "src": "/demo/cafe-aurora-demo/demo/equipo/equipo-03.svg",
+          "src": "/ejemplos-boveda/cafe-aurora/equipo/equipo-03.svg",
           "alt": "Retrato ilustrado de una encargada ficticia.",
           "width": 600,
           "height": 600
@@ -396,154 +410,6 @@
       "pasos": ["Elige un servicio", "Describe tu solicitud", "Tus datos de contacto"],
       "enviar": "Simular solicitud",
       "exito": "Solicitud simulada recibida. No se ha enviado información."
-    }
-  },
-  "interfaz": {
-    "favicon": "/demo/cafe-aurora-demo/demo/logos/favicon.svg",
-    "salto": "Ir al contenido",
-    "aviso": "Sitio de demostración",
-    "detalleAviso": "Café Aurora es un negocio ficticio. Ningún formulario realiza envíos.",
-    "herramientas": "Herramientas de la demostración",
-    "portal": {"texto": "Volver al portal", "textoCorto": "Portal", "href": "/"},
-    "cotizacion": {
-      "texto": "Volver a la cotización",
-      "textoCorto": "Cotizar",
-      "href": "/contacto?paquete=landing"
-    },
-    "selector": "Cambiar plan de demostración",
-    "fase": "Todos los datos y actividades son ficticios. En Captación puedes probar la edición y la bandeja simuladas; sus cambios solo duran en esta visita y se pierden al recargar o cambiar de plan.",
-    "planes": {
-      "presencia": {
-        "paqueteId": "landing",
-        "nombre": "Presencia Digital",
-        "textoCorto": "Presencia",
-        "descripcion": "Una página para presentar el negocio y facilitar el primer contacto.",
-        "cotizacionHref": "/contacto?paquete=landing",
-        "limite": 5,
-        "secciones": ["portada", "servicios", "quienes-somos", "testimonios", "formulario-contacto"]
-      },
-      "captacion": {
-        "paqueteId": "portal",
-        "nombre": "Captación de Clientes",
-        "textoCorto": "Captación",
-        "descripcion": "Diez secciones iniciales, cotización por pasos y administración simulada de textos, imágenes y consultas.",
-        "cotizacionHref": "/contacto?paquete=portal",
-        "limite": 10,
-        "secciones": [
-          "portada",
-          "servicios",
-          "quienes-somos",
-          "testimonios",
-          "novedades",
-          "catalogo-sin-compra",
-          "cotizacion-pasos",
-          "sedes",
-          "promocion-destacada",
-          "formulario-contacto"
-        ]
-      }
-    },
-    "administracion": {
-      "titulo": "Administración de demostración",
-      "aviso": "Sin login, base de datos ni envíos. Los cambios y mensajes solo existen en esta página y se pierden al recargar o cambiar de plan.",
-      "activar": "Cambiar a vista administrador",
-      "desactivar": "Cambiar a vista visitante",
-      "textoAdmin": "Admin",
-      "textoVisita": "Visita",
-      "secciones": "Secciones del sitio",
-      "seleccion": "{actual} de {limite} secciones",
-      "fijas": "Portada y Contacto permanecen incluidos para mantener el título principal y los destinos de contacto de esta demo.",
-      "limite": "Ya hay diez secciones. Desactiva una antes de agregar otra.",
-      "editor": "Editar contenido",
-      "elegir": "Pieza que quieres editar",
-      "enVivo": "Los cambios se ven directamente en el sitio de abajo. Puedes volver a vista visitante para recorrerlo.",
-      "imagenes": "Ilustraciones disponibles",
-      "errorImagen": "Selecciona una ilustración disponible.",
-      "errorNumero": "Escribe un número entero no negativo y dentro del rango seguro.",
-      "errorTexto": "Este texto no puede quedar vacío.",
-      "errorLongitud": "Escribe como máximo 2000 caracteres.",
-      "maximoTexto": 2000,
-      "bandeja": "Bandeja de contactos",
-      "sinContactos": "Todavía no hay mensajes. Prueba Contacto o la cotización por pasos en vista visitante.",
-      "leido": "Leído",
-      "nuevo": "Nuevo",
-      "marcar": "Marcar como leído",
-      "eliminar": "Eliminar mensaje",
-      "nombre": "Nombre",
-      "correo": "Correo",
-      "origen": "Origen",
-      "mensaje": "Mensaje",
-      "restablecer": "Restablecer demo",
-      "restablecido": "Demo restablecida: se descartaron los cambios y los mensajes simulados.",
-      "noJavascript": "Activa JavaScript para probar la edición y la bandeja simuladas.",
-      "etiquetas": {
-        "logo": "Logo",
-        "etiquetaDireccion": "Etiqueta de dirección",
-        "etiquetaHorarios": "Etiqueta de horarios",
-        "correo": "Correo",
-        "mensaje": "Mensaje",
-        "enviar": "Botón de envío simulado",
-        "aviso": "Aviso",
-        "exito": "Mensaje de éxito",
-        "reiniciar": "Botón de reinicio",
-        "errorGeneral": "Aviso de campos inválidos",
-        "limite": "Aviso de límite",
-        "sinJavascript": "Aviso sin JavaScript",
-        "textoConsulta": "Botón de consulta",
-        "siguiente": "Botón del siguiente paso",
-        "anterior": "Botón del paso anterior",
-        "paso": "Indicador de progreso",
-        "pasos": "Nombres de los pasos",
-        "sedes": "Sedes",
-        "enlaces": "Enlaces",
-        "textoVolver": "Botón para volver",
-        "titulo": "Título",
-        "descripcion": "Descripción",
-        "etiqueta": "Etiqueta",
-        "texto": "Texto",
-        "nombre": "Nombre",
-        "imagen": "Imagen",
-        "imagenes": "Imágenes",
-        "src": "Ilustración",
-        "alt": "Texto alternativo",
-        "elementos": "Elementos",
-        "personas": "Personas",
-        "productos": "Productos",
-        "parrafos": "Párrafos",
-        "leyenda": "Leyenda",
-        "autor": "Autor",
-        "detalle": "Detalle",
-        "pregunta": "Pregunta",
-        "respuesta": "Respuesta",
-        "direccion": "Dirección",
-        "horarios": "Horarios",
-        "precio": "Precio de ejemplo",
-        "fecha": "Fecha de ejemplo",
-        "rol": "Rol",
-        "copyright": "Texto final",
-        "accion": "Acción",
-        "campos": "Campos",
-        "textos": "Mensajes",
-        "servicio": "Servicio",
-        "opciones": "Opciones",
-        "placeholder": "Texto de ayuda",
-        "error": "Mensaje de error",
-        "nota": "Nota",
-        "url": "URL de ejemplo"
-      }
-    },
-    "boveda": {
-      "titulo": "Bóveda de componentes",
-      "descripcion": "Prueba piezas funcionales ya programadas. Aquí encontrarás formularios y, más adelante, carruseles, navegación y otros módulos reutilizables.",
-      "ver": "Abrir componente por separado",
-      "vacio": "Todavía no hay componentes disponibles.",
-      "incluido": "Disponible desde",
-      "volver": "Volver a la bóveda",
-      "props": "Props del componente",
-      "columnas": ["Prop", "Tipo", "Requerida", "Descripción"],
-      "si": "Sí",
-      "no": "No",
-      "informacionTecnica": "Información técnica"
     }
   }
 }

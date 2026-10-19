@@ -21,7 +21,7 @@ export default function MarcoSeccion({
     <section
       id={id}
       data-tono={tono}
-      className="scroll-mt-demo-ancla bg-seccion-fondo py-16 text-seccion-tinta data-[tono=suave]:bg-seccion-suave sm:py-24"
+      className="scroll-mt-boveda-ancla bg-seccion-fondo py-16 text-seccion-tinta data-[tono=suave]:bg-seccion-suave sm:py-24"
     >
       <Contenedor>
         {titulo && <TituloSeccion titulo={titulo} descripcion={descripcion} />}

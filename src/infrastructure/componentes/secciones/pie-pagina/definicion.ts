@@ -9,7 +9,6 @@ export const definicionPie: DefinicionRegistro<PiePaginaProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: false,
   categoria: 'seccion',
-  enDemo: true,
   componente: PiePagina,
   propsEjemplo: ejemploPiePagina,
   props: [

@@ -1,72 +1,80 @@
+import {negocio} from '../src/infrastructure/componentes/boveda/ejemplos';
 import {test} from 'node:test';
+
 import assert from 'node:assert/strict';
+
 import {existsSync, readdirSync, readFileSync} from 'node:fs';
+
 import path from 'node:path';
+
 import ts from 'typescript';
+
 import {createElement} from 'react';
+
 import {renderToStaticMarkup} from 'react-dom/server';
+
 import {Portada} from '../src/infrastructure/componentes/secciones/portada';
+
 import {
   registro,
   registroBoveda,
   getComponente,
 } from '../src/infrastructure/componentes/boveda/registro';
-import {negocio} from '../src/demo/negocio';
-import {
-  esPlanDemo,
-  getPlanesDemo,
-  getDemoPaquete,
-  getSeccionesPlan,
-  seleccionarSecciones,
-  seleccionarComposicion,
-} from '../src/demo/planes';
+
 import {FormularioContacto} from '../src/infrastructure/componentes/boveda/formulario-contacto';
+
 import {
   validarConsulta,
   limitesContacto,
 } from '../src/infrastructure/componentes/boveda/formulario-contacto/validacion';
-import IndiceBoveda from '../src/infrastructure/componentes/demo/IndiceBoveda/IndiceBoveda';
-import FichaComponente from '../src/infrastructure/componentes/demo/FichaComponente/FichaComponente';
-import PaginaPlan from '../src/infrastructure/componentes/demo/PaginaPlan/PaginaPlan';
-import HerramientasDemo from '../src/infrastructure/componentes/demo/HerramientasDemo/HerramientasDemo';
+
 import tailwindConfig from '../tailwind.config';
-import {getCatalogo, getPaquetes, getSitio} from '../src/infrastructure/handlers/datos';
-import PaginaCatalogo from '../src/infrastructure/componentes/Catalogo/PaginaCatalogo';
-import PaginaPaquete from '../src/infrastructure/componentes/DetallePaquete/PaginaPaquete';
+
 import TituloSeccion from '../src/infrastructure/componentes/base/TituloSeccion/TituloSeccion';
+
 import {Servicios} from '../src/infrastructure/componentes/secciones/servicios';
+
 import {QuienesSomos} from '../src/infrastructure/componentes/secciones/quienes-somos';
+
 import {Galeria} from '../src/infrastructure/componentes/secciones/galeria';
+
 import {Testimonios} from '../src/infrastructure/componentes/secciones/testimonios';
+
 import {PreguntasFrecuentes} from '../src/infrastructure/componentes/secciones/preguntas-frecuentes';
+
 import {UbicacionHorarios} from '../src/infrastructure/componentes/secciones/ubicacion-horarios';
+
 import {Whatsapp} from '../src/infrastructure/componentes/secciones/whatsapp';
+
 import {RedesSociales} from '../src/infrastructure/componentes/secciones/redes-sociales';
+
 import {PiePagina} from '../src/infrastructure/componentes/secciones/pie-pagina';
+
 import {Novedades} from '../src/infrastructure/componentes/secciones/novedades';
+
 import {CatalogoSinCompra} from '../src/infrastructure/componentes/secciones/catalogo-sin-compra';
+
 import {Sedes} from '../src/infrastructure/componentes/secciones/sedes';
+
 import {Equipo} from '../src/infrastructure/componentes/secciones/equipo';
+
 import {PromocionDestacada} from '../src/infrastructure/componentes/secciones/promocion-destacada';
+
 import {VistaGoogle} from '../src/infrastructure/componentes/secciones/vista-google';
+
 import {FormularioCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos';
+
 import {ejemploCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos/ejemplo';
+
 import {
   validarSolicitud,
   erroresPaso,
   pasoPrimerError,
 } from '../src/infrastructure/componentes/boveda/cotizacion-pasos/validacion';
-import {obtenerCampos} from '../src/infrastructure/componentes/boveda/edicion/campos';
-import {actualizarContenido} from '../src/infrastructure/componentes/boveda/edicion/actualizar';
-import {cambiarSeleccion, marcarMensaje, eliminarMensaje} from '../src/demo/administracion';
 
-test('la demo tiene una unica fuente JSON sin duplicar el negocio', () => {
-  assert.deepEqual(negocio, JSON.parse(readFileSync('src/data/demo/negocio.json', 'utf8')));
-  assert.equal(negocio.nombre, 'Café Aurora');
-  assert.ok(negocio.sedes.length > 1);
-  assert.ok(negocio.productos.length > 0);
-  assert.ok(negocio.novedades.length > 0);
-});
+import {obtenerCampos} from '../src/infrastructure/componentes/boveda/edicion/campos';
+
+import {actualizarContenido} from '../src/infrastructure/componentes/boveda/edicion/actualizar';
 
 test('los titulos compartidos usan la misma tipografia sans del portal', () => {
   for (const nivel of ['h1', 'h2'] as const) {
@@ -81,45 +89,6 @@ test('los titulos compartidos usan la misma tipografia sans del portal', () => {
   ]);
 });
 
-test('el catalogo distingue componentes aislados y demos del plan sin inventar demos', () => {
-  const catalogo = getCatalogo();
-  const paquetes = getPaquetes();
-  const sitio = getSitio();
-  const html = renderToStaticMarkup(createElement(PaginaCatalogo, {catalogo, paquetes, sitio}));
-  assert.equal(sitio.catalogoHabilitado, true);
-  assert.equal(html.match(/<h1\b/g)?.length, 1);
-  assert.ok(html.includes('href="/componentes"'));
-  assert.ok(html.includes('href="#planes"'));
-  assert.ok(html.includes(catalogo.exploracion.fase));
-  for (const paquete of paquetes) {
-    const demo = getDemoPaquete(paquete.id);
-    const detalle = renderToStaticMarkup(
-      createElement(PaginaPaquete, {
-        paquete,
-        paquetes,
-        componentes: [],
-        nombreSitio: sitio.nombre,
-        catalogo,
-        demo,
-      }),
-    );
-    assert.equal(detalle.match(/<h1\b/g)?.length, 1);
-    assert.ok(detalle.includes(paquete.nombre));
-    assert.ok(detalle.includes('id="consulta"'));
-    if (paquete.id === 'landing' || paquete.id === 'portal') {
-      assert.ok(demo);
-      assert.equal(demo.href, paquete.id === 'landing' ? '/demo/presencia' : '/demo/captacion');
-      assert.ok(detalle.includes(`href="${demo.href}"`));
-      assert.ok(detalle.includes('href="/componentes"'));
-      assert.ok(detalle.includes(catalogo.exploracion.fase));
-    } else {
-      assert.equal(demo, undefined);
-      assert.doesNotMatch(detalle, /href="\/demo\//);
-    }
-  }
-  assert.equal(getDemoPaquete('inexistente'), undefined);
-});
-
 test('Portada funciona con props minimas, texto largo e imagen opcional', () => {
   const html = renderToStaticMarkup(createElement(Portada, {titulo: 'Título '.repeat(100)}));
   assert.equal(html.match(/<h1\b/g)?.length, 1);
@@ -129,75 +98,6 @@ test('Portada funciona con props minimas, texto largo e imagen opcional', () => 
   assert.ok(ejemplo.includes('width="1600"'));
   assert.ok(ejemplo.includes('height="900"'));
   assert.ok(ejemplo.includes('href="#contacto"'));
-});
-
-test('las demos respetan 5 y 10 secciones y no cuentan las piezas siempre incluidas', () => {
-  const entradas = Array.from({length: 12}, (_, indice) => ({
-    slug: `seccion-${indice}`,
-    planMinimo: 'presencia' as const,
-    cuentaParaTope: true,
-  }));
-  const pie = {slug: 'pie', planMinimo: 'presencia' as const, cuentaParaTope: false};
-  for (const [plan, limite] of [
-    ['presencia', 5],
-    ['captacion', 10],
-  ] as const) {
-    const seleccion = seleccionarSecciones([...entradas, pie], plan, limite);
-    assert.equal(seleccion.filter((entrada) => entrada.cuentaParaTope).length, limite);
-    assert.equal(seleccion.at(-1)?.slug, 'pie');
-    assert.deepEqual(
-      getSeccionesPlan(plan)
-        .filter((entrada) => entrada.cuentaParaTope)
-        .map((entrada) => entrada.slug),
-      negocio.interfaz.planes[plan].secciones,
-    );
-    assert.equal(
-      getSeccionesPlan(plan).filter((entrada) => entrada.cuentaParaTope).length,
-      plan === 'presencia' ? 5 : 10,
-    );
-    assert.deepEqual(
-      getSeccionesPlan(plan)
-        .filter((entrada) => !entrada.cuentaParaTope)
-        .map((entrada) => entrada.slug),
-      ['whatsapp', 'redes-sociales', 'pie-pagina'],
-    );
-  }
-  assert.deepEqual(seleccionarSecciones([], 'presencia', 5), []);
-  assert.deepEqual(seleccionarSecciones([{...pie, planMinimo: 'captacion'}], 'presencia', 5), []);
-  assert.equal(esPlanDemo('desconocido'), false);
-  assert.equal(esPlanDemo('captacion'), true);
-});
-
-test('la composicion elegida respeta orden y rechaza errores de configuracion', () => {
-  const entradas = [
-    {slug: 'primera', planMinimo: 'presencia' as const, cuentaParaTope: true},
-    {slug: 'segunda', planMinimo: 'presencia' as const, cuentaParaTope: true},
-    {slug: 'avanzada', planMinimo: 'captacion' as const, cuentaParaTope: true},
-    {slug: 'pie', planMinimo: 'presencia' as const, cuentaParaTope: false},
-  ];
-  assert.deepEqual(
-    seleccionarComposicion(entradas, ['segunda', 'primera'], 'presencia', 5).map(
-      (entrada) => entrada.slug,
-    ),
-    ['segunda', 'primera', 'pie'],
-  );
-  assert.throws(
-    () => seleccionarComposicion(entradas, ['primera', 'primera'], 'presencia', 5),
-    /duplicadas/,
-  );
-  assert.throws(
-    () => seleccionarComposicion(entradas, ['ausente'], 'presencia', 5),
-    /no disponible/,
-  );
-  assert.throws(
-    () => seleccionarComposicion(entradas, ['avanzada'], 'presencia', 5),
-    /no disponible/,
-  );
-  assert.throws(() => seleccionarComposicion(entradas, ['pie'], 'presencia', 5), /no disponible/);
-  assert.throws(
-    () => seleccionarComposicion(entradas, ['primera', 'segunda'], 'presencia', 1),
-    /supera/,
-  );
 });
 
 test('las seis secciones nuevas funcionan con props minimas y listas vacias', () => {
@@ -270,7 +170,7 @@ test('la galeria y ubicacion usan recursos propios dimensionados sin mapas exter
   assert.doesNotMatch(html, /<iframe|google\.com|maps\./);
 });
 
-test('las piezas incluidas no contactan numeros ni perfiles reales en la demo', () => {
+test('las piezas incluidas no contactan numeros ni perfiles reales en el ejemplo', () => {
   const whatsapp = renderToStaticMarkup(createElement(Whatsapp, negocio.whatsapp));
   const redes = renderToStaticMarkup(createElement(RedesSociales, negocio.redes));
   const pie = renderToStaticMarkup(
@@ -278,7 +178,7 @@ test('las piezas incluidas no contactan numeros ni perfiles reales en la demo', 
   );
   assert.ok(whatsapp.includes('href="#contacto"'));
   assert.ok(whatsapp.includes('fixed bottom-28'));
-  assert.ok(whatsapp.includes('WhatsApp de demostración'));
+  assert.ok(whatsapp.includes('WhatsApp de ejemplo'));
   assert.equal(redes.match(/href="#contacto"/g)?.length, negocio.redes.enlaces.length);
   assert.doesNotMatch(`${whatsapp}${redes}`, /href="https?:|wa\.me|tel:|mailto:/);
   assert.ok(pie.includes('<footer'));
@@ -345,185 +245,6 @@ test('el formulario es aislable, etiqueta todos los campos y no envia sin JavaSc
   assert.equal(new Set(ids).size, ids.length);
 });
 
-test('el indice y las fichas se generan desde el registro con un solo h1', () => {
-  const interfaz = negocio.interfaz;
-  const indice = renderToStaticMarkup(
-    createElement(IndiceBoveda, {
-      entradas: registroBoveda,
-      textos: interfaz.boveda,
-    }),
-  );
-  assert.equal(indice.match(/<h1\b/g)?.length, 1);
-  assert.equal(indice.match(/<form\b/g)?.length, registroBoveda.length);
-  assert.doesNotMatch(
-    indice,
-    /href="\/componentes\/portada"|href="\/demo\/|Cuenta para el límite|<table/,
-  );
-  for (const entrada of registroBoveda) {
-    assert.ok(indice.includes(`href="/componentes/${entrada.slug}"`));
-    const ficha = renderToStaticMarkup(
-      createElement(
-        FichaComponente,
-        {
-          entrada,
-          plan: interfaz.planes[entrada.planMinimo].nombre,
-          textos: interfaz.boveda,
-        },
-        entrada.renderizar(true),
-      ),
-    );
-    assert.equal(ficha.match(/<h1\b/g)?.length, 1);
-    assert.ok(ficha.includes('<table'));
-    assert.ok(ficha.includes('<form'));
-    assert.ok(ficha.indexOf('<form') < ficha.indexOf('<table'));
-    assert.match(ficha, /<details class="[^"]*">/);
-    assert.doesNotMatch(ficha, /<details[^>]*\bopen\b/);
-    assert.ok(ficha.includes(interfaz.boveda.informacionTecnica));
-    assert.doesNotMatch(ficha, /href="\/demo\/|Sitio de demostración/);
-  }
-  const vacio = renderToStaticMarkup(
-    createElement(IndiceBoveda, {entradas: [], textos: interfaz.boveda}),
-  );
-  assert.ok(vacio.includes(interfaz.boveda.vacio));
-});
-
-test('la pagina ensamblada contiene aviso, botonera y solo un h1', () => {
-  const interfaz = negocio.interfaz;
-  for (const plan of getPlanesDemo()) {
-    const html = renderToStaticMarkup(
-      createElement(
-        PaginaPlan,
-        {
-          aviso: interfaz.aviso,
-          descripcionAviso: interfaz.detalleAviso,
-          fase: interfaz.fase,
-          herramientas: {
-            etiqueta: interfaz.herramientas,
-            selector: interfaz.selector,
-            portal: interfaz.portal,
-            cotizacion: {...interfaz.cotizacion, href: plan.cotizacionHref},
-            planes: getPlanesDemo(),
-            actual: plan.id,
-          },
-        },
-        getSeccionesPlan(plan.id).map((entrada) =>
-          createElement('div', {key: entrada.slug}, entrada.renderizar()),
-        ),
-      ),
-    );
-    assert.equal(html.match(/<h1\b/g)?.length, 1);
-    assert.ok(html.includes(`href="${plan.cotizacionHref.replace('&', '&amp;')}"`));
-    assert.ok(html.includes('aria-current="page"'));
-    assert.ok(html.includes('h-dvh'));
-    assert.ok(html.includes('fixed inset-0'));
-    assert.ok(html.includes('data-flotante="true"'));
-    assert.equal(html.match(/Sitio de demostración/g)?.length, 1);
-    assert.ok(html.includes('overflow-y-auto'));
-    assert.ok(html.includes('pointer-events-none fixed inset-x-0 top-0'));
-    assert.ok(html.includes('pointer-events-none fixed inset-x-0 bottom-0'));
-  }
-});
-
-test('la botonera flotante distingue marca y planes con iconos sin repetir el aviso', () => {
-  const interfaz = negocio.interfaz;
-  const html = renderToStaticMarkup(
-    createElement(HerramientasDemo, {
-      etiqueta: interfaz.herramientas,
-      selector: interfaz.selector,
-      portal: interfaz.portal,
-      cotizacion: interfaz.cotizacion,
-      planes: getPlanesDemo(),
-      actual: 'presencia',
-    }),
-  );
-  assert.equal(html.match(/<svg\b/g)?.length, 4);
-  assert.equal(html.match(/data-familia="marca"/g)?.length, 2);
-  assert.equal(html.match(/data-familia="plan"/g)?.length, 2);
-  assert.equal(html.match(/aria-current="page"/g)?.length, 1);
-  assert.doesNotMatch(html, /Sitio de demostración|(?:\s|")w-full(?:\s|")/);
-  assert.ok(html.includes('bg-brand-ink'));
-  assert.ok(html.includes('text-brand-light'));
-  assert.ok(html.includes('text-brand-coral'));
-  assert.ok(html.includes('text-brand-sky'));
-  assert.ok(html.includes('aria-label="Volver a la cotización"'));
-  assert.ok(html.includes('aria-label="Captación de Clientes"'));
-  assert.ok(html.includes('>Cotizar</span>'));
-  assert.ok(html.includes('shadow-lg'));
-  assert.doesNotMatch(html, /bg-seccion-fondo/);
-  for (const clase of [
-    'motion-safe:fine-pointer:hover:scale-105',
-    'motion-safe:focus-visible:scale-105',
-    'active:scale-100',
-    'motion-reduce:transform-none',
-    'motion-reduce:transition-none',
-    'duration-150',
-  ]) {
-    assert.equal(html.split(clase).length - 1, 4, clase);
-  }
-});
-
-test('las nuevas piezas cumplen fragmentacion, Tailwind y paginas sin marcado propio', () => {
-  function fuentes(directorio: string): string[] {
-    return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
-      const ruta = path.join(directorio, entrada.name);
-      return entrada.isDirectory() ? fuentes(ruta) : [ruta];
-    });
-  }
-  const piezas = ['base', 'boveda', 'secciones', 'demo', 'Catalogo', 'DetallePaquete'].flatMap(
-    (carpeta) => fuentes(path.join('src', 'infrastructure', 'componentes', carpeta)),
-  );
-  for (const ruta of piezas) {
-    assert.doesNotMatch(ruta, /\.(css|scss)$/);
-    if (!/\.(ts|tsx)$/.test(ruta)) continue;
-    const contenido = readFileSync(ruta, 'utf8');
-    assert.ok(contenido.split(/\r?\n/).length <= 150, `${ruta}: supera 150 lineas`);
-    assert.doesNotMatch(
-      contenido,
-      /\bany\b|style=\{|@apply|(?:bg|text|mt|p|rounded|shadow)-\[/,
-      ruta,
-    );
-    assert.doesNotMatch(contenido, /font-editorial|font-serif/, ruta);
-    if (ruta.endsWith('.tsx') && /[\\/](boveda|secciones)[\\/]/.test(ruta)) {
-      assert.doesNotMatch(contenido, /demo\/negocio|data\/|Café Aurora/, ruta);
-      const fuente = ts.createSourceFile(
-        ruta,
-        contenido,
-        ts.ScriptTarget.Latest,
-        true,
-        ts.ScriptKind.TSX,
-      );
-      function visitar(nodo: ts.Node) {
-        if (ts.isJsxText(nodo)) assert.equal(nodo.text.trim(), '', `${ruta}: texto en duro`);
-        ts.forEachChild(nodo, visitar);
-      }
-      visitar(fuente);
-    }
-  }
-  for (const ruta of [
-    'src/app/(portal)/componentes/page.tsx',
-    'src/app/(portal)/componentes/[slug]/page.tsx',
-    'src/app/(demo)/demo/[plan]/page.tsx',
-    'src/app/(portal)/contacto/page.tsx',
-    'src/app/(portal)/catalogo/page.tsx',
-    'src/app/(portal)/catalogo/[paquete]/page.tsx',
-  ]) {
-    const fuente = ts.createSourceFile(
-      ruta,
-      readFileSync(ruta, 'utf8'),
-      ts.ScriptTarget.Latest,
-      true,
-      ts.ScriptKind.TSX,
-    );
-    function visitar(nodo: ts.Node) {
-      if (ts.isJsxOpeningElement(nodo) || ts.isJsxSelfClosingElement(nodo)) {
-        assert.match(nodo.tagName.getText(fuente), /^[A-Z]/, `${ruta}: marcado de pagina`);
-      }
-      ts.forEachChild(nodo, visitar);
-    }
-    visitar(fuente);
-  }
-});
-
 test('las imagenes del ejemplo existen y los colores de texto cumplen contraste AA', () => {
   for (const imagen of [negocio.portada.imagen, negocio.portada.logo]) {
     assert.ok(existsSync(path.join('public', ...imagen.src.split('/').filter(Boolean))));
@@ -564,7 +285,6 @@ test('el registro conserva componentes, ejemplos tipados y metadatos unicos', ()
   assert.ok(portada.cuentaParaTope);
   assert.equal(portada.planMinimo, 'presencia');
   assert.equal(portada.categoria, 'seccion');
-  assert.equal(portada.enDemo, true);
   const aislado = renderToStaticMarkup(portada.renderizar(true));
   assert.doesNotMatch(aislado, /<h1\b|href="#contacto"/);
   assert.equal(aislado.match(/<h2\b/g)?.length, 1);
@@ -596,9 +316,7 @@ test('Captacion publica piezas agnosticas, listas vacias y una vista Google sin 
   assert.doesNotMatch(google, /<a\b|<iframe|google\.com|<h1\b/);
   const entrada = registro.find((item) => item.slug === 'vista-google');
   assert.ok(entrada);
-  assert.equal(entrada.enDemo, false);
   assert.equal(entrada.cuentaParaTope, false);
-  assert.ok(!getSeccionesPlan('captacion').some((item) => item.slug === 'equipo'));
 });
 
 test('los recursos de Captacion existen con dimensiones y texto alternativo', () => {
@@ -706,57 +424,38 @@ test('las instancias enlazan props tipadas y reflejan cambios sin alterar el reg
   assert.doesNotMatch(renderToStaticMarkup(portada.renderizar()), /Título editado de prueba/);
 });
 
-test('el selector intercambia secciones sin superar diez ni eliminar las piezas fijas', () => {
-  const inicial = negocio.interfaz.planes.captacion.secciones;
-  const disponibles = registro
-    .filter((item) => item.enDemo && item.cuentaParaTope)
-    .map((item) => item.slug);
-  const fijas = ['portada', 'formulario-contacto'];
-  assert.throws(() => cambiarSeleccion(inicial, 'equipo', disponibles, 10, fijas), /Límite/);
-  assert.throws(() => cambiarSeleccion(inicial, 'portada', disponibles, 10, fijas), /fija/);
-  assert.throws(
-    () => cambiarSeleccion(inicial, 'desconocida', disponibles, 10, fijas),
-    /no disponible/,
-  );
-  const sinNovedades = cambiarSeleccion(inicial, 'novedades', disponibles, 10, fijas);
-  const conEquipo = cambiarSeleccion(sinNovedades, 'equipo', disponibles, 10, fijas);
-  assert.equal(conEquipo.length, 10);
-  assert.ok(conEquipo.includes('equipo'));
-  assert.ok(!conEquipo.includes('novedades'));
-  assert.equal(inicial.length, 10);
-  assert.equal(negocio.catalogo.hrefConsulta, '#contacto');
-  assert.equal(negocio.promocion.accion.href, '#contacto');
-});
-
-test('la bandeja marca mensajes sin mutar ni aceptar identidades desconocidas', () => {
-  const mensajes = [
-    {
-      id: 1,
-      nombre: 'Ficticio',
-      correo: 'ficticio@ejemplo.invalid',
-      mensaje: 'Consulta de ejemplo',
-      origen: 'Contacto',
-      leido: false,
-    },
-  ];
-  assert.equal(marcarMensaje(mensajes, 1)[0].leido, true);
-  assert.equal(mensajes[0].leido, false);
-  assert.throws(() => marcarMensaje(mensajes, 99), /no disponible/);
-  assert.deepEqual(eliminarMensaje(mensajes, 1), []);
-  assert.equal(mensajes.length, 1);
-  assert.throws(() => eliminarMensaje(mensajes, 99), /no disponible/);
-});
-
-test('la simulacion no incorpora persistencia, autenticacion ni peticiones', () => {
-  const rutas = [
-    'src/infrastructure/componentes/demo/AdministracionDemo/useAdministracion.ts',
-    'src/infrastructure/componentes/boveda/cotizacion-pasos/useCotizacion.ts',
-    'src/demo/administracion.ts',
-  ];
-  for (const ruta of rutas) {
-    assert.doesNotMatch(
-      readFileSync(ruta, 'utf8'),
-      /localStorage|sessionStorage|fetch\(|XMLHttpRequest|axios|document\.cookie|use server/,
-    );
+test('la biblioteca conserva piezas fragmentadas, Tailwind y contenido por props', () => {
+  function fuentes(directorio: string): string[] {
+    return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
+      const ruta = path.join(directorio, entrada.name);
+      return entrada.isDirectory() ? fuentes(ruta) : [ruta];
+    });
+  }
+  for (const carpeta of ['base', 'boveda', 'secciones']) {
+    for (const ruta of fuentes(path.join('src', 'infrastructure', 'componentes', carpeta))) {
+      assert.doesNotMatch(ruta, /\.(css|scss)$/);
+      if (!/\.(ts|tsx)$/.test(ruta)) continue;
+      const contenido = readFileSync(ruta, 'utf8');
+      assert.ok(contenido.split(/\r?\n/).length <= 150, `${ruta}: supera 150 lineas`);
+      assert.doesNotMatch(
+        contenido,
+        /\bany\b|style=\{|@apply|(?:bg|text|mt|p|rounded|shadow)-\[/,
+        ruta,
+      );
+      if (!ruta.endsWith('.tsx') || carpeta === 'base') continue;
+      assert.doesNotMatch(contenido, /data\/|Café Aurora/, ruta);
+      const fuente = ts.createSourceFile(
+        ruta,
+        contenido,
+        ts.ScriptTarget.Latest,
+        true,
+        ts.ScriptKind.TSX,
+      );
+      function visitar(nodo: ts.Node) {
+        if (ts.isJsxText(nodo)) assert.equal(nodo.text.trim(), '', `${ruta}: texto en duro`);
+        ts.forEachChild(nodo, visitar);
+      }
+      visitar(fuente);
+    }
   }
 });

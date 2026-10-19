@@ -8,7 +8,6 @@ export const definicionNovedades: DefinicionRegistro<NovedadesProps> = {
   planMinimo: 'captacion',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: Novedades,
   propsEjemplo: ejemploNovedades,
   props: [

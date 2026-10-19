@@ -10,7 +10,6 @@ export const definicionFormulario: DefinicionRegistro<FormularioContactoProps> =
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'componente',
-  enDemo: true,
   componente: FormularioContacto,
   propsEjemplo: ejemploFormularioContacto,
   propsAisladas: {titulo: undefined, descripcion: undefined},

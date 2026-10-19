@@ -9,7 +9,6 @@ export const definicionUbicacion: DefinicionRegistro<UbicacionHorariosProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: UbicacionHorarios,
   propsEjemplo: ejemploUbicacionHorarios,
   props: [

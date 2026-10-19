@@ -17,21 +17,42 @@
     "verAlcance": "Gestión de alcance y mis compromisos",
     "verAdicionales": "Consultar costos adicionales",
     "verBase": "Ver la base incluida de Presencia Digital",
-    "consulta": "Conversemos sobre tu proyecto"
+    "consulta": "Conversemos sobre tu proyecto",
+    "proximamente": "Próximamente"
   },
-  "exploracion": {
-    "titulo": "Explora antes de cotizar",
-    "descripcion": "Puedes recorrer el sitio de ejemplo del plan que te interesa o revisar sus componentes por separado.",
-    "sitio": "Demo del sitio",
-    "detalleSitio": "Entra al detalle de Presencia Digital o Captación de Clientes para abrir la demo correspondiente a ese plan.",
-    "verPlanes": "Ver planes",
-    "componentes": "Componentes por separado",
-    "detalleComponentes": "Prueba piezas funcionales ya programadas, como el formulario de contacto, sin recorrer un sitio completo. Las secciones del sitio se muestran en la demo de cada plan.",
-    "verComponentes": "Explorar componentes",
-    "componentesHref": "/componentes",
-    "verDemo": "Ver demo del sitio",
-    "detallePlan": "Recorre el sitio de ejemplo de este plan o revisa las piezas reutilizables por separado.",
-    "fase": "Presencia muestra cinco secciones elegidas. Captación incluye diez secciones y permite probar edición, cotización por pasos y una bandeja de contactos simuladas, sin envíos ni almacenamiento."
+  "comparacion": {
+    "titulo": "Compara los planes",
+    "secciones": "Cantidad de secciones",
+    "cantidadSecciones": "Hasta {cantidad} vistas o secciones.",
+    "panelAdministracion": "Panel de administración",
+    "panelIncluido": "Incluido",
+    "panelNoIncluido": "No incluido",
+    "plazoEntrega": "Plazo de entrega",
+    "reuniones": "Reuniones incluidas",
+    "capacitacion": "Capacitación incluida",
+    "caracteristica": "Qué incluye",
+    "proximamente": "Próximamente",
+    "noDisponible": "—",
+    "verPlan": "Ver plan",
+    "anterior": "Plan anterior",
+    "siguiente": "Plan siguiente",
+    "ayudaCarrusel": "Desliza o usa las flechas para comparar los cuatro planes."
+  },
+  "vitrina": {
+    "titulo": "Componentes para tu sitio",
+    "descripcion": "Conoce los componentes que puede incluir el sitio de tu negocio y desde qué plan están disponibles.",
+    "tituloDetalle": "Qué puede incluir tu sitio",
+    "introduccionDetalle": "Defino contigo cuáles necesita tu negocio, dentro del alcance de tu plan.",
+    "revisionDetalle": "TODO(Daniel): Revisar introducción de la vitrina y alcance de los componentes.",
+    "sumaPlan": "Suma {plan}",
+    "verTodos": "Ver todos los componentes",
+    "etiquetas": {
+      "incluidoEn": "Incluido en {plan}",
+      "incluidoSinPlan": "Incluido en tu plan",
+      "disponibleDesde": "Disponible desde {plan}",
+      "disponibleSinPlan": "Disponible en un plan superior",
+      "componenteClave": "Componente clave"
+    }
   },
   "filosofia": {
     "titulo": "No solo desarrollo páginas web.",

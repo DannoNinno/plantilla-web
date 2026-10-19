@@ -8,7 +8,6 @@ export const definicionCotizacion: DefinicionRegistro<FormularioCotizacionProps>
   planMinimo: 'captacion',
   cuentaParaTope: true,
   categoria: 'componente',
-  enDemo: true,
   componente: FormularioCotizacion,
   propsEjemplo: ejemploCotizacion,
   propsAisladas: {titulo: undefined, descripcion: undefined},

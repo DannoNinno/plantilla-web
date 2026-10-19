@@ -8,7 +8,6 @@ export const definicionPromocion: DefinicionRegistro<PromocionDestacadaProps> = 
   planMinimo: 'captacion',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: PromocionDestacada,
   propsEjemplo: ejemploPromocion,
   props: [

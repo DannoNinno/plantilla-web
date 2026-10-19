@@ -8,7 +8,6 @@ export const definicionGoogle: DefinicionRegistro<VistaGoogleProps> = {
   planMinimo: 'captacion',
   cuentaParaTope: false,
   categoria: 'seccion',
-  enDemo: false,
   componente: VistaGoogle,
   propsEjemplo: ejemploGoogle,
   props: [

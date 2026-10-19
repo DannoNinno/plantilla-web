@@ -10,24 +10,26 @@ import {
   getNavegacion,
   getPaquete,
   getPaquetes,
+  getPaquetesHabilitados,
   getPerfil,
   getSitio,
 } from '../src/infrastructure/handlers/datos';
-import {
-  resolverSeleccion,
-  seleccionInicial,
-  validarRegistro,
-} from '../src/domain/casos-de-uso/componentes/seleccion';
+import {seleccionarComponentes} from '../src/domain/casos-de-uso/componentes/seleccion';
 import {
   contarPalabras,
   enlaceCorreo,
   enlaceCotizacion,
-  mensajeSeleccion,
   prepararCorreoContacto,
   validarMensaje,
 } from '../src/domain/servicios/contacto';
 import {CONTACT_EMAIL, MAX_MESSAGE_WORDS, QUOTES_EMAIL} from '../src/domain/configuracion/contacto';
-import type {DefinicionComponente} from '../src/domain/types/componentes';
+import {nombresIconos} from '../src/domain/types/componentes';
+import {iconos} from '../src/infrastructure/componentes/Vitrina/iconos';
+import GrillaComponentes from '../src/infrastructure/componentes/Vitrina/GrillaComponentes';
+import TarjetaComponente from '../src/infrastructure/componentes/Vitrina/TarjetaComponente';
+import PaginaCatalogo from '../src/infrastructure/componentes/Catalogo/PaginaCatalogo';
+import PaginaPaquete from '../src/infrastructure/componentes/DetallePaquete/PaginaPaquete';
+import TarjetaPlan from '../src/infrastructure/componentes/Catalogo/TarjetaPlan';
 import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
 import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
 import Entrada from '../src/infrastructure/componentes/Entrada/Entrada';
@@ -36,17 +38,6 @@ import {clasesBoton} from '../src/infrastructure/componentes/Boton/estilos';
 import {esEnlaceActivo} from '../src/infrastructure/componentes/Header/navegacion';
 import {precioDesdeCLP} from '../src/domain/servicios/precio';
 import tailwindConfig, {coloresMarca} from '../tailwind.config';
-
-const definiciones: DefinicionComponente[] = [
-  {id: 'base', nombre: 'Base', descripcionCorta: '', paquetes: {portal: 'base'}, dependencias: []},
-  {
-    id: 'extra',
-    nombre: 'Extra',
-    descripcionCorta: '',
-    paquetes: {portal: 'opcional'},
-    dependencias: ['base'],
-  },
-];
 
 function fuentes(directorio: string): string[] {
   return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
@@ -57,11 +48,11 @@ function fuentes(directorio: string): string[] {
 }
 
 test('la estructura conserva las capas y todos los datos son JSON', () => {
-  assert.deepEqual(readdirSync('src').sort(), ['app', 'data', 'demo', 'domain', 'infrastructure']);
+  assert.deepEqual(readdirSync('src').sort(), ['app', 'data', 'domain', 'infrastructure']);
   assert.deepEqual(readdirSync('src/data').sort(), [
     'catalogo.json',
     'componentes.json',
-    'demo',
+    'ejemplos-boveda.json',
     'navegacion.json',
     'paquetes.json',
     'perfil.json',
@@ -191,7 +182,9 @@ test('los primeros dos planes incluyen hasta cinco dias habiles y las reuniones 
   }
   for (const id of ['automatizacion', 'comercio-electronico']) {
     assert.equal(
-      getPaquete(id)?.secciones.some((seccion) => seccion.titulo === 'Plazo de entrega'),
+      getPaquetes()
+        .find((paquete) => paquete.id === id)
+        ?.secciones.some((seccion) => seccion.titulo === 'Plazo de entrega'),
       false,
     );
   }
@@ -498,24 +491,178 @@ test('el navbar marca la seccion actual y sus rutas hijas sin confundir prefijos
   assert.equal(esEnlaceActivo('/contacto', '/'), false);
 });
 
-test('el registro vacio conserva el estado inicial del configurador', () => {
-  validarRegistro(getComponentes());
-  assert.deepEqual(seleccionInicial(getComponentes(), 'portal'), {ids: [], errores: []});
+test('la vitrina hereda los componentes y destaca el panel sin mutar los datos', () => {
+  const componentes = getComponentes();
+  const original = JSON.stringify(componentes);
+  assert.equal(componentes.length, 19);
+  assert.deepEqual(Object.keys(iconos), [...nombresIconos]);
+  assert.deepEqual(
+    componentes.map((item) => item.icono),
+    [...nombresIconos],
+  );
+  const landing = seleccionarComponentes(componentes, 'landing', getPaquetes());
+  assert.equal(landing.incluidos.length, 11);
+  assert.equal(landing.noIncluidos.length, 8);
+  assert.ok(
+    landing.incluidos.every((item) => item.incluido && item.componente.planMinimo === 'landing'),
+  );
+  assert.ok(
+    landing.noIncluidos.every((item) => !item.incluido && item.componente.planMinimo === 'portal'),
+  );
+  const portal = seleccionarComponentes(componentes, 'portal', getPaquetes());
+  assert.equal(portal.incluidos.length, 19);
+  assert.deepEqual(portal.noIncluidos, []);
+  assert.equal(portal.incluidos[0].componente.id, 'panel-administracion');
+  assert.equal(JSON.stringify(componentes), original);
+  assert.deepEqual(seleccionarComponentes([], 'landing', getPaquetes()), {
+    incluidos: [],
+    noIncluidos: [],
+  });
 });
 
-test('la seleccion local conserva bases y dependencias', () => {
-  assert.deepEqual(seleccionInicial(definiciones, 'portal').ids, ['base']);
-  assert.deepEqual(resolverSeleccion(definiciones, 'portal', ['extra']).ids, ['base', 'extra']);
-  assert.equal(resolverSeleccion(definiciones, 'landing', ['extra']).errores.length, 1);
+test('la vitrina rechaza planes no habilitados y excluye sus componentes', () => {
+  const paquetes = getPaquetes().map((paquete) => ({
+    ...paquete,
+    habilitado: paquete.id === 'landing',
+  }));
+  const seleccion = seleccionarComponentes(getComponentes(), 'landing', paquetes);
+  assert.equal(seleccion.incluidos.length, 11);
+  assert.deepEqual(seleccion.noIncluidos, []);
+  for (const id of ['portal', 'automatizacion', 'comercio-electronico', 'inexistente']) {
+    assert.throws(
+      () => seleccionarComponentes(getComponentes(), id, paquetes),
+      /no esta habilitado/,
+    );
+  }
+  const soloPortal = paquetes.map((paquete) => ({...paquete, habilitado: paquete.id === 'portal'}));
+  assert.equal(seleccionarComponentes(getComponentes(), 'portal', soloPortal).incluidos.length, 8);
 });
 
-test('las definiciones ausentes, duplicadas y circulares se reportan', () => {
-  const ausente = resolverSeleccion([definiciones[1]], 'portal', ['extra']);
-  assert.deepEqual(ausente.ids, []);
-  assert.equal(ausente.errores.length, 1);
-  const ciclo = [{...definiciones[0], dependencias: ['extra']}, definiciones[1]];
-  assert.match(resolverSeleccion(ciclo, 'portal', ['extra']).errores.join(' '), /circular/);
-  assert.throws(() => validarRegistro([definiciones[0], definiciones[0]]), /duplicado/);
+test('las tarjetas de vitrina son descriptivas y accesibles, no demos interactivas', () => {
+  const textos = getCatalogo().vitrina.etiquetas;
+  for (const componente of getComponentes()) {
+    const html = renderToStaticMarkup(
+      createElement(TarjetaComponente, {
+        componente,
+        textos,
+        nombrePlanMinimo: getPaquete(componente.planMinimo)?.nombre,
+      }),
+    );
+    const id = html.match(/aria-labelledby="([^"]+)"/)?.[1];
+    assert.ok(id);
+    assert.ok(html.includes(`<h3 id="${id}"`));
+    assert.ok(html.includes(componente.nombre));
+    assert.ok(html.includes(componente.descripcion));
+    assert.doesNotMatch(html, /<a\b|<button\b|<input\b|tabindex=|TODO\(Daniel\)/);
+    if (componente.destacado) {
+      assert.match(html, /md:col-span-2/);
+      assert.match(html, /lg:col-span-3/);
+      for (const detalle of componente.detalles ?? []) assert.ok(html.includes(detalle));
+    }
+  }
+  const html = renderToStaticMarkup(
+    createElement(GrillaComponentes, {
+      componentes: seleccionarComponentes(getComponentes(), 'landing', getPaquetes()).incluidos,
+      textos,
+    }),
+  );
+  assert.equal(html.match(/<article\b/g)?.length, 11);
+});
+
+test('solo los primeros dos planes tienen rutas y tarjetas navegables', () => {
+  assert.deepEqual(
+    getPaquetesHabilitados().map((paquete) => paquete.id),
+    ['landing', 'portal'],
+  );
+  for (const [index, paquete] of getPaquetes().entries()) {
+    const html = renderToStaticMarkup(
+      createElement(TarjetaPlan, {paquete, numero: index + 1, textos: getCatalogo().textos}),
+    );
+    assert.ok(html.includes(paquete.nombre));
+    if (paquete.habilitado) {
+      assert.ok(html.includes(precioDesdeCLP(paquete.precioDesde)));
+      assert.ok(html.includes(`href="/catalogo/${paquete.id}"`));
+      assert.ok(paquete.comparacion);
+    } else {
+      assert.equal(getPaquete(paquete.id), undefined);
+      assert.match(html, /aria-disabled="true"/);
+      assert.match(html, /Próximamente/);
+      assert.doesNotMatch(html, /<a\b|CLP/);
+    }
+  }
+  const ruta = readFileSync('src/app/(portal)/catalogo/[paquete]/page.tsx', 'utf8');
+  assert.match(ruta, /getPaquetesHabilitados\(\)\.map/);
+  assert.equal(ruta.match(/if \(!paquete\) notFound\(\)/g)?.length, 2);
+});
+
+test('el catalogo conserva su composicion y suma comparacion despues de las tarjetas', () => {
+  const catalogo = getCatalogo();
+  const html = renderToStaticMarkup(
+    createElement(PaginaCatalogo, {catalogo, paquetes: getPaquetes(), sitio: getSitio()}),
+  );
+  const orden = [
+    'catalogo-titulo',
+    'planes-titulo',
+    'comparacion-titulo',
+    '>Ver todos los componentes</a>',
+    'filosofia-titulo',
+    'alcance-titulo',
+    'adicionales-titulo',
+  ];
+  for (let index = 1; index < orden.length; index++) {
+    assert.ok(html.indexOf(orden[index - 1]) < html.indexOf(orden[index]), orden[index]);
+  }
+  assert.equal(html.match(/<h1\b/g)?.length, 1);
+  assert.match(html, /Mis compromisos contigo/);
+  assert.match(html, /<table\b/);
+  assert.doesNotMatch(html, /href="\/demo\//);
+  for (const paquete of getPaquetes().filter((item) => !item.habilitado)) {
+    assert.ok(!html.includes(`href="/catalogo/${paquete.id}"`));
+  }
+});
+
+test('el detalle mantiene el formulario final preseleccionado y agrega vitrina y plazo', () => {
+  const catalogo = getCatalogo();
+  for (const paquete of getPaquetesHabilitados()) {
+    const html = renderToStaticMarkup(
+      createElement(PaginaPaquete, {
+        paquete,
+        paquetes: getPaquetes(),
+        componentes: getComponentes(),
+        catalogo,
+      }),
+    );
+    assert.equal(html.match(/<h1\b/g)?.length, 1);
+    assert.match(html, /id="consulta"/);
+    assert.match(html, /<form\b/);
+    assert.ok(html.includes(`<option value="${paquete.id}" selected="">`));
+    assert.ok(html.includes(catalogo.vitrina.tituloDetalle));
+    assert.ok(html.includes(paquete.comparacion!.plazoEntrega));
+    assert.ok(html.indexOf('componentes-titulo') < html.indexOf('id="consulta"'));
+    assert.ok(html.indexOf('Gestión de alcance y mis compromisos') < html.indexOf('<form'));
+    assert.doesNotMatch(html, /href="\/contacto|href="\/demo\//);
+  }
+});
+
+test('se retiran las rutas y herramientas de la demo pero se conserva la biblioteca', () => {
+  for (const ruta of [
+    'src/app/(demo)/layout.tsx',
+    'src/app/(portal)/componentes/[slug]/page.tsx',
+    'src/demo/planes.ts',
+    'src/data/demo/negocio.json',
+    'src/infrastructure/componentes/Configurador/Configurador.tsx',
+    'src/infrastructure/componentes/Catalogo/ExploracionCatalogo.tsx',
+  ])
+    assert.equal(existsSync(ruta), false, ruta);
+  for (const ruta of fuentes('src')) {
+    assert.doesNotMatch(
+      readFileSync(ruta, 'utf8'),
+      /from ['"][^'"]*(?:\/demo\/|\/Configurador\/)|href=["']\/demo\//,
+      ruta,
+    );
+  }
+  assert.equal(existsSync('public/ejemplos-boveda/cafe-aurora/manifest.json'), true);
+  assert.equal('exploracion' in getCatalogo(), false);
 });
 
 test('los correos oficiales solo se definen en la configuracion y no se expone Gmail', () => {
@@ -566,7 +713,7 @@ const datosContacto = {
 };
 
 test('el formulario prepara consultas y cotizaciones con todos los datos sin enviarlos', () => {
-  for (const opcion of [{id: 'consulta', nombre: 'Consulta'}, ...getPaquetes()]) {
+  for (const opcion of [{id: 'consulta', nombre: 'Consulta'}, ...getPaquetesHabilitados()]) {
     const resultado = prepararCorreoContacto(
       {...datosContacto, paqueteId: opcion.id},
       getPaquetes(),
@@ -590,14 +737,6 @@ test('el formulario prepara consultas y cotizaciones con todos los datos sin env
     getPaquetes(),
   );
   assert.ok(limite.ok);
-  const resumen = mensajeSeleccion('Presencia Digital', ['Componente de prueba']);
-  const seleccion = prepararCorreoContacto(
-    {...datosContacto, paqueteId: 'landing'},
-    getPaquetes(),
-    resumen,
-  );
-  assert.ok(seleccion.ok);
-  assert.ok(new URL(seleccion.href).searchParams.get('body')?.includes(resumen));
 });
 
 test('el formulario rechaza datos invalidos explicitamente sin generar un mailto', () => {
@@ -610,6 +749,8 @@ test('el formulario rechaza datos invalidos explicitamente sin generar un mailto
     {mensaje: ' '},
     {mensaje: Array(201).fill('palabra').join(' ')},
     {paqueteId: 'sistema-web-a-medida'},
+    {paqueteId: 'automatizacion'},
+    {paqueteId: 'comercio-electronico'},
   ]) {
     const resultado = prepararCorreoContacto({...datosContacto, ...cambio}, getPaquetes());
     assert.equal(resultado.ok, false);
@@ -618,11 +759,10 @@ test('el formulario rechaza datos invalidos explicitamente sin generar un mailto
   }
 });
 
-test('el formulario muestra Consulta y los cuatro planes sin simular un envio exitoso', () => {
+test('el formulario muestra Consulta y los planes habilitados sin simular un envio exitoso', () => {
   const html = renderToStaticMarkup(
     createElement(Contacto, {
       paquetes: getPaquetes(),
-      resumen: 'Mi selección',
       mensajeEtiqueta: 'Mi proyecto',
     }),
   );
@@ -630,13 +770,13 @@ test('el formulario muestra Consulta y los cuatro planes sin simular un envio ex
   assert.match(html, /name="nombre"/);
   assert.match(html, /name="correo"/);
   assert.match(html, /name="mensaje"/);
-  assert.match(html, /Mi selección/);
   assert.match(html, /Mi proyecto/);
   assert.match(html, /<select[^>]*name="paquete"/);
   assert.match(html, /<option value="consulta" selected="">Consulta<\/option>/);
-  for (const paquete of getPaquetes()) {
+  for (const paquete of getPaquetesHabilitados()) {
     assert.ok(html.includes(`<option value="${paquete.id}">${paquete.nombre}</option>`));
   }
+  assert.doesNotMatch(html, /value="automatizacion"|value="comercio-electronico"/);
   assert.match(html, /200.*palabras/);
   assert.match(html, /Preparar consulta/);
   assert.equal((html.match(/<button\b/g) ?? []).length, 1);

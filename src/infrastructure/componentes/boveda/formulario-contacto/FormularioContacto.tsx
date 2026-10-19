@@ -9,7 +9,7 @@ export default function FormularioContacto(props: FormularioContactoProps) {
   return (
     <section
       id={id}
-      className="scroll-mt-demo-ancla bg-seccion-fondo py-16 text-seccion-tinta sm:py-24"
+      className="scroll-mt-boveda-ancla bg-seccion-fondo py-16 text-seccion-tinta sm:py-24"
     >
       <Contenedor>
         <div

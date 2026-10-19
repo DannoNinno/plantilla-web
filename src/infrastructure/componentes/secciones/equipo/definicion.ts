@@ -8,7 +8,6 @@ export const definicionEquipo: DefinicionRegistro<EquipoProps> = {
   planMinimo: 'captacion',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: Equipo,
   propsEjemplo: ejemploEquipo,
   props: [

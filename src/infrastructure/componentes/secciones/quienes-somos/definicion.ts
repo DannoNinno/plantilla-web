@@ -9,7 +9,6 @@ export const definicionQuienesSomos: DefinicionRegistro<QuienesSomosProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: QuienesSomos,
   propsEjemplo: ejemploQuienesSomos,
   props: [

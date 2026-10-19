@@ -1,5 +1,5 @@
 import PaginaContacto from '@/infrastructure/componentes/Contacto/PaginaContacto';
-import {getPaquetes} from '@/infrastructure/handlers/datos';
+import {getPaquetesHabilitados} from '@/infrastructure/handlers/datos';
 import {notFound} from 'next/navigation';
 
 export const metadata = {
@@ -13,7 +13,7 @@ export default async function ContactoPage({
   searchParams: Promise<{paquete?: string | string[]}>;
 }) {
   const {paquete} = await searchParams;
-  const paquetes = getPaquetes();
+  const paquetes = getPaquetesHabilitados();
   const paqueteInicial = paquetes.find((opcion) => opcion.id === paquete)?.id;
   if (paquete !== undefined && paquete !== 'consulta' && !paqueteInicial) notFound();
   return <PaginaContacto paquetes={paquetes} paqueteInicial={paqueteInicial} />;

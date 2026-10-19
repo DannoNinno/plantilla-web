@@ -11,4 +11,4 @@ Citas con autor y contexto opcionales, en tarjetas separadas. Presencia Digital;
 
 Cada testimonio tiene `id`, `texto`, `autor` y `detalle` opcionales. Se usa `blockquote` con atribución en `figcaption`, sin inventar puntuaciones ni autores. El JSON de la demo advierte que sus opiniones son ficticias.
 
-Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, y las piezas `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`. Dependencias: React, lucide-react, Tailwind 3. Tokens: `seccion`, `fontFamily.sans`, `spacing.demo-ancla`. Sin estado, peticiones ni CSS propio.
+Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, y las piezas `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`. Dependencias: React, lucide-react, Tailwind 3. Tokens: `seccion`, `fontFamily.sans`, `spacing.boveda-ancla`. Sin estado, peticiones ni CSS propio.

@@ -8,7 +8,6 @@ export const definicionSedes: DefinicionRegistro<SedesProps> = {
   planMinimo: 'captacion',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: Sedes,
   propsEjemplo: ejemploSedes,
   props: [

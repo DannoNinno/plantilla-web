@@ -1,10 +1,21 @@
 [
   {
     "id": "landing",
+    "habilitado": true,
     "nombre": "Presencia Digital",
     "resumen": "Te ayudo a dar a conocer tu negocio y facilitar el primer contacto.",
     "descripcion": "Diseño y desarrollo tu landing page adaptable a móviles, con hasta 5 vistas o secciones y canales de contacto para comenzar tu presencia online.",
     "precioDesde": 150000,
+    "comparacion": {
+      "seccionesMaximas": 5,
+      "panelAdministracion": false,
+      "plazoEntrega": "Hasta 5 días hábiles.",
+      "reunionesIncluidas": [
+        "1 reunión de levantamiento (máximo 2 horas).",
+        "1 reunión de revisión y entrega (máximo 2 horas)."
+      ],
+      "capacitacion": "1 sesión de capacitación incluida (máximo 1 hora)."
+    },
     "secciones": [
       {
         "titulo": "Ideal para",
@@ -68,10 +79,23 @@
   },
   {
     "id": "portal",
+    "habilitado": true,
     "nombre": "Captación de Clientes",
     "resumen": "Desarrollo tu sitio para captar contactos y administrar tu contenido.",
     "descripcion": "Desarrollo tu sitio con panel de administración, hasta 10 vistas o secciones, formularios avanzados y SEO básico para ayudarte a captar nuevos clientes.",
     "precioDesde": 350000,
+    "comparacion": {
+      "seccionesMaximas": 10,
+      "panelAdministracion": true,
+      "plazoEntrega": "Hasta 5 días hábiles.",
+      "reunionesIncluidas": [
+        "Reunión de levantamiento.",
+        "Revisión intermedia.",
+        "Validación y pruebas.",
+        "Entrega final."
+      ],
+      "capacitacion": "Capacitación inicial incluida (1 hora)."
+    },
     "secciones": [
       {
         "titulo": "Ideal para",
@@ -130,6 +154,7 @@
   },
   {
     "id": "automatizacion",
+    "habilitado": false,
     "nombre": "Automatización de Procesos",
     "resumen": "Te ayudo a reducir tareas repetitivas y centralizar tu información.",
     "descripcion": "Desarrollo una solución para conectar tus herramientas y simplificar procesos manuales. Evalúo contigo lo que necesitas y cotizo según el alcance de tu proyecto.",
@@ -173,6 +198,7 @@
   },
   {
     "id": "comercio-electronico",
+    "habilitado": false,
     "nombre": "Comercio Electrónico",
     "resumen": "Creo tu tienda online para que puedas vender tus productos.",
     "descripcion": "Desarrollo tu tienda online con catálogo, carrito y gestión de pedidos. Evalúo tus requerimientos y la factibilidad técnica para definir el alcance y los medios de pago.",

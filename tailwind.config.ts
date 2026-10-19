@@ -43,7 +43,7 @@ export default {
       spacing: {
         header: alturaCabecera.base,
         'header-lg': alturaCabecera.amplia,
-        'demo-ancla': '4rem',
+        'boveda-ancla': '4rem',
       },
       outlineWidth: {foco: '3px'},
       zIndex: {salto: '60'},
@@ -51,7 +51,7 @@ export default {
         intro: `calc(100svh - ${alturaCabecera.base})`,
         'intro-lg': `calc(100svh - ${alturaCabecera.amplia})`,
         puerta: '65svh',
-        'demo-portada': '70svh',
+        'boveda-portada': '70svh',
       },
       backgroundImage: {
         intro: `radial-gradient(ellipse at 85% 20%, rgb(${rgb(coloresMarca.sky)} / 0.18), transparent 60%), ${fondoAzul}`,

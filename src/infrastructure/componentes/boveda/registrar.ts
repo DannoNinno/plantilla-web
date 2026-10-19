@@ -22,7 +22,6 @@ export interface DefinicionRegistro<Props extends object> {
   planMinimo: PlanBoveda;
   cuentaParaTope: boolean;
   categoria: 'seccion' | 'componente';
-  enDemo: boolean;
   componente: ComponentType<Props>;
   propsEjemplo: Props;
   propsAisladas?: Partial<Props>;

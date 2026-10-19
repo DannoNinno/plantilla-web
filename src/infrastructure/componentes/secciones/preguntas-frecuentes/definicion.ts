@@ -9,7 +9,6 @@ export const definicionPreguntas: DefinicionRegistro<PreguntasFrecuentesProps> =
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: PreguntasFrecuentes,
   propsEjemplo: ejemploPreguntasFrecuentes,
   props: [

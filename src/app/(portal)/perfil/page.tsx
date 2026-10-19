@@ -426,13 +426,6 @@ export default function PerfilPage() {
           </div>
         </EntradaScroll>
 
-        {getSitio().demosHabilitadas && (
-          <EntradaScroll aria-labelledby="demos-titulo" className="mt-20">
-            <h2 id="demos-titulo">Demos</h2>
-            <p>Sitios de ejemplo hechos con mi propia plantilla.</p>
-          </EntradaScroll>
-        )}
-
         <EntradaScroll aria-labelledby="formacion-titulo" className="mt-20">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-profile">
             04 / Formación e idiomas

@@ -1,4 +1,4 @@
-import {negocio} from '../../../../demo/negocio';
+import {negocio} from '../../boveda/ejemplos';
 import type {VistaGoogleProps} from './tipos';
 export const ejemploGoogle = {
   ...negocio.google,

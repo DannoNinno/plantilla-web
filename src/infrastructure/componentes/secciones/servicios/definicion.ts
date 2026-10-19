@@ -9,7 +9,6 @@ export const definicionServicios: DefinicionRegistro<ServiciosProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: Servicios,
   propsEjemplo: ejemploServicios,
   props: [

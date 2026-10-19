@@ -10,7 +10,6 @@ export const definicionPortada: DefinicionRegistro<PortadaProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: Portada,
   propsEjemplo: ejemploPortada,
   propsAisladas: {nivelTitulo: 'h2', accion: undefined},

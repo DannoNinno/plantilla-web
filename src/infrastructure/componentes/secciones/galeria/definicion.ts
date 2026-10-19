@@ -9,7 +9,6 @@ export const definicionGaleria: DefinicionRegistro<GaleriaProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: Galeria,
   propsEjemplo: ejemploGaleria,
   props: [

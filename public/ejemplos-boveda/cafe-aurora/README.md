@@ -1,10 +1,11 @@
-# Materiales de demostración: Café Aurora
+# Materiales de ejemplo: Café Aurora
 
-Negocio ficticio usado en las demos de dannotech.cl. Todo es ilustración original en SVG;
+Negocio ficticio usado en los ejemplos de la biblioteca reutilizable. Todo es ilustración original en SVG;
 no hay marcas, personas ni fotos reales.
 
 - `manifest.json` lista cada archivo con su ancho, alto y texto alternativo.
-- Colocar esta carpeta en `public/demo` para que quede servida en `/demo/...`.
+- Esta carpeta se conserva en `public/ejemplos-boveda/cafe-aurora` y se sirve en
+  `/ejemplos-boveda/cafe-aurora/...`; no existe una página interactiva del negocio.
 - Los logos usan texto con la fuente Georgia y respaldo serif; pueden verse levemente
   distintos según el dispositivo.
 

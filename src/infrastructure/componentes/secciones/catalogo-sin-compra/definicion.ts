@@ -8,7 +8,6 @@ export const definicionCatalogo: DefinicionRegistro<CatalogoSinCompraProps> = {
   planMinimo: 'captacion',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: CatalogoSinCompra,
   propsEjemplo: ejemploCatalogo,
   props: [
@@ -28,7 +27,7 @@ export const definicionCatalogo: DefinicionRegistro<CatalogoSinCompraProps> = {
       nombre: 'hrefConsulta',
       tipo: 'string',
       requerida: true,
-      descripcion: 'Destino; en la demo es un ancla local.',
+      descripcion: 'Destino; en la ejemplo es un ancla local.',
     },
   ],
 };

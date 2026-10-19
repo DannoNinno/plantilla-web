@@ -9,7 +9,6 @@ export const definicionTestimonios: DefinicionRegistro<TestimoniosProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'seccion',
-  enDemo: true,
   componente: Testimonios,
   propsEjemplo: ejemploTestimonios,
   props: [
@@ -17,7 +16,7 @@ export const definicionTestimonios: DefinicionRegistro<TestimoniosProps> = {
       nombre: 'elementos',
       tipo: 'Testimonio[]',
       requerida: false,
-      descripcion: 'Citas; lista vacía por defecto. Los ejemplos de la demo son ficticios.',
+      descripcion: 'Citas; lista vacía por defecto. Los ejemplos de la ejemplo son ficticios.',
     },
   ],
 };

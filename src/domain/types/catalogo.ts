@@ -1,3 +1,5 @@
+import type {TextosTarjetaComponente} from './componentes';
+
 export interface CatalogoServicios {
   textos: {
     etiqueta: string;
@@ -18,20 +20,35 @@ export interface CatalogoServicios {
     verAdicionales: string;
     verBase: string;
     consulta: string;
+    proximamente: string;
   };
-  exploracion: {
+  comparacion: {
+    titulo: string;
+    secciones: string;
+    cantidadSecciones: string;
+    panelAdministracion: string;
+    panelIncluido: string;
+    panelNoIncluido: string;
+    plazoEntrega: string;
+    reuniones: string;
+    capacitacion: string;
+    caracteristica: string;
+    proximamente: string;
+    noDisponible: string;
+    verPlan: string;
+    anterior: string;
+    siguiente: string;
+    ayudaCarrusel: string;
+  };
+  vitrina: {
     titulo: string;
     descripcion: string;
-    sitio: string;
-    detalleSitio: string;
-    verPlanes: string;
-    componentes: string;
-    detalleComponentes: string;
-    verComponentes: string;
-    componentesHref: string;
-    verDemo: string;
-    detallePlan: string;
-    fase: string;
+    tituloDetalle: string;
+    introduccionDetalle: string;
+    revisionDetalle: string;
+    sumaPlan: string;
+    verTodos: string;
+    etiquetas: TextosTarjetaComponente;
   };
   filosofia: {
     titulo: string;

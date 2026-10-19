@@ -9,7 +9,6 @@ export const definicionRedes: DefinicionRegistro<RedesSocialesProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: false,
   categoria: 'seccion',
-  enDemo: true,
   componente: RedesSociales,
   propsEjemplo: ejemploRedesSociales,
   props: [

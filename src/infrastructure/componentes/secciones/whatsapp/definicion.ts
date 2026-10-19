@@ -9,7 +9,6 @@ export const definicionWhatsapp: DefinicionRegistro<WhatsappProps> = {
   planMinimo: 'presencia',
   cuentaParaTope: false,
   categoria: 'seccion',
-  enDemo: true,
   componente: Whatsapp,
   propsEjemplo: ejemploWhatsapp,
   props: [
@@ -18,7 +17,7 @@ export const definicionWhatsapp: DefinicionRegistro<WhatsappProps> = {
       nombre: 'href',
       tipo: 'string',
       requerida: true,
-      descripcion: 'En la demo apunta al formulario local, no a un número real.',
+      descripcion: 'En la ejemplo apunta al formulario local, no a un número real.',
     },
   ],
 };

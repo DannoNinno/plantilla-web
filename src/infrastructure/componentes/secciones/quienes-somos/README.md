@@ -12,4 +12,4 @@ Historia del negocio con párrafos e imagen opcional. Presencia Digital; cuenta 
 
 Sin imagen se usa una sola columna. Los párrafos largos se ajustan; una lista vacía no genera texto de relleno. Next Image recibe dimensiones, alt y tamaños adaptables.
 
-Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, y las piezas `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`. Dependencias: React, Next.js y Tailwind 3. Tokens: `seccion`, `fontFamily.sans`, `spacing.demo-ancla`. Componente de servidor, agnóstico al negocio.
+Para copiar: incluir esta carpeta sin `ejemplo.ts` ni `definicion.ts`, y las piezas `base/MarcoSeccion`, `base/Contenedor`, `base/TituloSeccion`. Dependencias: React, Next.js y Tailwind 3. Tokens: `seccion`, `fontFamily.sans`, `spacing.boveda-ancla`. Componente de servidor, agnóstico al negocio.

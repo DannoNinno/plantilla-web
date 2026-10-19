@@ -1,4 +1,4 @@
-import {negocio} from '../../../../demo/negocio';
+import {negocio} from '../ejemplos';
 import type {FormularioCotizacionProps} from './tipos';
 export const ejemploCotizacion = {
   id: negocio.cotizacionPasos.id,
