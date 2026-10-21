@@ -1,8 +1,5 @@
-import {dirname} from 'node:path';
-import {fileURLToPath} from 'node:url';
-import {FlatCompat} from '@eslint/eslintrc';
-
-const compat = new FlatCompat({baseDirectory: dirname(fileURLToPath(import.meta.url))});
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const config = [
   {
@@ -17,8 +14,15 @@ const config = [
       'cloudflare-env.d.ts',
     ],
   },
-  ...compat.extends('next/core-web-vitals', 'plugin:prettier/recommended'),
-  {rules: {'prettier/prettier': 'warn'}},
+  ...nextCoreWebVitals,
+  prettierRecommended,
+  {
+    rules: {
+      'prettier/prettier': 'warn',
+      'react-hooks/refs': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+    },
+  },
 ];
 
 export default config;

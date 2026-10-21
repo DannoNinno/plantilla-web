@@ -91,7 +91,7 @@ export default function PerfilPage() {
             <FotoPerfil />
             <aside
               aria-labelledby="ficha-titulo"
-              className="max-w-sm overflow-hidden rounded-2xl border border-white/15 bg-white/5"
+              className="max-w-sm overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/14 via-white/8 to-brand-sky/15"
             >
               <div className="flex items-center justify-between border-b border-white/15 px-6 py-4">
                 <h2
@@ -192,7 +192,7 @@ export default function PerfilPage() {
           </p>
           <div
             data-entrada-elemento="texto"
-            className="mt-8 overflow-hidden rounded-2xl border border-brand-ink/15 bg-white"
+            className="mt-8 overflow-hidden rounded-2xl border border-brand-ink/15 bg-gradient-to-br from-white via-brand-sky/5 to-brand-coral/10 shadow-[0_14px_34px_-24px_rgba(4,24,47,0.45)]"
           >
             <table
               className="w-full table-fixed text-left text-sm"
@@ -299,7 +299,7 @@ export default function PerfilPage() {
               </tbody>
             </table>
           </div>
-          <div className="mt-6 rounded-xl border-l-2 border-brand-coral bg-white px-6 py-5">
+          <div className="mt-6 rounded-xl border border-brand-ink/10 border-l-2 border-l-brand-coral bg-gradient-to-br from-white to-brand-coral/10 px-6 py-5">
             <h3 className="text-sm font-semibold">Cómo trabajo</h3>
             <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-3 text-sm text-brand-ink/75">
               {perfil.competencias.map((competencia) => (
@@ -330,7 +330,7 @@ export default function PerfilPage() {
             {perfil.experiencia.map((experiencia) => (
               <li
                 key={experiencia.empresa}
-                className="grid gap-6 rounded-2xl border border-brand-ink/10 bg-white p-6 sm:p-8 lg:grid-cols-[15rem_1fr]"
+                className="grid gap-6 rounded-2xl border border-brand-ink/15 bg-gradient-to-br from-white via-brand-sky/5 to-brand-coral/10 p-6 shadow-[0_14px_34px_-24px_rgba(4,24,47,0.45)] sm:p-8 lg:grid-cols-[15rem_1fr]"
               >
                 <div>
                   <p className="font-mono text-xs text-brand-ink/65">{experiencia.periodo}</p>
@@ -385,7 +385,7 @@ export default function PerfilPage() {
             {perfil.proyectos.map((proyecto, index) => (
               <article
                 key={proyecto.id}
-                className="flex flex-col rounded-2xl border border-brand-ink/10 border-t-4 border-t-brand-sky bg-white p-6 even:border-t-brand-coral sm:p-8"
+                className="flex flex-col rounded-2xl border border-brand-ink/15 border-t-4 border-t-brand-sky bg-gradient-to-br from-white via-brand-sky/5 to-brand-coral/10 p-6 shadow-[0_14px_34px_-24px_rgba(4,24,47,0.45)] even:border-t-brand-coral sm:p-8"
               >
                 <p className="font-mono text-xs text-brand-ink/65">
                   CASO / {String(index + 1).padStart(2, '0')}
@@ -438,7 +438,7 @@ export default function PerfilPage() {
             Aprendizaje como base.
           </h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
-            <article className="group/formacion rounded-2xl border border-brand-ink/10 bg-white p-6 transition-[border-color,background-color,box-shadow] duration-300 fine-pointer:hover:border-brand-sky/30 fine-pointer:hover:bg-brand-sky/[0.12] fine-pointer:hover:shadow-capacidad-acento sm:p-8">
+            <article className="group/formacion rounded-2xl border border-brand-ink/15 bg-gradient-to-br from-white via-brand-sky/5 to-brand-coral/10 p-6 shadow-[0_14px_34px_-24px_rgba(4,24,47,0.45)] transition-[border-color,background-color,box-shadow] duration-300 fine-pointer:hover:border-brand-sky/30 fine-pointer:hover:bg-brand-sky/[0.12] fine-pointer:hover:shadow-capacidad-acento sm:p-8">
               <GraduationCap
                 size={28}
                 strokeWidth={1.5}
@@ -452,7 +452,7 @@ export default function PerfilPage() {
             {perfil.idiomas.map((idioma) => (
               <article
                 key={idioma.nombre}
-                className="group/idioma rounded-2xl border border-brand-ink/10 bg-white p-6 transition-[border-color,background-color,box-shadow] duration-300 fine-pointer:hover:border-brand-sky/30 fine-pointer:hover:bg-brand-sky/[0.12] fine-pointer:hover:shadow-capacidad-acento sm:p-8"
+                className="group/idioma rounded-2xl border border-brand-ink/15 bg-gradient-to-br from-white via-brand-sky/5 to-brand-coral/10 p-6 shadow-[0_14px_34px_-24px_rgba(4,24,47,0.45)] transition-[border-color,background-color,box-shadow] duration-300 fine-pointer:hover:border-brand-sky/30 fine-pointer:hover:bg-brand-sky/[0.12] fine-pointer:hover:shadow-capacidad-acento sm:p-8"
               >
                 <Languages
                   size={28}

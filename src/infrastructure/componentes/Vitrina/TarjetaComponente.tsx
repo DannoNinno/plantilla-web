@@ -15,6 +15,7 @@ export default function TarjetaComponente({
   nombrePlanMinimo,
   textos,
 }: TarjetaComponenteProps) {
+  const esPanelAdministracion = componente.id === 'panel-administracion';
   const tituloId = useId();
   const Icono = iconos[componente.icono];
   const etiqueta = nombrePlanMinimo
@@ -26,10 +27,12 @@ export default function TarjetaComponente({
   return (
     <article
       aria-labelledby={tituloId}
-      className={`flex h-full min-w-0 flex-col rounded-2xl border p-6 ${
-        componente.destacado
-          ? 'border-brand-sky-text/40 bg-brand-sky/10 md:col-span-2 lg:col-span-3'
-          : 'border-brand-ink/10 bg-white'
+      className={`flex h-full min-w-0 flex-col rounded-2xl border bg-white bg-gradient-to-br p-6 ${
+        esPanelAdministracion
+          ? 'border-brand-sky-text/40 from-brand-sky/20 via-brand-sky/15 to-brand-sky/10'
+          : 'border-brand-ink/15 from-brand-sky/15 via-brand-sky/10 via-70% to-brand-coral/5'
+      } ${
+        componente.destacado ? 'md:col-span-2 lg:col-span-3' : ''
       } ${incluido ? '' : 'opacity-60'}`}
     >
       <span className="inline-flex self-start rounded-xl bg-brand-sky/15 p-3 text-brand-sky-text">
