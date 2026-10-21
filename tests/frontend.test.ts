@@ -195,6 +195,8 @@ test('los primeros dos planes incluyen hasta cinco dias habiles y las reuniones 
 test('cada vista de detalle muestra todas las secciones de su plan', () => {
   for (const paquete of getPaquetes()) {
     const html = renderToStaticMarkup(createElement(DetallePaquete, {paquete}));
+    assert.match(html, /^<div class="mt-10 grid items-stretch gap-6 md:grid-cols-2">/);
+    assert.doesNotMatch(html, /items-start|h-\[|min-h-\[/);
     for (const seccion of paquete.secciones) {
       assert.ok(html.includes(`class="text-xl font-bold">${seccion.titulo}</h2>`));
       if (seccion.descripcion) assert.ok(html.includes(seccion.descripcion));
@@ -601,6 +603,9 @@ test('solo los primeros dos planes tienen rutas y tarjetas navegables', () => {
       assert.equal(getPaquete(paquete.id), undefined);
       assert.match(html, /aria-disabled="true"/);
       assert.match(html, /Próximamente/);
+      assert.match(html, /bg-brand-plan-disabled text-brand-ink\/70 shadow-none/);
+      assert.match(html, /bg-brand-ink\/10 px-3 py-2/);
+      assert.doesNotMatch(html, /bg-white|text-brand-sky-text|opacity-/);
       assert.doesNotMatch(html, /<a\b|CLP/);
     }
   }
@@ -630,9 +635,13 @@ test('el catalogo integra tarjetas y comparacion en un solo carrusel sin tabla n
   assert.doesNotMatch(html, /<table\b|overflow-x-auto|comparacion-titulo/);
   assert.equal(html.match(/aria-roledescription="carrusel"/g)?.length, 1);
   assert.equal(html.match(/aria-roledescription="diapositiva"/g)?.length, 4);
-  assert.equal(html.match(/inert=""/g)?.length, 5);
-  assert.match(html, /border-y-2 border-b-brand-coral\/50 border-t-brand-sky-text\/40/);
-  assert.match(html, /from-brand-sky\/40 via-white\/60 to-brand-coral\/35/);
+  assert.equal(html.match(/inert=""/g)?.length, 4);
+  assert.doesNotMatch(html, /border-y-2 border-brand-sky-text/);
+  assert.match(html, /from-brand-sky\/50 via-brand-sky\/25 via-35% to-brand-coral py-10/);
+  const planes = html.slice(html.indexOf('id="planes"'), html.indexOf('id="condiciones"'));
+  assert.doesNotMatch(planes, /-mx-6|via-white/);
+  assert.match(planes, /<div class="mx-auto max-w-6xl px-6">/);
+  assert.doesNotMatch(html.slice(0, html.indexOf('id="planes"')), /^<div class="[^"]*max-w-/);
   assert.equal(html.match(/data-entrada="true"/g)?.length, 4);
   assert.doesNotMatch(html, /href="\/demo\//);
   for (const paquete of getPaquetes().filter((item) => !item.habilitado)) {
@@ -658,20 +667,37 @@ test('el coverflow conserva controles y aisla el contenido de las tarjetas no se
     position: textos.posicion,
   };
   const html = renderToStaticMarkup(createElement(CoverflowCarousel, {items, labels}));
-  assert.equal(html.match(/<button\b/g)?.length, 3);
-  assert.equal(html.match(/disabled=""/g)?.length, 1);
+  assert.equal(html.match(/<button\b/g)?.length, 4);
+  assert.doesNotMatch(html, /disabled=""/);
   assert.doesNotMatch(html, /aria-current=|>0[1-4]<\/button>/);
   assert.match(html, /aria-live="polite" aria-atomic="true"/);
   assert.match(html, /Plan 1 de 4/);
-  assert.equal(html.match(/inert=""/g)?.length, 5);
-  assert.equal(html.match(/<div[^>]*aria-hidden="true"/g)?.length, 5);
+  assert.equal(html.match(/inert=""/g)?.length, 4);
+  assert.equal(html.match(/<div[^>]*aria-hidden="true"/g)?.length, 4);
   assert.match(html, /class="sr-only"/);
-  assert.match(html, /transition-\[transform,opacity\] duration-\[400ms\] ease-out/);
+  assert.match(html, /transition-\[transform,opacity,filter\] duration-\[400ms\] ease-out/);
   assert.match(html, /motion-reduce:transition-none/);
-  assert.match(html, /pointer-events-none absolute inset-y-0 left-1\/2/);
+  assert.match(html, /pointer-events-none relative z-30 flex/);
+  assert.match(html, /sm:absolute sm:inset-x-0 sm:inset-y-0/);
+  assert.match(html, /bg-transparent text-brand-ink\/75/);
+  assert.match(html, /group-focus-visible\/carrusel:underline/);
+  assert.doesNotMatch(html, /border-2|shadow-lg|bg-brand-ink/);
+  assert.match(html, /isolate grid min-w-0 grid-cols-1/);
+  assert.match(html, /sm:mx-16/);
+  assert.match(html, /lg:w-\[48%\]/);
+  assert.match(html, /scale-\[0.85\] opacity-50 blur-\[2px\]/);
+  assert.match(html, /scale-100 opacity-100 blur-none/);
+  assert.match(html, /mask-image:linear-gradient/);
+  assert.match(html, /hidden z-10 scale-\[0.85\] opacity-50 blur-\[2px\] sm:block/);
+  assert.match(html, /motion-safe:max-sm:animate-intro/);
+  assert.ok(html.indexOf('touch-pan-y') < html.indexOf('aria-label="Plan anterior"'));
+  assert.doesNotMatch(html, /rounded-full|-ml-5|-mr-5/);
   assert.doesNotMatch(html, /\shidden=""|overflow-x-auto/);
   assert.ok(
     html.includes(textos.irAlPlan.replace('{numero}', '2').replace('{nombre}', items[1].label)),
+  );
+  assert.ok(
+    html.includes(textos.irAlPlan.replace('{numero}', '4').replace('{nombre}', items[3].label)),
   );
   const unico = renderToStaticMarkup(
     createElement(CoverflowCarousel, {
@@ -701,6 +727,9 @@ test('las tarjetas de plan apilan detalles y dejan las acciones al final sin cam
       }),
     );
     assert.doesNotMatch(html, /grid-cols-|col-span-|border-l/);
+    assert.match(html, /rounded-2xl bg-white/);
+    assert.doesNotMatch(html.slice(0, html.indexOf('>')), /border/);
+    assert.match(html, /shadow-\[0_16px_40px/);
     const orden = [
       '<h3',
       precioDesdeCLP(paquete.precioDesde),

@@ -3,7 +3,7 @@ import EntradaScroll from '../EntradaScroll/EntradaScroll';
 
 export default function DetallePaquete({paquete}: {paquete: Paquete}) {
   return (
-    <div className="mt-10 grid items-start gap-6 md:grid-cols-2">
+    <div className="mt-10 grid items-stretch gap-6 md:grid-cols-2">
       {paquete.secciones.map((seccion) => (
         <EntradaScroll
           key={seccion.titulo}

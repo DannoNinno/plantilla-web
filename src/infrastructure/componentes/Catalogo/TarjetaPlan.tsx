@@ -21,10 +21,18 @@ export default function TarjetaPlan({paquete, numero, textos, comparacion}: Tarj
   return (
     <article
       aria-disabled={!paquete.habilitado || undefined}
-      className={`flex h-full min-w-0 flex-col rounded-2xl border border-brand-ink/10 bg-white p-5 sm:p-6${paquete.habilitado ? '' : ' opacity-60'}`}
+      className={`flex h-full min-w-0 flex-col rounded-2xl ${
+        paquete.habilitado
+          ? 'bg-white shadow-[0_16px_40px_-16px_rgba(4,24,47,0.4)]'
+          : 'bg-brand-plan-disabled text-brand-ink/70 shadow-none'
+      } p-5 sm:p-6`}
     >
       <div className="min-w-0">
-        <span className="text-xs font-semibold uppercase tracking-widest text-brand-sky-text">
+        <span
+          className={`text-xs font-semibold uppercase tracking-widest ${
+            paquete.habilitado ? 'text-brand-sky-text' : 'text-brand-ink/70'
+          }`}
+        >
           {textos.plan} {numero}
         </span>
         <h3 className="mt-4 break-words text-2xl font-bold sm:text-3xl">{paquete.nombre}</h3>
@@ -33,7 +41,7 @@ export default function TarjetaPlan({paquete, numero, textos, comparacion}: Tarj
             {precioDesdeCLP(paquete.precioDesde)}
           </p>
         ) : (
-          <p className="mt-4 flex items-center gap-2 text-xl font-semibold text-brand-ink/65">
+          <p className="mt-4 flex w-fit items-center gap-2 rounded-lg bg-brand-ink/10 px-3 py-2 text-sm font-semibold text-brand-ink/75">
             <LockKeyhole size={18} aria-hidden="true" />
             {textos.proximamente}
           </p>

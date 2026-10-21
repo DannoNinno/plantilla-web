@@ -14,11 +14,15 @@ export interface PaginaCatalogoProps {
 
 export default function PaginaCatalogo({catalogo, sitio, paquetes}: PaginaCatalogoProps) {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12 sm:py-20">
-      <PresentacionCatalogo textos={catalogo.textos} sitio={sitio} />
+    <div className="py-12 sm:py-20">
+      <div className="mx-auto max-w-6xl px-6">
+        <PresentacionCatalogo textos={catalogo.textos} sitio={sitio} />
+      </div>
       <PlanesCatalogo paquetes={paquetes} catalogo={catalogo} />
-      <CondicionesCatalogo catalogo={catalogo} />
-      <AdicionalesCatalogo catalogo={catalogo} />
+      <div className="mx-auto max-w-6xl px-6">
+        <CondicionesCatalogo catalogo={catalogo} />
+        <AdicionalesCatalogo catalogo={catalogo} />
+      </div>
     </div>
   );
 }

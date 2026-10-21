@@ -32,6 +32,7 @@ export default {
         },
         brand: {
           ...coloresMarca,
+          'plan-disabled': `color-mix(in srgb, ${coloresMarca.light} 82%, ${coloresMarca.ink})`,
           'sky-profile': `color-mix(in srgb, ${coloresMarca['sky-text']} 85%, ${coloresMarca.ink})`,
           'catalogo-active': `color-mix(in srgb, rgb(${rgb(coloresMarca['sky-text'])} / 0.96) 80%, rgb(${rgb(coloresMarca.ink)} / 0.96))`,
           'perfil-active': `color-mix(in srgb, rgb(${rgb(coloresMarca['coral-dark'])} / 0.96) 80%, rgb(${rgb(coloresMarca.ink)} / 0.96))`,

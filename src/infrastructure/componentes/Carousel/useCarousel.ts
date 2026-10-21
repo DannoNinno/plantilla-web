@@ -13,8 +13,8 @@ export function useCarousel(itemCount: number) {
 
   const clamp = (value: number) => Math.max(0, Math.min(itemCount - 1, value));
   const activeIndex = clamp(index);
-  const previous = () => setIndex((value) => clamp(clamp(value) - 1));
-  const next = () => setIndex((value) => clamp(clamp(value) + 1));
+  const previous = () => setIndex((value) => (clamp(value) - 1 + itemCount) % itemCount);
+  const next = () => setIndex((value) => (clamp(value) + 1) % itemCount);
 
   function select(value: number) {
     if (!Number.isInteger(value)) throw new Error('El indice del carrusel debe ser entero.');

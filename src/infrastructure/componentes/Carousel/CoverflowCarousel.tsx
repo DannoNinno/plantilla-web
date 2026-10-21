@@ -47,28 +47,21 @@ export default function CoverflowCarousel({items, labels}: CoverflowCarouselProp
       aria-describedby={`${id}-help`}
       tabIndex={0}
       onKeyDown={onKeyDown}
-      className="mt-6 min-w-0 rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-sky-text"
+      className="group/carrusel mt-6 min-w-0 focus:outline-none"
     >
       <p id={`${id}-help`} className="sr-only">
         {labels.help}
       </p>
-      <div className="relative -mx-4 sm:mx-0">
-        <CarouselControls
-          controlsId={id}
-          previousLabel={labels.previous}
-          nextLabel={labels.next}
-          previousDisabled={activeIndex === 0}
-          nextDisabled={activeIndex === items.length - 1}
-          onPrevious={previous}
-          onNext={next}
-        />
+      <div className="relative">
         <div
           id={id}
           {...swipeHandlers}
-          className="isolate grid min-w-0 touch-pan-y items-stretch justify-items-center overflow-hidden py-6 sm:py-8"
+          className="isolate grid min-w-0 grid-cols-1 touch-pan-y items-stretch justify-items-center py-6 sm:mx-16 sm:overflow-hidden sm:py-8 sm:[mask-image:linear-gradient(to_right,transparent,black_14%,black_86%,transparent)] lg:[mask-image:linear-gradient(to_right,transparent,black_18%,black_82%,transparent)]"
         >
           {items.map((item, index) => {
-            const offset = index - activeIndex;
+            const circularOffset = (index - activeIndex + items.length) % items.length;
+            const offset =
+              circularOffset > items.length / 2 ? circularOffset - items.length : circularOffset;
             const active = offset === 0;
             const neighbor = Math.abs(offset) === 1;
             const translation = active
@@ -89,12 +82,12 @@ export default function CoverflowCarousel({items, labels}: CoverflowCarouselProp
                 aria-label={item.label}
                 aria-hidden={!active && !neighbor ? true : undefined}
                 inert={!active && !neighbor ? true : undefined}
-                className={`relative col-start-1 row-start-1 w-[86%] max-w-[26rem] transition-[transform,opacity] duration-[400ms] ease-out motion-reduce:transition-none sm:w-[58%] lg:w-[40%] ${translation} ${
+                className={`relative col-start-1 row-start-1 w-full max-w-[30rem] transition-[transform,opacity,filter] duration-[400ms] ease-out motion-reduce:transition-none sm:w-[68%] lg:w-[48%] ${translation} ${
                   active
-                    ? 'z-20 scale-100 opacity-100'
+                    ? 'z-20 scale-100 opacity-100 blur-none motion-safe:max-sm:animate-intro'
                     : neighbor
-                      ? 'z-10 scale-[0.85] opacity-40'
-                      : 'pointer-events-none z-0 scale-[0.85] opacity-0'
+                      ? 'hidden z-10 scale-[0.85] opacity-50 blur-[2px] sm:block'
+                      : 'pointer-events-none z-0 hidden scale-[0.85] opacity-0 blur-[4px] sm:block'
                 }`}
               >
                 <div
@@ -119,11 +112,20 @@ export default function CoverflowCarousel({items, labels}: CoverflowCarouselProp
             );
           })}
         </div>
+        <CarouselControls
+          controlsId={id}
+          previousLabel={labels.previous}
+          nextLabel={labels.next}
+          previousDisabled={items.length === 1}
+          nextDisabled={items.length === 1}
+          onPrevious={previous}
+          onNext={next}
+        />
       </div>
       <p
         aria-live="polite"
         aria-atomic="true"
-        className="mt-4 text-center text-sm text-brand-ink/70"
+        className="mx-auto mt-4 w-fit rounded-lg px-3 py-2 text-center text-sm text-brand-ink/70 group-focus-visible/carrusel:bg-white/70 group-focus-visible/carrusel:text-brand-ink group-focus-visible/carrusel:underline group-focus-visible/carrusel:underline-offset-4"
       >
         {position}
       </p>
