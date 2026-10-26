@@ -3,7 +3,6 @@ import type {Paquete} from '../types/paquete';
 
 export interface DatosContacto {
   nombre: string;
-  correo: string;
   paqueteId: string;
   mensaje: string;
 }
@@ -44,12 +43,8 @@ export function prepararCorreoContacto(
   paquetes: Pick<Paquete, 'id' | 'nombre' | 'habilitado'>[],
 ): {ok: true; href: string} | {ok: false; error: string} {
   const nombre = datos.nombre.trim();
-  const correo = datos.correo.trim();
   if (!nombre || nombre.length > 100) {
     return {ok: false, error: 'Ingresa tu nombre, con un máximo de 100 caracteres.'};
-  }
-  if (correo.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(correo)) {
-    return {ok: false, error: 'Ingresa un correo válido para poder responderte.'};
   }
   const errorMensaje = validarMensaje(datos.mensaje);
   if (errorMensaje) return {ok: false, error: errorMensaje};
@@ -60,7 +55,6 @@ export function prepararCorreoContacto(
   const asunto = paquete ? `Solicitud de cotización: ${paquete.nombre}` : 'Consulta general';
   const cuerpo = [
     `Nombre: ${nombre}`,
-    `Correo de contacto: ${correo}`,
     `Motivo: ${paquete?.nombre ?? 'Consulta'}`,
     '',
     datos.mensaje.trim(),

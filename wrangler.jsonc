@@ -1,23 +1,73 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "dannotech",
+  "account_id": "136783a3adddb7d5b2438038923ac4ed",
   "routes": [
-    { "pattern": "dannotech.cl", "custom_domain": true },
-    { "pattern": "www.dannotech.cl", "custom_domain": true }
+    {"pattern": "dannotech.cl", "custom_domain": true},
+    {"pattern": "www.dannotech.cl", "custom_domain": true},
   ],
   "workers_dev": true,
   "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dannotech-db",
+      "database_id": "9a0d26d8-f211-4bb2-8e68-222c6f14bbec",
+      "migrations_dir": "drizzle",
+    },
+  ],
+  "send_email": [
+    {
+      "name": "AVISO_EMAIL",
+      "destination_address": "daniel.progra.dannotech@gmail.com",
+    },
+  ],
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-07",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
   },
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "dannotech"
-    }
-  ]
+      "service": "dannotech",
+    },
+  ],
+  "env": {
+    "staging": {
+      "name": "dannotech-ensayo",
+      "vars": {
+        "FORMULARIOS_URL": "https://dannotech-ensayo.daniel-progra-work.workers.dev",
+      },
+      "routes": [],
+      "workers_dev": true,
+      "preview_urls": false,
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "dannotech-ensayo-db",
+          "database_id": "4877d7a1-7728-4c75-800f-44628d673348",
+          "migrations_dir": "drizzle",
+        },
+      ],
+      "send_email": [
+        {
+          "name": "AVISO_EMAIL",
+          "destination_address": "daniel.progra.dannotech@gmail.com",
+        },
+      ],
+      "services": [
+        {
+          "binding": "WORKER_SELF_REFERENCE",
+          "service": "dannotech-ensayo",
+        },
+      ],
+    },
+  },
 }

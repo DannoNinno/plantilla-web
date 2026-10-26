@@ -3,17 +3,16 @@
 import {useEffect, useRef, useState} from 'react';
 import type {FormEvent} from 'react';
 import {validarConsulta} from './validacion';
+import {useHidratado} from '../../base/consulta/useHidratado';
 import type {ConsultaContacto, ErroresContacto, FormularioContactoProps} from './tipos';
 
 export function useFormularioContacto(props: FormularioContactoProps) {
   const [errores, setErrores] = useState<ErroresContacto>({});
   const [enviado, setEnviado] = useState(false);
-  const [habilitado, setHabilitado] = useState(false);
+  const habilitado = useHidratado();
   const resultadoRef = useRef<HTMLDivElement>(null);
   const nombreRef = useRef<HTMLInputElement>(null);
   const [reinicios, setReinicios] = useState(0);
-
-  useEffect(() => setHabilitado(true), []);
 
   useEffect(() => {
     if (enviado) resultadoRef.current?.focus();

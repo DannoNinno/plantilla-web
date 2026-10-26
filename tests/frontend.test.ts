@@ -33,6 +33,9 @@ import TarjetaPlan from '../src/infrastructure/componentes/Catalogo/TarjetaPlan'
 import CoverflowCarousel from '../src/infrastructure/componentes/Carousel/CoverflowCarousel';
 import CondicionesCatalogo from '../src/infrastructure/componentes/Catalogo/CondicionesCatalogo';
 import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
+import ListaSolicitudes from '../src/modules/formularios/admin/ListaSolicitudes';
+import {formulariosConfig} from '../src/config/formularios.config';
+import type {Solicitud} from '../src/modules/formularios/core/tipos';
 import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
 import Entrada from '../src/infrastructure/componentes/Entrada/Entrada';
 import Footer from '../src/infrastructure/componentes/Footer/Footer';
@@ -50,7 +53,14 @@ function fuentes(directorio: string): string[] {
 }
 
 test('la estructura conserva las capas y todos los datos son JSON', () => {
-  assert.deepEqual(readdirSync('src').sort(), ['app', 'data', 'domain', 'infrastructure']);
+  assert.deepEqual(readdirSync('src').sort(), [
+    'app',
+    'config',
+    'data',
+    'domain',
+    'infrastructure',
+    'modules',
+  ]);
   assert.deepEqual(readdirSync('src/data').sort(), [
     'catalogo.json',
     'componentes.json',
@@ -60,13 +70,13 @@ test('la estructura conserva las capas y todos los datos son JSON', () => {
     'perfil.json',
     'sitio.json',
   ]);
-  assert.equal(existsSync('src/app/api'), false);
-  assert.equal(existsSync('src/app/admin'), false);
+  assert.equal(existsSync('src/app/api/formularios/route.ts'), true);
+  assert.equal(existsSync('src/app/admin/solicitudes/page.tsx'), true);
   assert.equal(existsSync('src/infrastructure/repositorios'), false);
 });
 
-test('el codigo del frontend no contiene integraciones de backend', () => {
-  for (const ruta of fuentes('src')) {
+test('las capas visual y de dominio no contienen integraciones de backend', () => {
+  for (const ruta of [...fuentes('src/infrastructure'), ...fuentes('src/domain')]) {
     assert.doesNotMatch(
       readFileSync(ruta, 'utf8'),
       /better-sqlite3|exceljs|server-only|next\/headers|node:crypto|['"]use server['"]|\bfetch\s*\(/,
@@ -74,7 +84,7 @@ test('el codigo del frontend no contiene integraciones de backend', () => {
     );
   }
   const manifiesto = JSON.parse(readFileSync('package.json', 'utf8'));
-  for (const dependencia of ['better-sqlite3', 'exceljs', 'server-only']) {
+  for (const dependencia of ['better-sqlite3', 'exceljs', 'nodemailer', 'resend']) {
     assert.equal(dependencia in manifiesto.dependencies, false);
   }
 });
@@ -832,8 +842,10 @@ test('se retiran las rutas y herramientas de la demo pero se conserva la bibliot
 
 test('los correos oficiales solo se definen en la configuracion y no se expone Gmail', () => {
   const configuracion = path.join('src', 'domain', 'configuracion', 'contacto.ts');
+  const configuracionServidor = path.join('src', 'config', 'formularios.config.ts');
   for (const ruta of fuentes('src')) {
     const contenido = readFileSync(ruta, 'utf8');
+    if (ruta === configuracionServidor) continue;
     assert.doesNotMatch(contenido, /@gmail\.com/i, ruta);
     if (ruta !== configuracion) assert.doesNotMatch(contenido, /@dannotech\.cl/i, ruta);
   }
@@ -872,7 +884,6 @@ test('el limite real del mensaje es de 200 palabras, incluyendo espacios y salto
 
 const datosContacto = {
   nombre: 'Daniel & prueba',
-  correo: CONTACT_EMAIL,
   paqueteId: 'consulta',
   mensaje: 'Me interesa conversar sobre mi negocio, con ideas & preguntas.',
 };
@@ -893,7 +904,7 @@ test('el formulario prepara consultas y cotizaciones con todos los datos sin env
     );
     const cuerpo = url.searchParams.get('body')!;
     assert.ok(cuerpo.includes(datosContacto.nombre));
-    assert.ok(cuerpo.includes(datosContacto.correo));
+    assert.doesNotMatch(cuerpo, /Correo de contacto:/);
     assert.ok(cuerpo.includes(datosContacto.mensaje));
     assert.ok(cuerpo.includes(`Motivo: ${opcion.nombre}`));
   }
@@ -908,9 +919,6 @@ test('el formulario rechaza datos invalidos explicitamente sin generar un mailto
   for (const cambio of [
     {nombre: ''},
     {nombre: 'a'.repeat(101)},
-    {correo: ''},
-    {correo: 'correo-invalido'},
-    {correo: `${'a'.repeat(254)}@${CONTACT_EMAIL.split('@')[1]}`},
     {mensaje: ' '},
     {mensaje: Array(201).fill('palabra').join(' ')},
     {paqueteId: 'sistema-web-a-medida'},
@@ -924,7 +932,7 @@ test('el formulario rechaza datos invalidos explicitamente sin generar un mailto
   }
 });
 
-test('el formulario muestra Consulta y los planes habilitados sin simular un envio exitoso', () => {
+test('el formulario muestra Consulta y planes habilitados, con respaldo y sin simular exito', () => {
   const html = renderToStaticMarkup(
     createElement(Contacto, {
       paquetes: getPaquetes(),
@@ -933,7 +941,7 @@ test('el formulario muestra Consulta y los planes habilitados sin simular un env
   );
   assert.match(html, /<form[^>]*class="mt-6 max-w-2xl space-y-5"/);
   assert.match(html, /name="nombre"/);
-  assert.match(html, /name="correo"/);
+  assert.doesNotMatch(html, /name="(?:correo|email)"|type="email"|Tu correo/);
   assert.match(html, /name="mensaje"/);
   assert.match(html, /Mi proyecto/);
   assert.match(html, /<select[^>]*name="paquete"/);
@@ -943,16 +951,45 @@ test('el formulario muestra Consulta y los planes habilitados sin simular un env
   }
   assert.doesNotMatch(html, /value="automatizacion"|value="comercio-electronico"/);
   assert.match(html, /200.*palabras/);
-  assert.match(html, /Preparar consulta/);
+  assert.match(html, /Enviar consulta/);
   assert.equal((html.match(/<button\b/g) ?? []).length, 1);
   assert.doesNotMatch(html, /<a\b|mailto:/);
-  assert.ok(html.includes('Este formulario no envía ni guarda solicitudes'));
+  assert.ok(html.includes('Guardaré tu solicitud'));
+  assert.ok(html.includes('no podré responderte por ese medio'));
+  assert.match(html, /<input(?=[^>]*name="sitioWeb")(?=[^>]*tabindex="-1")/);
   assert.doesNotMatch(html, /maxlength="3000"/);
-  assert.doesNotMatch(html, /Consulta recibida|guardados|action=/);
+  assert.doesNotMatch(html, /Tu solicitud quedó guardada|action=/);
   const cotizacion = renderToStaticMarkup(
     createElement(Contacto, {paquetes: getPaquetes(), paqueteInicial: 'landing'}),
   );
   assert.ok(cotizacion.includes('<option value="landing" selected="">Presencia Digital</option>'));
-  assert.ok(cotizacion.includes('Preparar cotización'));
+  assert.ok(cotizacion.includes('Enviar cotización'));
   assert.doesNotMatch(cotizacion, /mailto:|wa\.me|Ver los canales de contacto/);
+  assert.doesNotMatch(cotizacion, /name="(?:correo|email)"|type="email"/);
+});
+
+test('el listado administrativo no expone correos nuevos ni históricos', () => {
+  const solicitud: Solicitud = {
+    id: '00000000-0000-4000-8000-000000000001',
+    tipo: 'consulta',
+    nombre: 'Prueba',
+    email: null,
+    datos: {mensaje: 'Mi proyecto'},
+    ipHash: 'hash',
+    estadoAviso: 'enviado',
+    intentosAviso: 1,
+    ultimoError: null,
+    leida: false,
+    creadoEn: '2020-01-01T00:00:00.000Z',
+    avisadoEn: null,
+    reservaHasta: null,
+  };
+  const anterior = {...solicitud, email: 'registro-anterior@example.org'};
+  const listado = renderToStaticMarkup(
+    createElement(ListaSolicitudes, {
+      solicitudes: [solicitud, {...anterior, id: '00000000-0000-4000-8000-000000000002'}],
+      config: formulariosConfig,
+    }),
+  );
+  assert.doesNotMatch(listado, /registro-anterior@example\.org/);
 });

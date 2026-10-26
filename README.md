@@ -1,28 +1,37 @@
 # dannotech
 
-Frontend en desarrollo con Next.js, React, TypeScript y Tailwind. Conserva la portada, perfil, catálogo y estética de marca. Todo el contenido estructurado se obtiene de JSON locales; no hay API, autenticación, base de datos, administración ni procesamiento de Excel.
+Sitio fullstack con Next.js, React, TypeScript y Tailwind sobre Cloudflare Workers/OpenNext. Conserva la portada, perfil, catálogo y estética de marca. El contenido público se obtiene de JSON locales; las consultas y cotizaciones se guardan en Cloudflare D1, con avisos internos por correo y un panel administrativo protegido. No hay procesamiento de Excel.
 
 ## Desarrollo
 
-Requiere Node.js 22 o superior para Wrangler; se recomienda Node.js 24 LTS.
+Requiere Node.js 22 o superior para Wrangler; se recomienda Node.js 24 LTS, indicado en [.node-version](./.node-version). [package.json](./package.json) fija pnpm 9.15.9. Usa Next.js 16.4.3; la actualización desde 15 fue necesaria para mantener una versión soportada por el adaptador. Cada página y endpoint privado autentica antes de consultar datos; no depende de proxy ni middleware experimental.
 
 ```sh
-npm ci
+npx pnpm@9.15.9 install --frozen-lockfile
 npm run dev
 npm run lint
 npm run test:frontend
+npm run test:formularios
+npm run test:proteccion
 npm run build
+npm run check
 ```
 
 `npm run build` compila Next.js en `.next`. Ya no se usa `output: 'export'` ni se genera `out`: el despliegue está preparado para Cloudflare Workers con OpenNext.
 
-En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambiar la política de ejecución. OpenNext no garantiza soporte completo de Windows; ante problemas exclusivos de esa plataforma, usa WSL o Linux. No ejecutes builds sobre una carpeta `.next` utilizada por otro proceso.
+En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambiar la política de ejecución. El empaquetado completo se verificó en Windows con el Modo de desarrollador habilitado por el dueño y `node-linker=hoisted` en [.npmrc](./.npmrc). No se instalaron WSL ni herramientas globales, ni se cambiaron permisos del sistema. En una instalación nueva, si aparecen errores `EPERM` de symlinks, habilita personalmente ese modo o compila en Linux. No ejecutes builds sobre una carpeta `.next` utilizada por otro proceso ni operaciones Wrangler que inicialicen a la vez la misma base local.
 
-`npm run lint` usa ESLint CLI sobre `src`, `tests` y `tailwind.config.ts`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier mediante `FlatCompat`; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance.
+`npm run lint` usa ESLint CLI sobre `src`, `tests` y `tailwind.config.ts`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier con configuración plana; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance. `npm run check` agrupa lint, tests del módulo/frontend/protección y el paquete completo de OpenNext, no solo el build de Next.js.
+
+El adaptador aún muestra su advertencia general de soporte de Windows y puede emitir `DEP0190` al desplegar. npm 11 avisa que no reconoce `node-linker`, una opción válida de **pnpm**. Son avisos de las herramientas, no errores de la aplicación; no se silencian ni se modifican dependencias instaladas para ocultarlos. La configuración hoisted y el lockfile deben conservarse.
 
 ## Cloudflare Workers
 
-La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker se llama `dannotech` y sirve los archivos de `.open-next/assets`. No hay bindings de D1, KV ni R2.
+La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker productivo se llama `dannotech` y sirve los archivos de `.open-next/assets`. El módulo incorpora `DB` (D1) y `AVISO_EMAIL` (`send_email`); no usa KV ni R2.
+
+Ya existen dos bases independientes con la migración inicial aplicada: `dannotech-db` (producción) y `dannotech-ensayo-db` (ensayo). El entorno `staging` utiliza exclusivamente su propia base y el Worker `dannotech-ensayo`, sin rutas de los dominios productivos. Está publicado en <https://dannotech-ensayo.daniel-progra-work.workers.dev>. Antes de retirar el campo de correo, se comprobaron allí ambos formularios, acceso/salida del panel y protecciones HTTP; el dueño confirmó los dos avisos en Gmail y su `Reply-To`. La retirada del campo y su nueva migración solo están aplicadas localmente, no en ensayo ni producción.
+
+**La versión nueva no se ha publicado en producción ni se han modificado sus secretos.** Los secretos de ensayo ya están configurados. Antes de publicar producción faltan sus tres secretos, la aprobación del dueño y seguir el [procedimiento del módulo](./src/modules/formularios/README.md). Tampoco se ha hecho commit ni push de esta implementación; preparar CI no la ejecuta en GitHub.
 
 ```sh
 npx opennextjs-cloudflare build
@@ -30,11 +39,13 @@ npm run preview
 npm run cf-typegen
 ```
 
-El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `preview` vuelve a compilar y ejecuta el sitio en el runtime local de Workers; no despliega. Los tipos generados, `.open-next`, `.wrangler` y `.dev.vars` están excluidos de Git.
+El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `preview` vuelve a compilar y ejecuta el sitio en el runtime local de Workers; no despliega. Los tipos generados, `.open-next`, `.wrangler` y los archivos `.dev.vars*` están excluidos de Git, excepto la plantilla vacía [.dev.vars.example](./.dev.vars.example).
 
-Las páginas prerenderizadas utilizan la caché de solo lectura de Workers Static Assets, recomendada por la [guía de OpenNext para sitios SSG](https://opennext.js.org/cloudflare/caching#ssg-site). Esto permite servir los paquetes generados con `generateStaticParams` y `dynamicParams = false` sin recursos externos. No soporta revalidación: los cambios de JSON se publican con un nuevo build y despliegue. Al incorporar datos dinámicos en el futuro, habrá que revisar esta estrategia.
+Las páginas prerenderizadas utilizan la caché de solo lectura de Workers Static Assets, recomendada por la [guía de OpenNext para sitios SSG](https://opennext.js.org/cloudflare/caching#ssg-site). Esto permite servir los paquetes generados con `generateStaticParams` y `dynamicParams = false` sin recursos externos. No soporta revalidación: los cambios de JSON se publican con un nuevo build y despliegue. Los formularios y el panel son dinámicos y no usan esa caché para las solicitudes.
 
-El archivo local `.dev.vars` contiene `NEXTJS_ENV=development`; si clonas el proyecto, créalo para que la integración local utilice el entorno de desarrollo. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
+Para desarrollo, copia [.dev.vars.example](./.dev.vars.example) a `.dev.vars` y completa los secretos locales. La integración usa D1 local y simula los avisos en consola; no envía correos reales en `next dev`. Los scripts de desarrollo, build y tests generan los tipos de los bindings. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
+
+En esta instalación ya hay credenciales aleatorias **distintas** en `.dev.vars` y `.dev.vars.staging`. La contraseña del panel de ensayo se consulta localmente en el segundo archivo; no se publica, se incluye en comandos ni se añade a Git. `FORMULARIOS_URL` en `staging` hace que los avisos enlacen al panel de ensayo, no al productivo.
 
 Para Workers Builds conectado a GitHub:
 
@@ -47,6 +58,14 @@ Para Workers Builds conectado a GitHub:
 - [wrangler.jsonc](./wrangler.jsonc) declara `dannotech.cl` y `www.dannotech.cl` como dominios personalizados del Worker; Cloudflare los aplica en el siguiente despliegue. Mantiene `workers_dev: true` y desactiva las URL de preview con `preview_urls: false`.
 
 `npm run deploy` está disponible para construir y desplegar en un solo comando, pero no es necesario ejecutarlo localmente cuando Cloudflare publica desde GitHub. Las imágenes siguen con `unoptimized: true`; no se requiere un binding de Cloudflare Images.
+
+### Validación continua y operación
+
+[validar.yml](./.github/workflows/validar.yml) prepara un control en Linux/Node.js 24: instalación congelada, lint, tests, paquete Worker y pruebas HTTP contra un Worker local con credenciales temporales y D1 emulada. No usa secretos productivos ni despliega. Se activará al subir los cambios autorizados; no se ha ejecutado aún en GitHub.
+
+[dependabot.yml](./.github/dependabot.yml) prepara revisiones mensuales de dependencias menores/parches y de Actions; no actualiza automáticamente versiones mayores ni integra cambios sin revisión. Las Actions están fijadas por commit.
+
+Wrangler tiene observabilidad habilitada. Revisa los errores del Worker y los avisos pendientes/fallidos del panel; conservar en D1 no reemplaza revisar esos estados. No hay borrado automático de solicitudes. Usa exportaciones privadas y Time Travel de D1 según la ventana de tu plan, con el procedimiento del [módulo](./src/modules/formularios/README.md). Los respaldos y logs pueden contener datos personales: no los publiques ni los guardes en Git.
 
 ## Organización
 
@@ -119,11 +138,13 @@ Las capacidades del perfil resaltan su fondo, acento lateral e icono al hacer ho
 
 ## Formularios
 
-La página `/contacto/` contiene el formulario compartido, con nombre, correo, un selector de los dos planes habilitados y la opción Consulta, y un mensaje de hasta 200 palabras. Tiene una única acción principal y no muestra la dirección destinataria ni enlaces de correo adicionales dentro del formulario. El footer mantiene el enlace `mailto:` con el texto «Escríbeme por correo». El límite se valida por palabras (separadas por espacios, tabulaciones o saltos de línea), no por caracteres; al excederlo se informa el error y se bloquea la preparación del correo.
+La página `/contacto/` contiene el formulario compartido, con nombre, un selector de los dos planes habilitados y la opción Consulta, y un mensaje de hasta 200 palabras (además de un límite defensivo de 10000 caracteres). No pide correo al visitante: la API descarta ese campo si un cliente antiguo lo añade y las solicitudes nuevas guardan `email=NULL`. Tiene una única acción principal y no muestra la dirección destinataria ni enlaces de correo adicionales dentro del formulario. El footer mantiene el enlace `mailto:` con el texto «Escríbeme por correo». El límite por palabras y los planes habilitados se validan también en el servidor.
 
-Las botoneras de cada plan enlazan a `/contacto/?plan=landing` o `/contacto/?plan=portal`. La página de Contacto conserva su prerenderizado estático y lee el parámetro dentro de un límite de Suspense; valida que el plan esté habilitado y lo preselecciona. Si no está disponible, informa al usuario y permite una Consulta. Cambiar de plan mediante navegación cliente también actualiza la selección. Consulta prepara un `mailto:` a `CONTACT_EMAIL`; un plan prepara uno a `QUOTES_EMAIL`, con el nombre del plan en el asunto y los datos del formulario en el cuerpo. El usuario debe tener un programa de correo configurado, revisar el borrador y enviarlo desde allí. El sitio no envía ni almacena solicitudes, no muestra confirmaciones de envío y no integra SMTP ni APIs de correo. El backend y el panel administrativo para gestionar solicitudes quedan pendientes, sin diseñarlos en esta etapa.
+Las botoneras de cada plan enlazan a `/contacto/?paquete=landing` o `/contacto/?paquete=portal`. La página valida el parámetro y preselecciona el plan habilitado; los desconocidos responden 404. El formulario llama a `POST /api/formularios/`: guarda primero en D1 y después intenta hasta dos veces el aviso nativo de Cloudflare al destino interno verificado, sin correo del visitante ni `Reply-To`. No permite responder al visitante por email. No hay Gmail SMTP, proveedores externos, cron ni colas. Si el aviso falla, la solicitud permanece guardada y se puede reenviar manualmente desde `/admin/solicitudes/`. No se garantiza la entrega al buzón ni la ausencia absoluta de duplicados ante fallos ambiguos del proveedor.
 
-Rutas disponibles: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/` y `/componentes/`. La vitrina tiene título y descripción propios para buscadores; se accede desde los detalles de los planes. No se publican detalles de componentes ni rutas de demo. Las rutas `/api` y `/admin` ya no existen. Los planes desconocidos o desactivados no generan páginas y devuelven 404.
+La [migración de retirada del campo](./drizzle/0001_tearful_swordsman.sql) hace nullable la columna anterior y conserva sus valores históricos; no borra solicitudes ni correos ya almacenados. Los correos anteriores solo se muestran en el detalle administrativo, identificados como históricos. El nombre y el contenido libre pueden seguir siendo datos personales: retirar el campo email no garantiza por sí solo el cumplimiento de protección de datos.
+
+Rutas públicas: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/` y `/componentes/`. El panel privado está en `/admin/solicitudes/`, con acceso desde `/admin/acceso/`, y las operaciones están bajo `/api/admin/`. La vitrina tiene título y descripción propios para buscadores; se accede desde los detalles de los planes. No se publican detalles de componentes ni rutas de demo. Los planes desconocidos o desactivados no generan páginas y devuelven 404.
 
 ## Biblioteca reutilizable
 

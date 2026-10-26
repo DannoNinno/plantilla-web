@@ -8,10 +8,22 @@ import useCotizacion from './useCotizacion';
 import type {FormularioCotizacionProps} from './tipos';
 export default function PasosCotizacion(props: FormularioCotizacionProps) {
   const {campos, textos} = props;
-  const estado = useCotizacion(props);
+  const {
+    valores,
+    paso: pasoActual,
+    errores,
+    enviado,
+    habilitado,
+    formularioRef,
+    resultadoRef,
+    cambiar,
+    enviar,
+    anterior,
+    reiniciar,
+  } = useCotizacion(props);
   const uid = useId();
   const avisoId = `${uid}-aviso`;
-  const paso = textos.paso.replace('{actual}', String(estado.paso)).replace('{total}', '3');
+  const paso = textos.paso.replace('{actual}', String(pasoActual)).replace('{total}', '3');
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <p id={avisoId} className="break-words text-sm">
@@ -20,81 +32,81 @@ export default function PasosCotizacion(props: FormularioCotizacionProps) {
       <noscript>
         <p className="font-semibold">{textos.sinJavascript}</p>
       </noscript>
-      {estado.enviado ? (
+      {enviado ? (
         <ResultadoContacto
           exito={textos.exito}
           textoReiniciar={textos.reiniciar}
-          reiniciar={estado.reiniciar}
-          resultadoRef={estado.resultadoRef}
+          reiniciar={reiniciar}
+          resultadoRef={resultadoRef}
         />
       ) : (
         <form
-          ref={estado.formularioRef}
+          ref={formularioRef}
           noValidate
-          onSubmit={estado.enviar}
+          onSubmit={enviar}
           aria-describedby={avisoId}
           className="space-y-6 rounded-2xl bg-white p-5 sm:p-8"
         >
           <p className="break-words text-sm font-semibold">{paso}</p>
           <h3 data-titulo-paso tabIndex={-1} className="break-words text-xl font-bold">
-            {textos.pasos[estado.paso - 1] ?? paso}
+            {textos.pasos[pasoActual - 1] ?? paso}
           </h3>
-          {estado.paso === 1 && (
+          {pasoActual === 1 && (
             <SelectorServicio
               campo={campos.servicio}
               id={`${uid}-servicio`}
               avisoId={avisoId}
-              valor={estado.valores.servicio}
-              error={estado.errores.servicio}
-              cambiar={(valor) => estado.cambiar('servicio', valor)}
+              valor={valores.servicio}
+              error={errores.servicio}
+              cambiar={(valor) => cambiar('servicio', valor)}
             />
           )}
-          {estado.paso === 2 && (
+          {pasoActual === 2 && (
             <CampoContacto
               {...campos.mensaje}
               nombre="mensaje"
               id={`${uid}-mensaje`}
               avisoId={avisoId}
-              valor={estado.valores.mensaje}
-              onChange={(evento) => estado.cambiar('mensaje', evento.target.value)}
-              errorActual={estado.errores.mensaje}
+              valor={valores.mensaje}
+              onChange={(evento) => cambiar('mensaje', evento.target.value)}
+              errorActual={errores.mensaje}
             />
           )}
-          {estado.paso === 3 && (
+          {pasoActual === 3 && (
             <>
               <CampoContacto
                 {...campos.nombre}
                 nombre="nombre"
                 id={`${uid}-nombre`}
                 avisoId={avisoId}
-                valor={estado.valores.nombre}
-                onChange={(evento) => estado.cambiar('nombre', evento.target.value)}
-                errorActual={estado.errores.nombre}
+                valor={valores.nombre}
+                onChange={(evento) => cambiar('nombre', evento.target.value)}
+                errorActual={errores.nombre}
               />
               <CampoContacto
                 {...campos.correo}
                 nombre="correo"
                 id={`${uid}-correo`}
                 avisoId={avisoId}
-                valor={estado.valores.correo}
-                onChange={(evento) => estado.cambiar('correo', evento.target.value)}
-                errorActual={estado.errores.correo}
+                valor={valores.correo}
+                onChange={(evento) => cambiar('correo', evento.target.value)}
+                errorActual={errores.correo}
               />
             </>
           )}
-          {Object.keys(estado.errores).length > 0 && (
+          {Object.keys(errores).length > 0 && (
             <p role="alert" className="break-words font-semibold">
               {textos.errorGeneral}
             </p>
           )}
           <div className="flex flex-wrap gap-3">
-            {estado.paso > 1 && (
-              <Boton onClick={estado.anterior} variante="borde">
+            {pasoActual > 1 && (
+              <Boton onClick={anterior} variante="borde">
                 {textos.anterior}
               </Boton>
             )}
-            <Boton type="submit" variante="seccion" disabled={!estado.habilitado}>
-              {estado.paso === 3 ? textos.enviar : textos.siguiente}
+            <Boton type="submit" variante="seccion" disabled={!habilitado}>
+              {pasoActual === 3 ? textos.enviar : textos.siguiente}
             </Boton>
           </div>
         </form>

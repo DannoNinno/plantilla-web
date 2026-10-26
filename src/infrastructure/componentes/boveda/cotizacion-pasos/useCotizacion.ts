@@ -2,6 +2,7 @@
 import {useEffect, useRef, useState} from 'react';
 import type {FormEvent} from 'react';
 import {erroresPaso, pasoPrimerError, validarSolicitud} from './validacion';
+import {useHidratado} from '../../base/consulta/useHidratado';
 import type {ErroresCotizacion, FormularioCotizacionProps, SolicitudCotizacion} from './tipos';
 const inicial: SolicitudCotizacion = {servicio: '', nombre: '', correo: '', mensaje: ''};
 
@@ -10,11 +11,10 @@ export default function useCotizacion(props: FormularioCotizacionProps) {
   const [paso, setPaso] = useState<1 | 2 | 3>(1);
   const [errores, setErrores] = useState<ErroresCotizacion>({});
   const [enviado, setEnviado] = useState(false);
-  const [habilitado, setHabilitado] = useState(false);
+  const habilitado = useHidratado();
   const [foco, setFoco] = useState(0);
   const formularioRef = useRef<HTMLFormElement>(null);
   const resultadoRef = useRef<HTMLDivElement>(null);
-  useEffect(() => setHabilitado(true), []);
   useEffect(() => {
     if (!foco) return;
     if (enviado) resultadoRef.current?.focus();
