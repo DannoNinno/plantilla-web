@@ -1,5 +1,5 @@
-import nextVitals from 'eslint-config-next/core-web-vitals';
-import prettier from 'eslint-plugin-prettier/recommended';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const config = [
   {
@@ -14,8 +14,8 @@ const config = [
       'cloudflare-env.d.ts',
     ],
   },
-  ...nextVitals,
-  prettier,
+  ...nextCoreWebVitals,
+  prettierRecommended,
   {rules: {'prettier/prettier': 'warn'}},
 ];
 

@@ -10,6 +10,7 @@ export interface DatosFormulario {
   servicio?: string;
   detalle?: string;
   telefono?: string;
+  consentimiento?: string;
 }
 
 export interface NuevaSolicitud {

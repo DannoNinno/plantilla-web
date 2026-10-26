@@ -23,15 +23,15 @@ En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambi
 
 `npm run lint` usa ESLint CLI sobre `src`, `tests` y `tailwind.config.ts`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier con configuración plana; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance. `npm run check` agrupa lint, tests del módulo/frontend/protección y el paquete completo de OpenNext, no solo el build de Next.js.
 
-El adaptador aún muestra su advertencia general de soporte de Windows y puede emitir `DEP0190` al desplegar. npm 11 avisa que no reconoce `node-linker`, una opción válida de **pnpm**. Son avisos de las herramientas, no errores de la aplicación; no se silencian ni se modifican dependencias instaladas para ocultarlos. La configuración hoisted y el lockfile deben conservarse.
+El adaptador aún muestra su advertencia general de soporte de Windows y puede emitir `DEP0190` al desplegar. npm 11 avisa que no reconoce `node-linker`, una opción válida de **pnpm**. Son avisos de las herramientas, no errores de la aplicación; no se silencian ni se modifican dependencias instaladas para ocultarlos. La configuración hoisted y el lockfile deben conservarse. pnpm es el único gestor de instalación: se retiró el segundo lockfile de npm para evitar versiones contradictorias. Se pueden seguir ejecutando scripts con `npm run`.
+
+Se actualizaron Drizzle, OpenNext y Wrangler y se renovó `body-parser` dentro de su rango compatible. Los overrides acotados de `glob` (solo `@node-minify/core`) y `undici` (solo Miniflare) aplican parches de seguridad que esos padres aún fijan a versiones anteriores. Revisarlos al actualizar los padres. No se fuerzan cambios mayores de Tailwind o de las herramientas de migración para eliminar avisos moderados de desarrollo.
 
 ## Cloudflare Workers
 
 La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker productivo se llama `dannotech` y sirve los archivos de `.open-next/assets`. El módulo incorpora `DB` (D1) y `AVISO_EMAIL` (`send_email`); no usa KV ni R2.
 
-Ya existen dos bases independientes con la migración inicial aplicada: `dannotech-db` (producción) y `dannotech-ensayo-db` (ensayo). El entorno `staging` utiliza exclusivamente su propia base y el Worker `dannotech-ensayo`, sin rutas de los dominios productivos. Está publicado en <https://dannotech-ensayo.daniel-progra-work.workers.dev>. Antes de retirar el campo de correo, se comprobaron allí ambos formularios, acceso/salida del panel y protecciones HTTP; el dueño confirmó los dos avisos en Gmail y su `Reply-To`. La retirada del campo y su nueva migración solo están aplicadas localmente, no en ensayo ni producción.
-
-**La versión nueva no se ha publicado en producción ni se han modificado sus secretos.** Los secretos de ensayo ya están configurados. Antes de publicar producción faltan sus tres secretos, la aprobación del dueño y seguir el [procedimiento del módulo](./src/modules/formularios/README.md). Tampoco se ha hecho commit ni push de esta implementación; preparar CI no la ejecuta en GitHub.
+Existen dos bases independientes: `dannotech-db` (producción) y `dannotech-ensayo-db` (ensayo). El entorno `staging` utiliza exclusivamente su propia base y el Worker `dannotech-ensayo`, sin rutas de los dominios productivos. Su URL es <https://dannotech-ensayo.daniel-progra-work.workers.dev>. El dueño autorizó preparar producción y publicar esta versión en `main`; el [procedimiento del módulo](./src/modules/formularios/README.md) exige migrar y configurar secretos independientes antes del push que puede activar Workers Builds.
 
 ```sh
 npx opennextjs-cloudflare build
@@ -41,17 +41,20 @@ npm run cf-typegen
 
 El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `preview` vuelve a compilar y ejecuta el sitio en el runtime local de Workers; no despliega. Los tipos generados, `.open-next`, `.wrangler` y los archivos `.dev.vars*` están excluidos de Git, excepto la plantilla vacía [.dev.vars.example](./.dev.vars.example).
 
+[worker.ts](./worker.ts) es el punto de entrada propio: redirige HTTP remoto a HTTPS conservando host, ruta y parámetros (301 en GET/HEAD, 308 en otros métodos), delega al Worker generado y añade HSTS de un año a sus respuestas HTTPS. Solo loopback conserva HTTP para desarrollo. No modifica el Worker generado ni usa proxy experimental. Los assets servidos directamente por Cloudflare pueden no pasar por este punto de entrada; la protección aquí cubre las páginas y endpoints delegados. La cookie administrativa siempre es `Secure` fuera de desarrollo.
+
 Las páginas prerenderizadas utilizan la caché de solo lectura de Workers Static Assets, recomendada por la [guía de OpenNext para sitios SSG](https://opennext.js.org/cloudflare/caching#ssg-site). Esto permite servir los paquetes generados con `generateStaticParams` y `dynamicParams = false` sin recursos externos. No soporta revalidación: los cambios de JSON se publican con un nuevo build y despliegue. Los formularios y el panel son dinámicos y no usan esa caché para las solicitudes.
 
 Para desarrollo, copia [.dev.vars.example](./.dev.vars.example) a `.dev.vars` y completa los secretos locales. La integración usa D1 local y simula los avisos en consola; no envía correos reales en `next dev`. Los scripts de desarrollo, build y tests generan los tipos de los bindings. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
 
-En esta instalación ya hay credenciales aleatorias **distintas** en `.dev.vars` y `.dev.vars.staging`. La contraseña del panel de ensayo se consulta localmente en el segundo archivo; no se publica, se incluye en comandos ni se añade a Git. `FORMULARIOS_URL` en `staging` hace que los avisos enlacen al panel de ensayo, no al productivo.
+En esta instalación hay credenciales aleatorias **distintas** en `.dev.vars`, `.dev.vars.staging` y `.dev.vars.production`. La contraseña de cada panel se consulta localmente en su archivo ignorado; no se publica, se incluye en comandos ni se añade a Git. `FORMULARIOS_URL` en `staging` hace que los avisos enlacen al panel de ensayo, no al productivo.
 
 Para Workers Builds conectado a GitHub:
 
 - Usa Node.js 24 LTS para compilar.
 - Cloudflare detecta pnpm e instala con `pnpm install --frozen-lockfile`. [pnpm-workspace.yaml](./pnpm-workspace.yaml) declara el proyecto raíz como único paquete; conserva `packages` para que pnpm 9 pueda leer la configuración y mantén [pnpm-lock.yaml](./pnpm-lock.yaml) sincronizado con las dependencias.
 - El archivo versionado [.env.production](./.env.production) define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl`; Next.js lo carga en los builds de producción para resolver los metadatos. No contiene secretos; los archivos `.env.local`, `.env*.local` y `.dev.vars` siguen excluidos de Git. Evita variables del entorno de build con otro valor, ya que tienen prioridad sobre este archivo.
+- Mantén Next.js en una versión soportada por su política oficial (actualmente 16.x en este proyecto). OpenNext aborta el build si detecta una versión EOL; el flag `--dangerouslyUseUnsupportedNextVersion` existe, pero no se recomienda para producción.
 - Comando de build: `npx opennextjs-cloudflare build`.
 - Comando de despliegue, ejecutado por Cloudflare: `npx opennextjs-cloudflare deploy`.
 - Usa el comando de despliegue del adaptador, no `wrangler deploy` directamente: OpenNext prepara también los assets de caché antes de publicar.
@@ -59,9 +62,15 @@ Para Workers Builds conectado a GitHub:
 
 `npm run deploy` está disponible para construir y desplegar en un solo comando, pero no es necesario ejecutarlo localmente cuando Cloudflare publica desde GitHub. Las imágenes siguen con `unoptimized: true`; no se requiere un binding de Cloudflare Images.
 
+### Privacidad mínima y contacto
+
+[La política pública](./src/app/(portal)/privacidad/page.tsx) identifica a Daniel Salamanca Jorquera y enlaza el correo oficial. Antes de enviar, el formulario exige una autorización no premarcada; el servidor valida `consentimiento: true` y registra la versión de la política definida en [contacto.ts](./src/domain/configuracion/contacto.ts), junto con la fecha de la solicitud. No pide email, no autoriza publicidad y ofrece un enlace al correo oficial para quien necesite respuesta.
+
+El dueño revisará y eliminará manualmente las consultas sin contrato después de un máximo de doce meses desde el último contacto, también en Gmail y registros históricos; los datos de clientes siguen las obligaciones aplicables. Revisar respaldos y reaplicar eliminaciones al restaurarlos. No hay borrado automático ni se presenta esta implementación como certificación de cumplimiento legal. No se añaden analítica, píxeles ni cookies de marketing.
+
 ### Validación continua y operación
 
-[validar.yml](./.github/workflows/validar.yml) prepara un control en Linux/Node.js 24: instalación congelada, lint, tests, paquete Worker y pruebas HTTP contra un Worker local con credenciales temporales y D1 emulada. No usa secretos productivos ni despliega. Se activará al subir los cambios autorizados; no se ha ejecutado aún en GitHub.
+[validar.yml](./.github/workflows/validar.yml) ejecuta en Linux/Node.js 24 la instalación congelada, lint, tests, paquete Worker y pruebas HTTP contra un Worker local con credenciales temporales y D1 emulada. No usa secretos productivos ni despliega. Workers Builds es un proceso separado: revisa ambos resultados al publicar.
 
 [dependabot.yml](./.github/dependabot.yml) prepara revisiones mensuales de dependencias menores/parches y de Actions; no actualiza automáticamente versiones mayores ni integra cambios sin revisión. Las Actions están fijadas por commit.
 

@@ -11,6 +11,11 @@
     "rootDir": ".",
     "jsx": "react-jsx"
   },
-  "include": ["tests/*.test.ts", "cloudflare-env.d.ts", "src/modules/formularios/entorno.d.ts"],
+  "include": [
+    "tests/*.test.ts",
+    "cloudflare-env.d.ts",
+    "src/modules/formularios/entorno.d.ts",
+    "types/**/*.d.ts"
+  ],
   "exclude": ["node_modules", ".next", ".test-build"]
 }

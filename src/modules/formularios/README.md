@@ -8,7 +8,7 @@ El proyecto se actualizó de Next.js 15 a 16.4.3, con aprobación, porque OpenNe
 
 `npm run build` valida Next.js; `npm run check` también empaqueta OpenNext. El paquete completo se verificó en Windows tras habilitar el dueño el Modo de desarrollador y aprobar `node-linker=hoisted` en [.npmrc](../../../.npmrc), reinstalando con el mismo lockfile y pnpm 9.15.9. No se instaló WSL ni se cambiaron permisos. Se mantienen visibles las advertencias generales de Windows/`DEP0190` del adaptador y de npm sobre la opción de pnpm.
 
-1. Honeypot, validación Zod y límite de cinco solicitudes por IP en diez minutos.
+1. Honeypot, validación Zod (incluida autorización explícita de privacidad) y límite de cinco solicitudes por IP en diez minutos.
 2. Guardado completo en D1. El límite se vuelve a comprobar en la misma sentencia de inserción para evitar carreras.
 3. Hasta dos intentos inmediatos del aviso interno usando `send_email`.
 4. Éxito público solo después de guardar, aunque falle el aviso. El honeypot es la excepción deliberada.
@@ -30,7 +30,7 @@ Si el proceso se interrumpe entre guardar y avisar, la solicitud queda pendiente
 
 [formularios.config.ts](../../config/formularios.config.ts) concentra identidad, URL pública para los enlaces al panel, remitente, destinatario predeterminado, zona horaria, esquemas, asuntos y política antispam del módulo. Un tipo puede declarar `destino` para reemplazar el destinatario predeterminado; debe estar permitido por el binding y verificado en Cloudflare.
 
-La configuración del sitio actual reutiliza su catálogo JSON y la validación de mensajes existente. Consulta obtiene el asunto «Consulta general» por defecto y Cotización traduce el identificador de un plan habilitado a su nombre en el servidor. En el payload se usan `nombre` y `mensaje` para consulta y `nombre`/`servicio`/`detalle` para cotización. Se admite teléfono opcional en la API sin añadirlo a la interfaz actual. No se admite email entre los datos validados.
+La configuración del sitio actual reutiliza su catálogo JSON y la validación de mensajes existente. Consulta obtiene el asunto «Consulta general» por defecto y Cotización traduce el identificador de un plan habilitado a su nombre en el servidor. En el payload se usan `nombre` y `mensaje` para consulta y `nombre`/`servicio`/`detalle` para cotización. Ambos requieren `consentimiento: true`; el servidor lo transforma en la versión de la política vigente y la guarda en `datos.consentimiento`, sin confiar en una versión enviada por el cliente. La interfaz usa una casilla obligatoria no premarcada, enlaza la política y ofrece el correo oficial para obtener respuesta. Se admite teléfono opcional en la API sin añadirlo a la interfaz actual. No se admite email entre los datos validados.
 
 Solo los adaptadores y la integración HTTP conocen Cloudflare/Next/Drizzle. El núcleo es independiente de esas herramientas. Se usa el constructor estructurado con HTML y texto; no se necesita `mimetext`.
 
@@ -79,7 +79,7 @@ Con autorización del dueño se crearon:
 
 | Entorno | Worker | Base D1 | Estado |
 | --- | --- | --- | --- |
-| Producción | `dannotech` | `dannotech-db` | Base creada y migrada; aplicación nueva no publicada, secretos sin modificar |
+| Producción | `dannotech` | `dannotech-db` | Publicación autorizada; comprobar migraciones y secretos antes de desplegar |
 | Ensayo (`staging`) | `dannotech-ensayo` | `dannotech-ensayo-db` | Publicado, migrado y con secretos propios |
 
 Los identificadores reales están en [wrangler.jsonc](../../../wrangler.jsonc). No vuelvas a crear estas bases. `staging` no tiene rutas de los dominios productivos y su autorreferencia apunta a su propio Worker. No se cambiaron DNS ni reglas de Email Routing.
@@ -90,7 +90,7 @@ Ensayo: <https://dannotech-ensayo.daniel-progra-work.workers.dev>. Accede por `/
 
 La migración inicial SQL está en [drizzle/](../../../drizzle) y ya se aplicó a local y a ambas bases remotas. Para cambios futuros, ejecuta `npm run db:generate`, revisa el SQL y respalda antes de aplicar:
 
-La migración [0001_tearful_swordsman.sql](../../../drizzle/0001_tearful_swordsman.sql) permite `NULL` en la columna `email` anterior, conservando todos los registros y sus valores históricos. Se aplicó únicamente a la base local. Las solicitudes nuevas ya no insertan email. Antes de publicar esta versión en ensayo y luego en producción, aplica esta migración en el entorno correspondiente; no se han actualizado las bases ni aplicaciones remotas por este cambio.
+La migración [0001_tearful_swordsman.sql](../../../drizzle/0001_tearful_swordsman.sql) permite `NULL` en la columna `email` anterior, conservando todos los registros y sus valores históricos. Las solicitudes nuevas ya no insertan email. Antes de publicar esta versión en ensayo y luego en producción, aplica las migraciones pendientes en el entorno correspondiente. La autorización se guarda en el JSON existente, sin otra migración.
 
 ```sh
 npm run db:migrate:local
@@ -114,13 +114,13 @@ npx wrangler secret put ADMIN_PASSWORD
 npm run check
 ```
 
-No subas `.dev.vars.staging` a producción. `IP_SALT` y `ADMIN_SECRET` deben tener al menos 32 caracteres aleatorios y la contraseña entre 16 y 256. Para rotar un secreto de ensayo usa el mismo comando con `--env staging`; no omitas ese selector.
+No subas `.dev.vars.staging` a producción. `IP_SALT` y `ADMIN_SECRET` deben tener al menos 32 caracteres aleatorios y la contraseña entre 16 y 256. En esta instalación los tres valores productivos se guardan localmente en `.dev.vars.production`, ignorado por Git, y son independientes de ensayo y desarrollo. Para rotar un secreto de ensayo usa el mismo comando con `--env staging`; no omitas ese selector.
 
 Antes de publicar, comprueba que el destinatario configurado ya está verificado y coincide con `destination_address` en Wrangler, y que el remitente pertenece al dominio habilitado. No hace falta crear otra regla de recepción ni cambiar las reglas actuales de Email Routing.
 
 `npm run deploy:staging` construye y publica **solo ensayo**. `npm run deploy` publica producción: no ejecutarlo hasta tener autorización. Usa el despliegue de OpenNext, no Wrangler directamente, porque el adaptador prepara los assets de caché.
 
-No se ha hecho commit ni push. Si se autoriza integrarlo a `main`, comprueba primero los secretos y migraciones: el flujo automático existente de Cloudflare puede publicar al integrar. La CI preparada solo valida; no despliega.
+El dueño autorizó integrar y publicar en `main`. Comprueba primero los secretos y migraciones: el flujo automático existente de Cloudflare puede publicar al integrar. La CI de GitHub solo valida; no despliega. Mantén el lockfile de pnpm como única fuente de versiones.
 
 ### Prueba real del aviso y del fallo
 
@@ -130,19 +130,19 @@ No se ha hecho commit ni push. Si se autoriza integrarlo a `main`, comprueba pri
 4. Restaura inmediatamente el binding de ensayo, vuelve a desplegar ensayo y pulsa «Reenviar aviso» en su panel. Debe cambiar a enviado. Restaura siempre la configuración aunque la prueba falle.
 5. Los tests automatizados reproducen ese fallo con un notificador falso y no envían correo real.
 
-Antes de retirar el campo email se verificaron en ensayo una consulta y una cotización: ambas persistidas, `estado_aviso=enviado`, un intento y sin error. El dueño confirmó recepción de ambos correos y el `Reply-To` de esa versión anterior. También se verificaron acceso, listado y cierre de sesión. La versión sin campo email aún no está publicada en ensayo. Esto no equivale a haber probado una interrupción real del servicio remoto; el fallo/reintento está cubierto por los tests del módulo.
+El dueño confirmó recepción de ambos correos de la versión anterior. Cada nueva publicación debe verificar de nuevo una consulta y una cotización sin email, acceso al panel y autorización de privacidad. No confundir la aceptación por Cloudflare con la confirmación del buzón. El fallo/reintento está cubierto por los tests del módulo; eso no equivale a probar una interrupción real del servicio remoto.
 
 ## Administración
 
 - `/admin/acceso/`: contraseña única, límite de cinco intentos por IP cada diez minutos en D1.
-- Sesión firmada con HMAC-SHA256, vencimiento de ocho horas, cookie `HttpOnly`, `SameSite=Strict` y `Secure` en HTTPS.
+- Sesión firmada con HMAC-SHA256, vencimiento de ocho horas, cookie `HttpOnly`, `SameSite=Strict` y `Secure` obligatorio fuera de desarrollo. El [Worker propio](../../../worker.ts) fuerza HTTPS remoto antes de ejecutar Next.js y añade HSTS; solo loopback permite HTTP. No hay `includeSubDomains` ni preload.
 - Cada página llama a `exigirAdmin` y cada endpoint privado a `exigirAdminApi` antes de acceder a datos; las operaciones POST validan `Origin`. No hay dependencia de proxy. Las rutas administrativas responden con `private, no-store` y `noindex, nofollow`.
 - `/admin/solicitudes/`: filtros, paginación de veinte registros, contador de avisos fallidos y solicitudes no leídas resaltadas.
 - Detalle: todos los datos, errores, intentos, reserva, lectura y reenvío manual.
 - Los registros conservan el hash salado de la IP, no la IP original. Esto es seudonimización, no anonimato: nombre, mensaje y, si se aporta mediante la API, teléfono pueden contener datos personales. Eliminar el campo email no garantiza cumplimiento normativo.
 - Los correos almacenados antes del cambio no se borran automáticamente: siguen disponibles solo en el detalle privado como «Correo (registro anterior)». Las solicitudes nuevas no muestran ese campo. Un borrado histórico requiere decisión expresa sobre alcance y respaldos.
 
-Al rotar `ADMIN_SECRET` se invalidan las sesiones existentes. Rotar `IP_SALT` cambia la identificación de IP para los límites nuevos. Por decisión del dueño no hay borrado automático: se conservan las solicitudes y se revisa manualmente su necesidad y los respaldos.
+Al rotar `ADMIN_SECRET` se invalidan las sesiones existentes. Rotar `IP_SALT` cambia la identificación de IP para los límites nuevos. Por decisión del dueño no hay borrado automático: revisar y eliminar manualmente las consultas/cotizaciones sin contrato a más tardar doce meses desde el último contacto, incluyendo históricos y Gmail. Los registros de clientes siguen las obligaciones contractuales y legales. Revisar respaldos y reaplicar las eliminaciones al restaurar, conforme a la política pública.
 
 ### Supervisión y respaldos
 
@@ -189,4 +189,4 @@ npm.cmd run test:runtime
 
 Para probar el Worker local, aplica primero la migración local e inicia `npm run preview -- --port 3108`; en otra terminal utiliza `TEST_BASE_URL=http://localhost:3108`. No ejecutes migraciones locales mientras arranca el preview: ambos inicializan Miniflare y pueden bloquear la misma base SQLite.
 
-La [CI Linux](../../../.github/workflows/validar.yml) prepara `npm run check` y el runtime local con credenciales efímeras y sin secretos remotos. Está preparada, pero no se ha ejecutado en GitHub porque aún no se autorizó subir cambios. [Dependabot](../../../.github/dependabot.yml) propone revisiones mensuales sin actualizaciones mayores automáticas.
+La [CI Linux](../../../.github/workflows/validar.yml) ejecuta `npm run check` y el runtime local con credenciales efímeras y sin secretos remotos. Revisa su resultado en cada push autorizado. [Dependabot](../../../.github/dependabot.yml) propone revisiones mensuales sin actualizaciones mayores automáticas.

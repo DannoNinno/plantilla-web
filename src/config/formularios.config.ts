@@ -1,6 +1,7 @@
 import {z} from 'zod';
 import paquetes from '../data/paquetes.json';
 import {validarMensaje} from '../domain/servicios/contacto';
+import {PRIVACY_VERSION} from '../domain/configuracion/contacto';
 import type {ConfiguracionFormularios} from '../modules/formularios/core/tipos';
 
 const linea = (maximo: number) =>
@@ -20,6 +21,9 @@ const mensaje = z
   });
 const comunes = {
   nombre: linea(100),
+  consentimiento: z
+    .literal(true, {error: 'Autoriza el tratamiento de tus datos para atender la solicitud.'})
+    .transform(() => PRIVACY_VERSION),
 };
 const esquemaConsulta = z.object({
   ...comunes,

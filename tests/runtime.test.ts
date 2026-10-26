@@ -70,4 +70,39 @@ test('el endpoint público valida tipo, formato, tamaño y honeypot sin enviar a
   const trampa = await enviar(JSON.stringify({tipo: 'consulta', sitioWeb: 'bot-de-prueba'}));
   assert.equal(trampa.status, 200);
   assert.deepEqual(await trampa.json(), {ok: true});
+  const sinConsentimiento = await enviar(
+    JSON.stringify({tipo: 'consulta', nombre: 'Prueba sin guardar', mensaje: 'Mensaje de prueba.'}),
+  );
+  assert.equal(sinConsentimiento.status, 400);
+  assert.match(await sinConsentimiento.text(), /consentimiento/);
+});
+
+test('privacidad y contacto son públicos, sin pedir correo al visitante', async () => {
+  const politica = await fetch(new URL('/privacidad/', base));
+  assert.equal(politica.status, 200);
+  const texto = await politica.text();
+  assert.match(texto, /Daniel Salamanca Jorquera/);
+  assert.match(texto, /doce meses/);
+  assert.match(texto, /mailto:contacto@dannotech\.cl/);
+  const contacto = await fetch(new URL('/contacto/', base));
+  assert.equal(contacto.status, 200);
+  const html = await contacto.text();
+  assert.match(html, /name="consentimiento"/);
+  assert.match(html, /href="\/privacidad\/?"/);
+  assert.doesNotMatch(html, /name="(?:correo|email)"|type="email"/);
+});
+
+test('el Worker remoto fuerza HTTPS en páginas y POST sin modificar su destino', async () => {
+  if (new URL(base).protocol !== 'https:') return;
+  for (const ruta of ['/?prueba=https', '/admin/acceso/?prueba=https', '/api/formularios/']) {
+    const url = new URL(ruta, base);
+    const segura = url.href;
+    url.protocol = 'http:';
+    const method = ruta.startsWith('/api/') ? 'POST' : 'GET';
+    const respuesta = await fetch(url, {method, redirect: 'manual'});
+    assert.equal(respuesta.status, method === 'POST' ? 308 : 301, ruta);
+    assert.equal(respuesta.headers.get('location'), segura);
+  }
+  const respuesta = await fetch(new URL('/admin/acceso/', base));
+  assert.match(respuesta.headers.get('strict-transport-security') ?? '', /max-age=31536000/);
 });

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync, readdirSync} from 'node:fs';
 import {getPlatformProxy, type PlatformProxy} from 'wrangler';
 import {formulariosConfig} from '../src/config/formularios.config';
+import {PRIVACY_VERSION} from '../src/domain/configuracion/contacto';
 import {FormularioService} from '../src/modules/formularios/core/FormularioService';
 import {D1Almacen} from '../src/modules/formularios/adaptadores/D1Almacen';
 import {CloudflareEmailNotificador} from '../src/modules/formularios/adaptadores/CloudflareEmailNotificador';
@@ -21,6 +22,7 @@ const consulta = {
   tipo: 'consulta',
   nombre: '  Persona <prueba>  ',
   mensaje: 'Quisiera conversar sobre mi proyecto.',
+  consentimiento: true,
 };
 let plataforma: PlatformProxy<{DB: D1Database}>;
 let almacen: D1Almacen;
@@ -98,6 +100,7 @@ test('guarda antes de enviar; conserva todos los datos y marca enviado', async (
   assert.equal(guardada?.nombre, 'Persona <prueba>');
   assert.equal(guardada?.email, null);
   assert.equal(guardada?.datos.mensaje, consulta.mensaje);
+  assert.equal(guardada?.datos.consentimiento, PRIVACY_VERSION);
   assert.equal(guardada?.intentosAviso, 1);
   assert.ok(guardada?.avisadoEn);
   assert.equal(guardada?.reservaHasta, null);
@@ -166,6 +169,21 @@ test('honeypot y tipo inválido no guardan ni envían', async () => {
   const s = servicio(noEnviar);
   assert.deepEqual(await s.procesar({...consulta, sitioWeb: 'spam'}, ip()), {ok: true});
   assert.equal((await s.procesar({...consulta, tipo: 'desconocido'}, ip())).ok, false);
+  assert.equal(await almacen.contar(), antes);
+});
+
+test('ambos tipos requieren consentimiento explícito y no aceptan una versión del cliente', async () => {
+  const antes = await almacen.contar();
+  for (const tipo of ['consulta', 'cotizacion']) {
+    for (const consentimiento of [undefined, false, 'true', PRIVACY_VERSION]) {
+      const resultado = await servicio(noEnviar).procesar(
+        {...consulta, tipo, servicio: 'landing', detalle: consulta.mensaje, consentimiento},
+        ip(),
+      );
+      assert.equal(resultado.ok, false);
+      if (!resultado.ok) assert.ok(resultado.errores?.consentimiento);
+    }
+  }
   assert.equal(await almacen.contar(), antes);
 });
 

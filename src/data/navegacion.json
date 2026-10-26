@@ -3,5 +3,8 @@
     {"label": "Catálogo", "href": "/catalogo"},
     {"label": "Perfil", "href": "/perfil"}
   ],
-  "pie": [{"label": "Contacto", "href": "/contacto"}]
+  "pie": [
+    {"label": "Contacto", "href": "/contacto"},
+    {"label": "Privacidad", "href": "/privacidad"}
+  ]
 }

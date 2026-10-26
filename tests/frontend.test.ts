@@ -485,7 +485,10 @@ test('la navegacion no apunta a administracion ni a endpoints eliminados', () =>
     navegacion.principal.map((link) => link.href),
     ['/catalogo', '/perfil'],
   );
-  assert.deepEqual(navegacion.pie, [{label: 'Contacto', href: '/contacto'}]);
+  assert.deepEqual(navegacion.pie, [
+    {label: 'Contacto', href: '/contacto'},
+    {label: 'Privacidad', href: '/privacidad'},
+  ]);
   assert.equal(getSitio().catalogoHabilitado, true);
   for (const link of [...navegacion.principal, ...navegacion.pie]) {
     assert.doesNotMatch(link.href, /^\/(admin|api)(\/|$)/);
@@ -953,9 +956,15 @@ test('el formulario muestra Consulta y planes habilitados, con respaldo y sin si
   assert.match(html, /200.*palabras/);
   assert.match(html, /Enviar consulta/);
   assert.equal((html.match(/<button\b/g) ?? []).length, 1);
-  assert.doesNotMatch(html, /<a\b|mailto:/);
-  assert.ok(html.includes('Guardaré tu solicitud'));
-  assert.ok(html.includes('no podré responderte por ese medio'));
+  assert.ok(html.includes(`href="mailto:${CONTACT_EMAIL}"`));
+  assert.match(html, /href="\/privacidad\/?"/);
+  assert.ok(html.includes('Guardaré tu nombre y mensaje'));
+  assert.ok(html.includes('responderte desde este formulario'));
+  assert.match(
+    html,
+    /<input(?=[^>]*type="checkbox")(?=[^>]*name="consentimiento")(?=[^>]*required="")/,
+  );
+  assert.doesNotMatch(html, /<input(?=[^>]*name="consentimiento")[^>]*checked/);
   assert.match(html, /<input(?=[^>]*name="sitioWeb")(?=[^>]*tabindex="-1")/);
   assert.doesNotMatch(html, /maxlength="3000"/);
   assert.doesNotMatch(html, /Tu solicitud quedó guardada|action=/);
@@ -964,7 +973,8 @@ test('el formulario muestra Consulta y planes habilitados, con respaldo y sin si
   );
   assert.ok(cotizacion.includes('<option value="landing" selected="">Presencia Digital</option>'));
   assert.ok(cotizacion.includes('Enviar cotización'));
-  assert.doesNotMatch(cotizacion, /mailto:|wa\.me|Ver los canales de contacto/);
+  assert.ok(cotizacion.includes(`href="mailto:${CONTACT_EMAIL}"`));
+  assert.doesNotMatch(cotizacion, /wa\.me|Ver los canales de contacto/);
   assert.doesNotMatch(cotizacion, /name="(?:correo|email)"|type="email"/);
 });
 

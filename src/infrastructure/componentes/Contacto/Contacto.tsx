@@ -4,12 +4,13 @@ import {useEffect, useId, useRef, useState} from 'react';
 import type {FormEvent} from 'react';
 import type {ContactoProps} from '../../../domain/types/ui';
 import {clasesBoton} from '../Boton/estilos';
-import {MAX_MESSAGE_WORDS} from '../../../domain/configuracion/contacto';
-import {contarPalabras, validarMensaje} from '../../../domain/servicios/contacto';
+import {CONTACT_EMAIL, MAX_MESSAGE_WORDS} from '../../../domain/configuracion/contacto';
+import {contarPalabras, enlaceCorreo, validarMensaje} from '../../../domain/servicios/contacto';
 import CampoTrampa from '../../../modules/formularios/componentes/CampoTrampa';
 import EstadoEnvio from '../../../modules/formularios/componentes/EstadoEnvio';
 import {useEnvioFormulario} from '../../../modules/formularios/componentes/useEnvioFormulario';
 import {useHidratado} from '../base/consulta/useHidratado';
+import Link from 'next/link';
 
 export default function Contacto({
   paquetes,
@@ -42,6 +43,7 @@ export default function Contacto({
     const ok = await estado.enviar({
       tipo: paquete ? 'cotizacion' : 'consulta',
       nombre: String(campos.get('nombre') ?? ''),
+      consentimiento: campos.has('consentimiento'),
       sitioWeb: String(campos.get('sitioWeb') ?? ''),
       ...(paquete ? {servicio: paquete.id, detalle: mensaje} : {mensaje}),
     });
@@ -145,9 +147,39 @@ export default function Contacto({
       </p>
       <EstadoEnvio error={estado.error} exito={estado.exito} />
       <p id={`${id}-envio`} className="text-sm leading-relaxed text-brand-ink/70">
-        Guardaré tu solicitud para revisarla. No pedimos tu correo, por lo que no podré responderte
-        por ese medio. Evita incluir datos personales o sensibles en el mensaje.
+        Guardaré tu nombre y mensaje para revisar tu solicitud. No pedimos tu correo ni podemos
+        responderte desde este formulario. Si necesitas una respuesta,{' '}
+        <a className="underline" href={enlaceCorreo(CONTACT_EMAIL)}>
+          escríbeme directamente al correo oficial
+        </a>
+        . Consulta la{' '}
+        <Link className="underline" href="/privacidad/">
+          política de privacidad
+        </Link>{' '}
+        antes de enviar. Evita incluir datos sensibles en el mensaje.
       </p>
+      <label className="flex items-start gap-3 text-sm leading-relaxed">
+        <input
+          type="checkbox"
+          name="consentimiento"
+          required
+          disabled={estado.enviando}
+          aria-invalid={!!estado.errores.consentimiento}
+          aria-describedby={
+            estado.errores.consentimiento ? `${id}-consentimiento-error` : undefined
+          }
+          className="mt-1 h-5 w-5 shrink-0"
+        />
+        <span>
+          Autorizo el tratamiento de mi nombre y mensaje para atender esta solicitud, según la
+          política de privacidad. Esta autorización no incluye publicidad.
+          {estado.errores.consentimiento && (
+            <span id={`${id}-consentimiento-error`} className="mt-1 block text-brand-coral-dark">
+              {estado.errores.consentimiento}
+            </span>
+          )}
+        </span>
+      </label>
       <button
         type="submit"
         disabled={!habilitado || excedido || estado.enviando}

@@ -19,7 +19,7 @@ export function useEnvioFormulario() {
   const [exito, setExito] = useState(false);
   const ocupado = useRef(false);
 
-  async function enviar(datos: Record<string, string>): Promise<boolean> {
+  async function enviar(datos: Record<string, string | boolean>): Promise<boolean> {
     if (ocupado.current) return false;
     ocupado.current = true;
     setEnviando(true);

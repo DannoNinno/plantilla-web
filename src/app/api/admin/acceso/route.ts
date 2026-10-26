@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     respuesta.headers.set('Cache-Control', 'no-store');
     respuesta.cookies.set(NOMBRE_COOKIE, await crearSesion(env.ADMIN_SECRET), {
       httpOnly: true,
-      secure: new URL(request.url).protocol === 'https:',
+      secure: process.env.NODE_ENV !== 'development' || new URL(request.url).protocol === 'https:',
       sameSite: 'strict',
       path: '/',
       maxAge: DURACION_SESION,

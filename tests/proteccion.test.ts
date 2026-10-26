@@ -3,6 +3,26 @@ import assert from 'node:assert/strict';
 import {existsSync, readdirSync, readFileSync} from 'node:fs';
 import path from 'node:path';
 import ts from 'typescript';
+import {redirigirHTTPS} from '../src/infrastructure/seguridad/https';
+
+test('HTTPS conserva host, ruta y parámetros; solo permite HTTP en loopback', () => {
+  for (const host of ['dannotech.cl', 'www.dannotech.cl', 'dannotech-ensayo.example.workers.dev']) {
+    const peticion = new Request(`http://${host}/admin/acceso/?origen=prueba`);
+    const respuesta = redirigirHTTPS(peticion);
+    assert.ok(respuesta);
+    assert.equal(respuesta?.status, 301);
+    assert.equal(respuesta.headers.get('location'), `https://${host}/admin/acceso/?origen=prueba`);
+    assert.equal(redirigirHTTPS(new Request(`https://${host}/`)), undefined);
+    assert.equal(
+      redirigirHTTPS(new Request(`http://${host}/api/formularios/`, {method: 'POST'}))?.status,
+      308,
+    );
+  }
+  for (const host of ['localhost', '127.0.0.1', '[::1]']) {
+    assert.equal(redirigirHTTPS(new Request(`http://${host}:3108/`)), undefined);
+  }
+  assert.equal(redirigirHTTPS(new Request('http://localhost.example/'))?.status, 301);
+});
 
 function archivos(directorio: string): string[] {
   return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
