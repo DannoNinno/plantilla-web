@@ -34,6 +34,7 @@ export default function PaginaPaquete({
         paquete={paquete}
         volver={catalogo.textos.volver}
         plazoEntrega={catalogo.comparacion.plazoEntrega}
+        textos={catalogo.textos}
       />
       <EntradaScroll aria-labelledby="componentes-titulo" className="mt-12">
         <h2 id="componentes-titulo" data-entrada-elemento="titulo" className="text-2xl font-bold">

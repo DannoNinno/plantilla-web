@@ -1,25 +1,26 @@
 import 'server-only';
-import type {ConfiguracionFormularios, Notificador, Solicitud} from '../core/tipos';
+import type {ConfiguracionEnvio} from '../../../config/formularios.config';
+import type {ConsultaRecibida} from '../../../domain/types/consulta';
+import type {EntregaConsulta} from '../core/FormularioService';
 import {avisoSolicitud} from '../plantillas/avisoSolicitud';
 
-export class CloudflareEmailNotificador implements Notificador {
+export class CloudflareEmailNotificador implements EntregaConsulta {
   constructor(
     private readonly binding: SendEmail | undefined,
-    private readonly config: ConfiguracionFormularios,
+    private readonly config: ConfiguracionEnvio,
   ) {}
 
-  /** Envía solo al destinatario interno configurado, sin correo del visitante. */
-  async enviarAviso(solicitud: Solicitud): Promise<void> {
-    if (!this.binding) throw new Error('Falta el binding AVISO_EMAIL en producción.');
-    const definicion = this.config.tipos[solicitud.tipo];
+  async enviarAviso(consulta: ConsultaRecibida): Promise<void> {
+    if (!this.binding) throw new Error('Falta el binding AVISO_EMAIL.');
+    const plan =
+      this.config.consulta.planes.find((opcion) => opcion.id === consulta.plan)?.nombre ??
+      'Aún no lo sé';
     await this.binding.send({
-      from: {email: this.config.remitente, name: `Formularios ${this.config.nombreSitio}`},
-      to: definicion.destino ?? this.config.destinoAvisos,
-      subject: definicion.asunto({
-        ...solicitud.datos,
-        nombre: solicitud.nombre,
-      }),
-      ...avisoSolicitud(solicitud, this.config),
+      from: {email: this.config.remitente, name: this.config.consulta.negocio},
+      to: this.config.destinoAvisos,
+      ...(consulta.correo ? {replyTo: consulta.correo} : {}),
+      subject: `${this.config.prefijoAsunto} ${plan} — ${consulta.nombre}`,
+      ...avisoSolicitud(consulta, this.config),
     });
   }
 }

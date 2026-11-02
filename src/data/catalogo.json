@@ -5,7 +5,11 @@
     "identidad": "Soy {persona}, y {marca} es mi marca personal.",
     "presentacion": "Trabajo directamente contigo para mejorar tu presencia digital, captar clientes, automatizar procesos o llevar tus productos a una tienda online.",
     "planes": "Elige tu punto de partida",
-    "precios": "Los valores son precios desde. Defino contigo el alcance y preparo tu cotización antes de comenzar.",
+    "precios": "Precios finales desde, con impuesto incluido: no pagas un impuesto extra sobre el valor publicado. Elige dos pagos de 50 % o pago completo al inicio con un descuento aproximado del 15 %. Defino contigo el alcance antes de comenzar.",
+    "impuestoIncluido": "impuesto incluido",
+    "pagoDosCuotas": "En dos pagos de 50 %",
+    "pagoInicial": "Pago completo al inicio",
+    "descuentoPagoInicial": "descuento aproximado del 15 %",
     "plan": "Plan",
     "detalle": "Ver detalle de",
     "verDetalles": "Ver detalles",
@@ -14,7 +18,7 @@
     "alcance": "Gestión de alcance",
     "principios": "Mis compromisos contigo",
     "adicionales": "Servicios y costos adicionales",
-    "detalleAdicionales": "Si necesitas horas adicionales o soporte fuera de lo contratado, te explico el costo y espero tu aprobación antes de avanzar.",
+    "detalleAdicionales": "No hay soporte incluido, salvo 1 hora de ajustes sin costo tras la entrega. Para más cambios agendamos una reunión; el valor hora está por definir y se acuerda antes del pago. Aplico los cambios en un máximo de 2 días hábiles después del pago.",
     "volver": "Volver al catálogo",
     "verAlcance": "Gestión de alcance y mis compromisos",
     "verAdicionales": "Consultar costos adicionales",
@@ -24,11 +28,19 @@
   },
   "comparacion": {
     "titulo": "Planes de servicios",
-    "secciones": "Cantidad de secciones",
-    "cantidadSecciones": "Hasta {cantidad} vistas o secciones.",
+    "paginas": "Páginas (vistas)",
+    "unaPagina": "1 página.",
+    "cantidadPaginas": "Hasta {cantidad} páginas.",
+    "secciones": "Secciones por página",
+    "cantidadSecciones": "Hasta {cantidad} secciones por página.",
     "panelAdministracion": "Panel de administración",
     "panelIncluido": "Incluido",
     "panelNoIncluido": "No incluido",
+    "correoDominio": "Correo con tu dominio",
+    "propiedad": "Sitio, dominio y cuentas",
+    "activosCliente": "A tu nombre.",
+    "ajustes": "Ajustes tras la entrega",
+    "ajustesIncluidos": "1 hora sin costo. Sin soporte adicional incluido.",
     "plazoEntrega": "Plazo de entrega",
     "reuniones": "Reuniones incluidas",
     "capacitacion": "Capacitación incluida",
@@ -42,9 +54,9 @@
   },
   "vitrina": {
     "titulo": "Componentes para tu sitio",
-    "descripcion": "Conoce los componentes que puede incluir el sitio de tu negocio y desde qué plan están disponibles.",
+    "descripcion": "Conoce los componentes disponibles: Presencia Digital incluye 1 página y Captación de Clientes hasta 5 páginas, ambas con hasta 6 secciones por página. Seleccionamos las piezas dentro de ese alcance.",
     "tituloDetalle": "Qué puede incluir tu sitio",
-    "introduccionDetalle": "Defino contigo cuáles necesita tu negocio, dentro del alcance de tu plan.",
+    "introduccionDetalle": "Defino contigo las piezas que necesita tu negocio, con hasta 6 secciones por página dentro del alcance de tu plan. Las páginas adicionales se cotizan aparte.",
     "revisionDetalle": "TODO(Daniel): Revisar introducción de la vitrina y alcance de los componentes.",
     "sumaPlan": "Suma {plan}",
     "verTodos": "Ver todos los componentes",
@@ -72,9 +84,19 @@
   "alcance": {
     "introduccion": "Para cuidar la calidad de mi trabajo y cumplir los plazos que acordamos:",
     "condiciones": [
-      "Evalúo por separado cualquier requerimiento fuera del alcance que contrataste.",
-      "Si necesitas cambios significativos, puedo preparar una nueva cotización.",
-      "Te informo las horas adicionales y necesito tu aprobación antes de realizarlas."
+      "Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.",
+      "Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.",
+      "Las páginas que repiten el mismo diseño cuentan como una sola: el listado de noticias y el detalle de cada noticia cuentan como una página.",
+      "No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración.",
+      "Las páginas adicionales y los requerimientos fuera del alcance se cotizan aparte.",
+      "Ambos planes se entregan en 7 días hábiles desde la entrega de tus textos, logo y fotos.",
+      "Hitos: día 1 reunión inicial, día 4 primera versión, día 6 ajustes y día 7 entrega.",
+      "En dos pagos de 50 %: el primero antes de la reunión inicial (día 1) y el segundo al aprobar la versión final, antes de publicar (día 7).",
+      "Puedes pagar todo al inicio con un descuento aproximado del 15 % y los montos finales publicados.",
+      "No publico el sitio hasta recibir el pago total.",
+      "No hay soporte incluido, salvo 1 hora de ajustes sin costo tras la entrega.",
+      "Para más cambios agendamos una reunión y acordamos el valor hora, por definir, antes del pago.",
+      "Aplico los cambios adicionales en un máximo de 2 días hábiles después del pago."
     ]
   },
   "principios": [
@@ -84,24 +106,24 @@
     "Desarrollo soluciones que puedas mantener en el tiempo.",
     "Me enfoco en lo que aporta valor a tu negocio.",
     "Te entrego documentación básica cuando corresponde.",
-    "Tu dominio y tus activos digitales quedan siempre a tu nombre."
+    "Tu sitio, dominio, cuentas y activos digitales quedan siempre a tu nombre."
   ],
   "adicionales": [
     {
       "nombre": "Reuniones Adicionales",
-      "costo": "$25.000 CLP por hora."
+      "costo": "Valor hora por definir; se acuerda antes del pago."
     },
     {
       "nombre": "Capacitación Adicional",
-      "costo": "$25.000 CLP por hora."
+      "costo": "Valor hora por definir; se acuerda antes del pago."
     },
     {
       "nombre": "Desarrollo Fuera de Alcance",
-      "costo": "Desde $35.000 CLP por hora."
+      "costo": "Valor hora por definir; se acuerda antes del pago."
     },
     {
-      "nombre": "Soporte Evolutivo",
-      "costo": "Cotización según necesidad."
+      "nombre": "Cambios tras la entrega",
+      "costo": "Máximo de 2 días hábiles después del pago."
     }
   ]
 }

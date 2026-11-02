@@ -1,18 +1,21 @@
 import Link from 'next/link';
 import type {Paquete} from '@/domain/types/paquete';
-import {precioDesdeCLP} from '../../../../domain/servicios/precio';
+import type {CatalogoServicios} from '@/domain/types/catalogo';
+import PrecioPlan from '../Catalogo/PrecioPlan';
 import EntradaScroll from '../../boveda/EntradaScroll/EntradaScroll';
 
 export interface PresentacionPaqueteProps {
   paquete: Paquete;
   volver: string;
   plazoEntrega: string;
+  textos: CatalogoServicios['textos'];
 }
 
 export default function PresentacionPaquete({
   paquete,
   volver,
   plazoEntrega,
+  textos,
 }: PresentacionPaqueteProps) {
   if (!paquete.comparacion) {
     throw new Error(`Falta el resumen del plan habilitado: ${paquete.id}`);
@@ -29,9 +32,7 @@ export default function PresentacionPaquete({
         {paquete.nombre}
       </h1>
       <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3">
-        <p className="text-2xl font-semibold text-brand-sky-text">
-          {precioDesdeCLP(paquete.precioDesde)}
-        </p>
+        <PrecioPlan paquete={paquete} textos={textos} />
         <p className="text-sm text-brand-ink/70">
           <span className="font-semibold">{plazoEntrega}: </span>
           {paquete.comparacion.plazoEntrega}

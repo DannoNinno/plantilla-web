@@ -1,11 +1,4 @@
 import {CONTACT_EMAIL, MAX_MESSAGE_WORDS, QUOTES_EMAIL} from '../configuracion/contacto';
-import type {Paquete} from '../types/paquete';
-
-export interface DatosContacto {
-  nombre: string;
-  paqueteId: string;
-  mensaje: string;
-}
 
 type CorreoOficial = typeof CONTACT_EMAIL | typeof QUOTES_EMAIL;
 
@@ -36,31 +29,4 @@ export function validarMensaje(mensaje: string): string | null {
   }
   if (mensaje.trim().length < 10) return 'Escribe un mensaje de al menos 10 caracteres.';
   return null;
-}
-
-export function prepararCorreoContacto(
-  datos: DatosContacto,
-  paquetes: Pick<Paquete, 'id' | 'nombre' | 'habilitado'>[],
-): {ok: true; href: string} | {ok: false; error: string} {
-  const nombre = datos.nombre.trim();
-  if (!nombre || nombre.length > 100) {
-    return {ok: false, error: 'Ingresa tu nombre, con un máximo de 100 caracteres.'};
-  }
-  const errorMensaje = validarMensaje(datos.mensaje);
-  if (errorMensaje) return {ok: false, error: errorMensaje};
-  const paquete = paquetes.find((opcion) => opcion.habilitado && opcion.id === datos.paqueteId);
-  if (datos.paqueteId !== 'consulta' && !paquete) {
-    return {ok: false, error: 'Elige Consulta o uno de los planes disponibles.'};
-  }
-  const asunto = paquete ? `Solicitud de cotización: ${paquete.nombre}` : 'Consulta general';
-  const cuerpo = [
-    `Nombre: ${nombre}`,
-    `Motivo: ${paquete?.nombre ?? 'Consulta'}`,
-    '',
-    datos.mensaje.trim(),
-  ].join('\r\n');
-  return {
-    ok: true,
-    href: enlaceCorreo(paquete ? QUOTES_EMAIL : CONTACT_EMAIL, asunto, cuerpo),
-  };
 }

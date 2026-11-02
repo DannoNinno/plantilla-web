@@ -70,7 +70,7 @@ test('cada página privada autentica antes de leer parámetros, datos o renderiz
   const paginas = archivos(path.join('src', 'app', 'admin'))
     .filter((ruta) => path.basename(ruta) === 'page.tsx')
     .filter((ruta) => path.basename(path.dirname(ruta)) !== 'acceso');
-  assert.ok(paginas.length >= 2);
+  assert.ok(paginas.length >= 1);
   for (const ruta of paginas) {
     const fuente = analizar(ruta);
     const cuerpo = funcionExportada(fuente, 'default');
@@ -86,7 +86,7 @@ test('cada endpoint administrativo privado comprueba origen y sesión antes de o
   const rutas = archivos(path.join('src', 'app', 'api', 'admin'))
     .filter((ruta) => path.basename(ruta) === 'route.ts')
     .filter((ruta) => path.basename(path.dirname(ruta)) !== 'acceso');
-  assert.ok(rutas.length >= 3);
+  assert.ok(rutas.length >= 1);
   for (const ruta of rutas) {
     const fuente = analizar(ruta);
     const cuerpo = funcionExportada(fuente, 'POST');

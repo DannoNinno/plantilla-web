@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
-  title: 'Administración de solicitudes',
+  title: 'Administración',
   robots: {index: false, follow: false},
 };
 

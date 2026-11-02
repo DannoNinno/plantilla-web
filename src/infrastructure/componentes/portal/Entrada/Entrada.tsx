@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import {ArrowDown, ArrowUpRight, LockKeyhole, PanelsTopLeft, UserRound} from 'lucide-react';
-import {getSitio} from '../../../handlers/datos';
+import {getPaquete, getSitio} from '../../../handlers/datos';
 import {precioDesdeCLP} from '../../../../domain/servicios/precio';
 import {clasesBoton} from '../../boveda/Base/Boton/estilos';
 import EntradaScroll from '../../boveda/EntradaScroll/EntradaScroll';
@@ -8,8 +8,10 @@ import IlustracionServicio from './IlustracionServicio';
 import {EnlaceSeccion} from '../../boveda/EntradaScroll/EnlaceSeccion';
 
 const sitio = getSitio();
+const precioInicial = getPaquete('landing')?.precioPagoInicial;
 
 export default function Entrada() {
+  if (precioInicial === undefined) throw new Error('Falta el precio inicial de Presencia Digital.');
   const tarjetaCatalogo = (
     <>
       <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-sky-text group-focus-visible:text-white fine-pointer:group-hover:text-white">
@@ -83,7 +85,8 @@ export default function Entrada() {
                 día.
               </p>
               <p className="mt-4 text-lg font-semibold text-brand-sky-text">
-                Sitios {precioDesdeCLP(150000).replace('Desde', 'desde')}.
+                Sitios {precioDesdeCLP(precioInicial).replace('Desde', 'desde')}, impuesto incluido,
+                pagando todo al inicio.
               </p>
             </div>
           </div>

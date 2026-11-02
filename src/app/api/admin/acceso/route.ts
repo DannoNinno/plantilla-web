@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     ) {
       return NextResponse.redirect(new URL('/admin/acceso/?error=credenciales', request.url), 303);
     }
-    const respuesta = NextResponse.redirect(new URL('/admin/solicitudes/', request.url), 303);
+    const respuesta = NextResponse.redirect(new URL('/admin/', request.url), 303);
     respuesta.headers.set('Cache-Control', 'no-store');
     respuesta.cookies.set(NOMBRE_COOKIE, await crearSesion(env.ADMIN_SECRET), {
       httpOnly: true,

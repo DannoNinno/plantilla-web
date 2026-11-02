@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {ArrowUpRight, LockKeyhole} from 'lucide-react';
 import type {Paquete} from '@/domain/types/paquete';
 import type {CatalogoServicios} from '@/domain/types/catalogo';
-import {precioDesdeCLP} from '../../../../domain/servicios/precio';
+import PrecioPlan from './PrecioPlan';
 import {clasesBoton} from '../../boveda/Base/Boton/estilos';
 
 export interface TarjetaPlanProps {
@@ -37,9 +37,7 @@ export default function TarjetaPlan({paquete, numero, textos, comparacion}: Tarj
         </span>
         <h3 className="mt-4 break-words text-2xl font-bold sm:text-3xl">{paquete.nombre}</h3>
         {paquete.habilitado ? (
-          <p className="mt-4 text-2xl font-semibold text-brand-sky-text">
-            {precioDesdeCLP(paquete.precioDesde)}
-          </p>
+          <PrecioPlan paquete={paquete} textos={textos} className="mt-4" />
         ) : (
           <p className="mt-4 flex w-fit items-center gap-2 rounded-lg bg-brand-ink/10 px-3 py-2 text-sm font-semibold text-brand-ink/75">
             <LockKeyhole size={18} aria-hidden="true" />
@@ -51,9 +49,20 @@ export default function TarjetaPlan({paquete, numero, textos, comparacion}: Tarj
       {paquete.habilitado && datos && (
         <dl className="mt-6 grid gap-4 border-t border-brand-ink/10 pt-5 text-sm">
           <div>
+            <dt className="font-semibold">{comparacion.paginas}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">
+              {datos.paginasMaximas === 1
+                ? comparacion.unaPagina
+                : comparacion.cantidadPaginas.replace('{cantidad}', String(datos.paginasMaximas))}
+            </dd>
+          </div>
+          <div>
             <dt className="font-semibold">{comparacion.secciones}</dt>
             <dd className="mt-2 leading-relaxed text-brand-ink/70">
-              {comparacion.cantidadSecciones.replace('{cantidad}', String(datos.seccionesMaximas))}
+              {comparacion.cantidadSecciones.replace(
+                '{cantidad}',
+                String(datos.seccionesPorPagina),
+              )}
             </dd>
           </div>
           <div>
@@ -64,6 +73,22 @@ export default function TarjetaPlan({paquete, numero, textos, comparacion}: Tarj
             <dt className="font-semibold">{comparacion.panelAdministracion}</dt>
             <dd className="mt-2 leading-relaxed text-brand-ink/70">
               {datos.panelAdministracion ? comparacion.panelIncluido : comparacion.panelNoIncluido}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold">{comparacion.correoDominio}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">
+              {datos.correoDominio ? comparacion.panelIncluido : comparacion.panelNoIncluido}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold">{comparacion.propiedad}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">{comparacion.activosCliente}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold">{comparacion.ajustes}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">
+              {comparacion.ajustesIncluidos}
             </dd>
           </div>
           <div>

@@ -8,7 +8,7 @@ export default async function AccesoPage({
   const {error} = await searchParams;
   return (
     <section className="mx-auto max-w-md space-y-6">
-      <h1 className="text-3xl font-bold">Acceso a solicitudes</h1>
+      <h1 className="text-3xl font-bold">Acceso a administración</h1>
       {error && (
         <p role="alert">
           {error === 'limite'

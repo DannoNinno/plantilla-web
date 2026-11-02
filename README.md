@@ -1,6 +1,6 @@
 # dannotech
 
-Sitio fullstack con Next.js, React, TypeScript y Tailwind sobre Cloudflare Workers/OpenNext. Conserva la portada, perfil, catálogo y estética de marca. El contenido público se obtiene de JSON locales; las consultas y cotizaciones se guardan en Cloudflare D1, con avisos internos por correo y un panel administrativo protegido. No hay procesamiento de Excel.
+Sitio fullstack con Next.js, React, TypeScript y Tailwind sobre Cloudflare Workers/OpenNext. Conserva la portada, perfil, catálogo y estética de marca. El contenido público se obtiene de JSON locales; las consultas nuevas se entregan exclusivamente por correo, sin almacenarlas en el sitio. El panel administrativo protegido queda reservado para otras herramientas. No hay procesamiento de Excel.
 
 ## Desarrollo
 
@@ -29,9 +29,9 @@ Se actualizaron Drizzle, OpenNext y Wrangler y se renovó `body-parser` dentro d
 
 ## Cloudflare Workers
 
-La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker productivo se llama `dannotech` y sirve los archivos de `.open-next/assets`. El módulo incorpora `DB` (D1) y `AVISO_EMAIL` (`send_email`); no usa KV ni R2.
+La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker productivo se llama `dannotech` y sirve los archivos de `.open-next/assets`. El formulario usa `AVISO_EMAIL` (`send_email`) y `FORMULARIOS_LIMITE` (cinco intentos por minuto por hash de IP). `DB` (D1) se conserva para el límite de acceso administrativo y registros históricos, no para consultas nuevas. No usa KV ni R2.
 
-Existen dos bases independientes: `dannotech-db` (producción) y `dannotech-ensayo-db` (ensayo). El entorno `staging` utiliza exclusivamente su propia base y el Worker `dannotech-ensayo`, sin rutas de los dominios productivos. Su URL es <https://dannotech-ensayo.daniel-progra-work.workers.dev>. El dueño autorizó preparar producción y publicar esta versión en `main`; el [procedimiento del módulo](./src/modules/formularios/README.md) exige migrar y configurar secretos independientes antes del push que puede activar Workers Builds.
+Existen dos bases independientes: `dannotech-db` (producción) y `dannotech-ensayo-db` (ensayo). El entorno `staging` utiliza exclusivamente su propia base y el Worker `dannotech-ensayo`, sin rutas de los dominios productivos. Su URL es <https://dannotech-ensayo.daniel-progra-work.workers.dev>. Sigue el [procedimiento del módulo](./src/modules/formularios/README.md) y solicita autorización antes de publicar; un push a la rama conectada puede activar Workers Builds.
 
 ```sh
 npx opennextjs-cloudflare build
@@ -47,9 +47,9 @@ El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `pre
 
 Las páginas prerenderizadas utilizan la caché de solo lectura de Workers Static Assets, recomendada por la [guía de OpenNext para sitios SSG](https://opennext.js.org/cloudflare/caching#ssg-site). Esto permite servir los paquetes generados con `generateStaticParams` y `dynamicParams = false` sin recursos externos. No soporta revalidación: los cambios de JSON se publican con un nuevo build y despliegue. Los formularios y el panel son dinámicos y no usan esa caché para las solicitudes.
 
-Para desarrollo, copia [.dev.vars.example](.dev.vars.example) a `.dev.vars` y completa los secretos locales. La integración usa D1 local y simula los avisos en consola; no envía correos reales en `next dev`. Los scripts de desarrollo, build y tests generan los tipos de los bindings. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
+Para desarrollo, copia [.dev.vars.example](.dev.vars.example) a `.dev.vars` sin sobrescribir secretos existentes y completa valores aleatorios locales. Los tests usan un proveedor falso; el runtime local de Cloudflare no acredita recepción real en Gmail. No existe un notificador que vuelque consultas a la consola ni un reemplazo exitoso ante bindings ausentes. Los scripts de desarrollo, build y tests generan los tipos de los bindings. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
 
-En esta instalación hay credenciales aleatorias **distintas** en `.dev.vars`, `.dev.vars.staging` y `.dev.vars.production`. La contraseña de cada panel se consulta localmente en su archivo ignorado; no se publica, se incluye en comandos ni se añade a Git. `FORMULARIOS_URL` en `staging` hace que los avisos enlacen al panel de ensayo, no al productivo.
+Los secretos de desarrollo, ensayo y producción deben ser distintos y mantenerse fuera de Git. `FORMULARIOS_URL` es una variable heredada: los correos nuevos no incluyen enlaces a solicitudes ni al panel.
 
 Para Workers Builds conectado a GitHub:
 
@@ -66,9 +66,9 @@ Para Workers Builds conectado a GitHub:
 
 ### Privacidad mínima y contacto
 
-[La política pública](./src/app/(portal)/privacidad/page.tsx) identifica a Daniel Salamanca Jorquera y enlaza el correo oficial. Antes de enviar, el formulario exige una autorización no premarcada; el servidor valida `consentimiento: true` y registra la versión de la política definida en [contacto.ts](./src/domain/configuracion/contacto.ts), junto con la fecha de la solicitud. No pide email, no autoriza publicidad y ofrece un enlace al correo oficial para quien necesite respuesta.
+[La política pública](<./src/app/(portal)/privacidad/page.tsx>), el formulario y el correo comparten trece avisos configurables. La casilla obligatoria viene desmarcada; «Ver más» es una acción independiente. El servidor valida la aceptación y la versión vigente. El correo contiene la fecha/hora de Chile, el aviso aceptado y la fecha límite de eliminación. Se solicita teléfono, correo o ambos, según el canal elegido, sin autorizar publicidad.
 
-El dueño revisará y eliminará manualmente las consultas sin contrato después de un máximo de doce meses desde el último contacto, también en Gmail y registros históricos; los datos de clientes siguen las obligaciones aplicables. Revisar respaldos y reaplicar eliminaciones al restaurarlos. No hay borrado automático ni se presenta esta implementación como certificación de cumplimiento legal. No se añaden analítica, píxeles ni cookies de marketing.
+Las consultas nuevas sin avance se eliminan manualmente del correo **a más tardar seis meses desde el envío**; el [procedimiento de Gmail](./src/modules/formularios/README.md#borrado-en-gmail) explica la revisión mensual y cómo anticiparla para no superar ese máximo. El cambio no elimina datos históricos de D1 ni sus respaldos, que requieren revisión según el aviso aplicable. No hay borrado automático ni certificación de cumplimiento legal; conviene revisión jurídica antes de publicar. No se añaden analítica, píxeles ni cookies de marketing.
 
 ### Validación continua y operación
 
@@ -76,7 +76,7 @@ El dueño revisará y eliminará manualmente las consultas sin contrato después
 
 [dependabot.yml](.github/dependabot.yml) prepara revisiones mensuales de dependencias menores/parches y de Actions; no actualiza automáticamente versiones mayores ni integra cambios sin revisión. Las Actions están fijadas por commit.
 
-Wrangler tiene observabilidad habilitada. Revisa los errores del Worker y los avisos pendientes/fallidos del panel; conservar en D1 no reemplaza revisar esos estados. No hay borrado automático de solicitudes. Usa exportaciones privadas y Time Travel de D1 según la ventana de tu plan, con el procedimiento del [módulo](./src/modules/formularios/README.md). Los respaldos y logs pueden contener datos personales: no los publiques ni los guardes en Git.
+Wrangler tiene observabilidad habilitada. El formulario registra solo eventos constantes de envío/fallo, nunca campos de la consulta ni errores crudos del proveedor. No habilites captura de cuerpos HTTP en herramientas externas. No existe una bandeja ni reenvío desde el panel: un fallo conserva los campos en pantalla y se informa al visitante. Protege cualquier respaldo histórico y reaplica las eliminaciones al restaurarlo.
 
 ## Organización
 
@@ -141,7 +141,9 @@ Los [iconos de vitrina](./src/infrastructure/componentes/portal/Vitrina/iconos.t
 
 El catálogo conserva los cuatro planes de [tarifas.md](./tarifas.md). El campo `habilitado` de [paquetes.json](./src/data/paquetes.json) controla su disponibilidad: Presencia Digital y Captación de Clientes están activos; Automatización de Procesos y Comercio Electrónico aparecen atenuados como «Próximamente», sin precio ni enlace. `getPaquetes()` conserva todos los datos para el catálogo; `getPaquetesHabilitados()` y `getPaquete()` solo exponen los activos para detalles, rutas estáticas y contacto. Los planes desactivados responden 404 y no se pueden cotizar en el formulario. Los servicios y costos adicionales aparecen al final del catálogo general. Al actualizar las tarifas, sincroniza los JSON con el documento; las pruebas conservan la verificación de precios y detalle de los cuatro planes.
 
-Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación de Clientes, respectivamente. Ambos planes tienen un plazo de hasta 5 días hábiles, visible junto al precio, con las reuniones incluidas dentro de ese período. El detalle mantiene `PresentacionPaquete`, `DetallePaquete`, `EnlacesPaquete` y `ConsultaPaquete`; esta última integra el formulario al final, con el plan preseleccionado. La vitrina descriptiva ocupa el lugar de la antigua demo. Contacto conserva el parámetro `?paquete=`.
+Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación de Clientes, respectivamente. Los dos planes se entregan en 7 días hábiles desde que el cliente entrega textos, logo y fotos, con hitos en los días 1, 4, 6 y 7. Presencia Digital incluye 1 página y Captación de Clientes hasta 5 páginas, ambas con hasta 6 secciones por página. El catálogo y el detalle explican cómo se cuentan páginas, exclusiones y cotización de páginas adicionales. El detalle mantiene `PresentacionPaquete`, `DetallePaquete`, `EnlacesPaquete` y `ConsultaPaquete`; esta última integra el formulario al final, con el plan preseleccionado. Contacto conserva el parámetro `?paquete=`.
+
+[paquetes.json](./src/data/paquetes.json) define los precios finales con impuesto incluido: desde $177.000/$413.000 en dos pagos de 50 % o desde $150.000/$350.000 pagando todo al inicio. El descuento se comunica como **aproximado del 15 %** porque los montos comerciales no equivalen exactamente a multiplicar por 0,85; no se recalculan en la interfaz. [catalogo.json](./src/data/catalogo.json) concentra etiquetas y condiciones. El primer pago precede a la reunión inicial y el segundo a la publicación, que exige pago total. Solo Captación de Clientes incluye correo con dominio. Ambos planes incluyen 1 hora de ajustes tras la entrega, sin soporte adicional; el valor hora de cambios está por definir y se acuerda antes del pago, con ejecución en máximo 2 días hábiles posteriores. Sitio, dominio y cuentas quedan a nombre del cliente. Los planes desactivados y sus precios no cambian. En el home solo se aclara la modalidad y el impuesto junto al precio inicial, sin cambiar estructura ni estilos.
 
 El diseño de referencia es `restore-point` (`8f384f3`, 9 de octubre de 2026). La reforma se incorpora sobre él, sin reemplazar sus páginas. El home conserva el hero con «Explorar el sitio», las cuatro secciones numeradas, ilustraciones, degradados y puertas de Catálogo y Perfil. El perfil conserva `FotoPerfil`, los botones Hablemos, Detalle técnico y LinkedIn, y la sección técnica; no incorpora `BeneficiosPyme`. El grupo de rutas `(portal)` conserva `SaltoContenido`. El interruptor `catalogoHabilitado` sigue controlando los enlaces, la etiqueta «Próximamente» y la redirección del catálogo.
 
@@ -171,13 +173,15 @@ Las capacidades del perfil resaltan su fondo, acento lateral e icono al hacer ho
 
 ## Formularios
 
-La página `/contacto/` contiene el formulario compartido, con nombre, un selector de los dos planes habilitados y la opción Consulta, y un mensaje de hasta 200 palabras (además de un límite defensivo de 10000 caracteres). No pide correo al visitante: la API descarta ese campo si un cliente antiguo lo añade y las solicitudes nuevas guardan `email=NULL`. Tiene una única acción principal y no muestra la dirección destinataria ni enlaces de correo adicionales dentro del formulario. El footer mantiene el enlace `mailto:` con el texto «Escríbeme por correo». El límite por palabras y los planes habilitados se validan también en el servidor.
+La página `/contacto/` usa [FormularioConsulta](./src/infrastructure/componentes/boveda/FormularioConsulta/FormularioConsulta.tsx): nombre obligatorio; teléfono y/o correo; canal WhatsApp, llamada o correo; plan opcional con «Aún no lo sé»; mensaje de hasta 200 palabras con contador y límite defensivo de 10000 caracteres. Se valida en cliente y servidor. El wrapper [Contacto](./src/infrastructure/componentes/portal/Contacto/Contacto.tsx) aporta configuración y transporte; la pieza de bóveda no conoce el portal ni Cloudflare.
 
-Las botoneras de cada plan enlazan a `/contacto/?paquete=landing` o `/contacto/?paquete=portal`. La página valida el parámetro y preselecciona el plan habilitado; los desconocidos responden 404. El formulario llama a `POST /api/formularios/`: guarda primero en D1 y después intenta hasta dos veces el aviso nativo de Cloudflare al destino interno verificado, sin correo del visitante ni `Reply-To`. No permite responder al visitante por email. No hay Gmail SMTP, proveedores externos, cron ni colas. Si el aviso falla, la solicitud permanece guardada y se puede reenviar manualmente desde `/admin/solicitudes/`. No se garantiza la entrega al buzón ni la ausencia absoluta de duplicados ante fallos ambiguos del proveedor.
+Las botoneras enlazan a `/contacto/?paquete=landing` o `/contacto/?paquete=portal`. Solo se preseleccionan planes activos; los desconocidos responden 404. `GET /api/formularios/` prepara un token firmado sin sesión persistida. `POST` comprueba origen, tamaño, campos, consentimiento, trampa, tiempo mínimo y límite de repetición; espera un único envío de Cloudflare al destinatario fijo. Si se aporta correo, se usa como `Reply-To`. No guarda consultas en D1, archivos, cachés ni logs ni introduce sus datos en URLs. No hay reintentos automáticos, cron ni colas. El éxito confirma aceptación del proveedor, no entrega o lectura en Gmail; un resultado ambiguo puede duplicarse si el visitante decide reintentar.
 
-La [migración de retirada del campo](./drizzle/0001_tearful_swordsman.sql) hace nullable la columna anterior y conserva sus valores históricos; no borra solicitudes ni correos ya almacenados. Los correos anteriores solo se muestran en el detalle administrativo, identificados como históricos. El nombre y el contenido libre pueden seguir siendo datos personales: retirar el campo email no garantiza por sí solo el cumplimiento de protección de datos.
+La [configuración pública](./src/domain/configuracion/consulta.ts) concentra identidad, plazos, aviso, proveedores, planes y WhatsApp; la [configuración del envío](./src/config/formularios.config.ts) define remitente, destino, asunto y zona horaria. El enlace directo de WhatsApp permanece desactivado hasta configurar un número del negocio; el visitante sí puede dejar su número para ser contactado por ese canal.
 
-Rutas públicas: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/` y `/componentes/`. El panel privado está en `/admin/solicitudes/`, con acceso desde `/admin/acceso/`, y las operaciones están bajo `/api/admin/`. La vitrina tiene título y descripción propios para buscadores; se accede desde los detalles de los planes. No se publican detalles de componentes ni rutas de demo. Los planes desconocidos o desactivados no generan páginas y devuelven 404.
+No se ejecuta una migración destructiva: los registros históricos de D1 permanecen, pero se retiraron su bandeja, detalle y endpoints de lectura/reenvío. El panel `/admin/`, protegido mediante `/admin/acceso/`, queda reservado para otros propósitos.
+
+Rutas públicas: `/`, `/perfil/`, `/contacto/`, `/privacidad/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/` y `/componentes/`. La vitrina tiene título y descripción propios para buscadores; se accede desde los detalles de los planes. No se publican detalles de componentes ni rutas de demo. Los planes desconocidos o desactivados no generan páginas y devuelven 404.
 
 ## Biblioteca reutilizable
 
@@ -185,7 +189,7 @@ La biblioteca se concentra en [boveda](./src/infrastructure/componentes/boveda),
 
 El [registro](./src/infrastructure/componentes/boveda/registro.ts) mantiene tipos, documentación de props, ejemplos e instancias editables en memoria. Los ejemplos consumen [ejemplos-boveda.json](./src/data/ejemplos-boveda.json) mediante un proveedor propio; las ilustraciones originales están en [public/ejemplos-boveda](./public/ejemplos-boveda). No dependen de módulos ni rutas de demo. Los tokens `seccion`, `canal`, `boveda-ancla` y `boveda-portada` de Tailwind pertenecen a esas piezas y no sustituyen la paleta del sitio.
 
-Los formularios reutilizables validan sus props y entregan consultas mediante callbacks opcionales, sin conectar servicios externos. Los ejemplos usan datos ficticios y enlaces internos, nunca números ni perfiles reales. No hay administración pública, bandeja, persistencia ni backend. `npm run test:frontend` ejecuta tanto las pruebas de la reforma UX como las de la biblioteca; se retiran únicamente las verificaciones específicas de las demos eliminadas.
+Los formularios de ejemplo registrados validan sus props y usan callbacks locales, sin envío real. [FormularioConsulta](./src/infrastructure/componentes/boveda/FormularioConsulta/FormularioConsulta.tsx) es la pieza de integración reutilizable: recibe configuración y una función asíncrona de envío, sin endpoint ni marca incrustados. No se registra como ejemplo serializable porque su transporte es una función. Los ejemplos usan datos ficticios y enlaces internos. `npm run test:frontend` ejecuta las pruebas de UX y arquitectura de la biblioteca.
 
 ## Docker anterior
 

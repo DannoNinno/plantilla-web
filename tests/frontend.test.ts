@@ -19,7 +19,6 @@ import {
   contarPalabras,
   enlaceCorreo,
   enlaceCotizacion,
-  prepararCorreoContacto,
   validarMensaje,
 } from '../src/domain/servicios/contacto';
 import {CONTACT_EMAIL, MAX_MESSAGE_WORDS, QUOTES_EMAIL} from '../src/domain/configuracion/contacto';
@@ -33,9 +32,6 @@ import TarjetaPlan from '../src/infrastructure/componentes/portal/Catalogo/Tarje
 import CoverflowCarousel from '../src/infrastructure/componentes/boveda/Carousel/CoverflowCarousel';
 import CondicionesCatalogo from '../src/infrastructure/componentes/portal/Catalogo/CondicionesCatalogo';
 import Contacto from '../src/infrastructure/componentes/portal/Contacto/Contacto';
-import ListaSolicitudes from '../src/modules/formularios/admin/ListaSolicitudes';
-import {formulariosConfig} from '../src/config/formularios.config';
-import type {Solicitud} from '../src/modules/formularios/core/tipos';
 import DetallePaquete from '../src/infrastructure/componentes/portal/DetallePaquete/DetallePaquete';
 import Entrada from '../src/infrastructure/componentes/portal/Entrada/Entrada';
 import Footer from '../src/infrastructure/componentes/portal/Footer/Footer';
@@ -71,7 +67,8 @@ test('la estructura conserva las capas y todos los datos son JSON', () => {
     'sitio.json',
   ]);
   assert.equal(existsSync('src/app/api/formularios/route.ts'), true);
-  assert.equal(existsSync('src/app/admin/solicitudes/page.tsx'), true);
+  assert.equal(existsSync('src/app/admin/page.tsx'), true);
+  assert.equal(existsSync('src/app/admin/solicitudes/page.tsx'), false);
   assert.equal(existsSync('src/infrastructure/repositorios'), false);
 });
 
@@ -156,7 +153,80 @@ test('los cuatro planes conservan precios y todo el detalle de tarifas.md', () =
 test('los precios desde se muestran en pesos chilenos sin decimales', () => {
   assert.deepEqual(
     getPaquetes().map((paquete) => precioDesdeCLP(paquete.precioDesde)),
-    ['Desde $150.000 CLP', 'Desde $350.000 CLP', 'Desde $500.000 CLP', 'Desde $700.000 CLP'],
+    ['Desde $177.000 CLP', 'Desde $413.000 CLP', 'Desde $500.000 CLP', 'Desde $700.000 CLP'],
+  );
+});
+
+test('los planes activos muestran precios finales por modalidad y separan paginas de secciones', () => {
+  const catalogo = getCatalogo();
+  assert.deepEqual(
+    getPaquetesHabilitados().map((paquete) => [
+      paquete.id,
+      paquete.precioDesde,
+      paquete.precioPagoInicial,
+      paquete.comparacion?.paginasMaximas,
+      paquete.comparacion?.seccionesPorPagina,
+      paquete.comparacion?.correoDominio,
+    ]),
+    [
+      ['landing', 177000, 150000, 1, 6, false],
+      ['portal', 413000, 350000, 5, 6, true],
+    ],
+  );
+  for (const paquete of getPaquetesHabilitados()) {
+    const tarjeta = renderToStaticMarkup(
+      createElement(TarjetaPlan, {
+        paquete,
+        numero: 1,
+        textos: catalogo.textos,
+        comparacion: catalogo.comparacion,
+      }),
+    );
+    const detalle = renderToStaticMarkup(
+      createElement(PaginaPaquete, {
+        paquete,
+        paquetes: getPaquetes(),
+        componentes: getComponentes(),
+        catalogo,
+      }),
+    );
+    for (const html of [tarjeta, detalle]) {
+      for (const texto of [
+        precioDesdeCLP(paquete.precioDesde),
+        precioDesdeCLP(paquete.precioPagoInicial!),
+        catalogo.textos.pagoDosCuotas,
+        catalogo.textos.pagoInicial,
+        catalogo.textos.descuentoPagoInicial,
+        paquete.comparacion!.plazoEntrega,
+      ])
+        assert.ok(html.includes(texto), `${paquete.id}: ${texto}`);
+      assert.ok((html.match(/impuesto incluido/g)?.length ?? 0) >= 2);
+      assert.doesNotMatch(
+        html,
+        /Hasta (?:5|10) vistas o secciones|rondas? de (?:ajustes|correcciones)/i,
+      );
+    }
+    const incluye = paquete.secciones.find((seccion) => seccion.titulo === 'Incluye')!;
+    assert.equal(incluye.elementos!.includes('Correo con tu dominio.'), paquete.id === 'portal');
+    const condiciones = paquete.secciones.flatMap((seccion) => seccion.elementos ?? []);
+    for (const texto of [
+      'No se publica el sitio hasta recibir el pago total.',
+      'No hay soporte incluido, salvo 1 hora de ajustes sin costo.',
+      'Los cambios adicionales se aplican en un máximo de 2 días hábiles después del pago.',
+      'Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.',
+      'Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.',
+      'No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración.',
+    ])
+      assert.ok(condiciones.includes(texto), `${paquete.id}: ${texto}`);
+  }
+  assert.deepEqual(
+    getPaquetes()
+      .filter((paquete) => !paquete.habilitado)
+      .map((paquete) => [paquete.id, paquete.precioDesde, paquete.precioPagoInicial]),
+    [
+      ['automatizacion', 500000, undefined],
+      ['comercio-electronico', 700000, undefined],
+    ],
   );
 });
 
@@ -185,12 +255,21 @@ test('los casos y contextos preservan la privacidad y el perfil separa audiencia
   assert.equal(getSitio().demosHabilitadas, false);
 });
 
-test('los primeros dos planes incluyen hasta cinco dias habiles y las reuniones en ese periodo', () => {
+test('los planes activos se entregan en siete dias desde el contenido y detallan los hitos', () => {
+  const plazo = '7 días hábiles desde la entrega de tus textos, logo y fotos.';
   for (const id of ['landing', 'portal']) {
     assert.deepEqual(
       getPaquete(id)?.secciones.find((seccion) => seccion.titulo === 'Plazo de entrega')?.elementos,
-      ['Hasta 5 días hábiles.', 'Las reuniones incluidas se realizan dentro de ese período.'],
+      [
+        plazo,
+        'Día 1: reunión inicial.',
+        'Día 4: primera versión.',
+        'Día 6: ajustes.',
+        'Día 7: entrega.',
+        'Las reuniones incluidas se realizan dentro de ese período.',
+      ],
     );
+    assert.equal(getPaquete(id)?.comparacion?.plazoEntrega, plazo);
   }
   for (const id of ['automatizacion', 'comercio-electronico']) {
     assert.equal(
@@ -233,13 +312,16 @@ test('el catalogo conserva filosofia, alcance, principios y costos adicionales d
     assert.ok(fuente.includes(texto), texto);
   }
   assert.equal(catalogo.filosofia.objetivos.length, 6);
-  assert.equal(catalogo.alcance.condiciones.length, 3);
+  assert.equal(catalogo.alcance.condiciones.length, 13);
   assert.equal(catalogo.principios.length, 7);
   assert.deepEqual(catalogo.adicionales, [
-    {nombre: 'Reuniones Adicionales', costo: '$25.000 CLP por hora.'},
-    {nombre: 'Capacitación Adicional', costo: '$25.000 CLP por hora.'},
-    {nombre: 'Desarrollo Fuera de Alcance', costo: 'Desde $35.000 CLP por hora.'},
-    {nombre: 'Soporte Evolutivo', costo: 'Cotización según necesidad.'},
+    {nombre: 'Reuniones Adicionales', costo: 'Valor hora por definir; se acuerda antes del pago.'},
+    {nombre: 'Capacitación Adicional', costo: 'Valor hora por definir; se acuerda antes del pago.'},
+    {
+      nombre: 'Desarrollo Fuera de Alcance',
+      costo: 'Valor hora por definir; se acuerda antes del pago.',
+    },
+    {nombre: 'Cambios tras la entrega', costo: 'Máximo de 2 días hábiles después del pago.'},
   ]);
 });
 
@@ -252,6 +334,7 @@ test('la oferta presenta a dannotech como marca personal en primera persona', ()
   assert.doesNotMatch(html, /Este espacio todavía no está disponible\.|grayscale/);
   assert.doesNotMatch(html, /(?:\s|")cursor-not-allowed(?:\s|")/);
   assert.ok(html.includes('Sitios desde $150.000 CLP'));
+  assert.ok(html.includes('impuesto incluido, pagando todo al inicio.'));
   assert.ok(html.includes('href="#que-hago"'));
   assert.match(html, /href="\/catalogo"/);
   for (const titulo of ['Qué hago y para quién', 'Por qué conmigo', 'Cómo trabajo']) {
@@ -609,9 +692,10 @@ test('solo los primeros dos planes tienen rutas y tarjetas navegables', () => {
       const datos = paquete.comparacion;
       assert.ok(html.includes(datos.plazoEntrega));
       assert.ok(html.includes(datos.capacitacion));
-      assert.ok(html.includes(String(datos.seccionesMaximas)));
+      assert.ok(html.includes(String(datos.paginasMaximas)));
+      assert.ok(html.includes(String(datos.seccionesPorPagina)));
       for (const reunion of datos.reunionesIncluidas) assert.ok(html.includes(reunion));
-      assert.equal(html.match(/<dt\b/g)?.length, 5);
+      assert.equal(html.match(/<dt\b/g)?.length, 9);
     } else {
       assert.equal(getPaquete(paquete.id), undefined);
       assert.match(html, /aria-disabled="true"/);
@@ -885,57 +969,7 @@ test('el limite real del mensaje es de 200 palabras, incluyendo espacios y salto
   assert.equal(validarMensaje('hola'), 'Escribe un mensaje de al menos 10 caracteres.');
 });
 
-const datosContacto = {
-  nombre: 'Daniel & prueba',
-  paqueteId: 'consulta',
-  mensaje: 'Me interesa conversar sobre mi negocio, con ideas & preguntas.',
-};
-
-test('el formulario prepara consultas y cotizaciones con todos los datos sin enviarlos', () => {
-  for (const opcion of [{id: 'consulta', nombre: 'Consulta'}, ...getPaquetesHabilitados()]) {
-    const resultado = prepararCorreoContacto(
-      {...datosContacto, paqueteId: opcion.id},
-      getPaquetes(),
-    );
-    assert.ok(resultado.ok);
-    const url = new URL(resultado.href);
-    assert.equal(url.protocol, 'mailto:');
-    assert.equal(url.pathname, opcion.id === 'consulta' ? CONTACT_EMAIL : QUOTES_EMAIL);
-    assert.equal(
-      url.searchParams.get('subject'),
-      opcion.id === 'consulta' ? 'Consulta general' : `Solicitud de cotización: ${opcion.nombre}`,
-    );
-    const cuerpo = url.searchParams.get('body')!;
-    assert.ok(cuerpo.includes(datosContacto.nombre));
-    assert.doesNotMatch(cuerpo, /Correo de contacto:/);
-    assert.ok(cuerpo.includes(datosContacto.mensaje));
-    assert.ok(cuerpo.includes(`Motivo: ${opcion.nombre}`));
-  }
-  const limite = prepararCorreoContacto(
-    {...datosContacto, mensaje: Array(200).fill('palabra').join(' ')},
-    getPaquetes(),
-  );
-  assert.ok(limite.ok);
-});
-
-test('el formulario rechaza datos invalidos explicitamente sin generar un mailto', () => {
-  for (const cambio of [
-    {nombre: ''},
-    {nombre: 'a'.repeat(101)},
-    {mensaje: ' '},
-    {mensaje: Array(201).fill('palabra').join(' ')},
-    {paqueteId: 'sistema-web-a-medida'},
-    {paqueteId: 'automatizacion'},
-    {paqueteId: 'comercio-electronico'},
-  ]) {
-    const resultado = prepararCorreoContacto({...datosContacto, ...cambio}, getPaquetes());
-    assert.equal(resultado.ok, false);
-    if (!resultado.ok) assert.ok(resultado.error.length > 0);
-    assert.equal('href' in resultado, false);
-  }
-});
-
-test('el formulario muestra Consulta y planes habilitados, con respaldo y sin simular exito', () => {
+test('el formulario pide un canal y contacto, informa el consentimiento y no persiste consultas', () => {
   const html = renderToStaticMarkup(
     createElement(Contacto, {
       paquetes: getPaquetes(),
@@ -944,22 +978,27 @@ test('el formulario muestra Consulta y planes habilitados, con respaldo y sin si
   );
   assert.match(html, /<form[^>]*class="mt-6 max-w-2xl space-y-5"/);
   assert.match(html, /name="nombre"/);
-  assert.doesNotMatch(html, /name="(?:correo|email)"|type="email"|Tu correo/);
+  assert.match(html, /name="telefono"/);
+  assert.match(html, /name="correo"/);
+  assert.match(html, /name="canal"/);
   assert.match(html, /name="mensaje"/);
   assert.match(html, /Mi proyecto/);
-  assert.match(html, /<select[^>]*name="paquete"/);
-  assert.match(html, /<option value="consulta" selected="">Consulta<\/option>/);
+  assert.match(html, /<select[^>]*name="plan"/);
+  assert.match(html, /<option value="" selected="">Aún no lo sé<\/option>/);
   for (const paquete of getPaquetesHabilitados()) {
     assert.ok(html.includes(`<option value="${paquete.id}">${paquete.nombre}</option>`));
   }
   assert.doesNotMatch(html, /value="automatizacion"|value="comercio-electronico"/);
   assert.match(html, /200.*palabras/);
   assert.match(html, /Enviar consulta/);
-  assert.equal((html.match(/<button\b/g) ?? []).length, 1);
+  assert.equal((html.match(/<button\b/g) ?? []).length, 2);
   assert.ok(html.includes(`href="mailto:${CONTACT_EMAIL}"`));
   assert.match(html, /href="\/privacidad\/?"/);
-  assert.ok(html.includes('Guardaré tu nombre y mensaje'));
-  assert.ok(html.includes('responderte desde este formulario'));
+  assert.ok(html.includes('solo para responder esta'));
+  assert.ok(html.includes('6 meses'));
+  assert.ok(html.includes('tengo autorización'));
+  assert.ok(html.includes('Ver más'));
+  assert.equal((html.match(/<li>/g) ?? []).length, 13);
   assert.match(
     html,
     /<input(?=[^>]*type="checkbox")(?=[^>]*name="consentimiento")(?=[^>]*required="")/,
@@ -972,34 +1011,8 @@ test('el formulario muestra Consulta y planes habilitados, con respaldo y sin si
     createElement(Contacto, {paquetes: getPaquetes(), paqueteInicial: 'landing'}),
   );
   assert.ok(cotizacion.includes('<option value="landing" selected="">Presencia Digital</option>'));
-  assert.ok(cotizacion.includes('Enviar cotización'));
+  assert.ok(cotizacion.includes('Enviar consulta'));
   assert.ok(cotizacion.includes(`href="mailto:${CONTACT_EMAIL}"`));
   assert.doesNotMatch(cotizacion, /wa\.me|Ver los canales de contacto/);
-  assert.doesNotMatch(cotizacion, /name="(?:correo|email)"|type="email"/);
-});
-
-test('el listado administrativo no expone correos nuevos ni históricos', () => {
-  const solicitud: Solicitud = {
-    id: '00000000-0000-4000-8000-000000000001',
-    tipo: 'consulta',
-    nombre: 'Prueba',
-    email: null,
-    datos: {mensaje: 'Mi proyecto'},
-    ipHash: 'hash',
-    estadoAviso: 'enviado',
-    intentosAviso: 1,
-    ultimoError: null,
-    leida: false,
-    creadoEn: '2020-01-01T00:00:00.000Z',
-    avisadoEn: null,
-    reservaHasta: null,
-  };
-  const anterior = {...solicitud, email: 'registro-anterior@example.org'};
-  const listado = renderToStaticMarkup(
-    createElement(ListaSolicitudes, {
-      solicitudes: [solicitud, {...anterior, id: '00000000-0000-4000-8000-000000000002'}],
-      config: formulariosConfig,
-    }),
-  );
-  assert.doesNotMatch(listado, /registro-anterior@example\.org/);
+  assert.match(cotizacion, /name="correo"/);
 });

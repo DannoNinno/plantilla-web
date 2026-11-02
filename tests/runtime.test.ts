@@ -1,5 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
+import {PRIVACY_VERSION} from '../src/domain/configuracion/contacto';
 
 const configurada = process.env.TEST_BASE_URL;
 if (!configurada)
@@ -7,8 +8,8 @@ if (!configurada)
 const base = new URL(configurada).origin;
 const id = '00000000-0000-4000-8000-000000000001';
 
-test('el panel y el detalle rechazan sesiones ausentes o manipuladas', async () => {
-  for (const ruta of ['/admin/solicitudes/', `/admin/solicitudes/${id}/`]) {
+test('el panel rechaza sesiones ausentes o manipuladas', async () => {
+  for (const ruta of ['/admin/']) {
     for (const cookie of ['', 'sesion_formularios=manipulada']) {
       const respuesta = await fetch(new URL(ruta, base), {
         redirect: 'manual',
@@ -23,11 +24,7 @@ test('el panel y el detalle rechazan sesiones ausentes o manipuladas', async () 
 });
 
 test('los endpoints administrativos autentican sin depender del proxy', async () => {
-  for (const ruta of [
-    `/api/admin/formularios/${id}/reenviar/`,
-    `/api/admin/formularios/${id}/leida/`,
-    '/api/admin/salir/',
-  ]) {
+  for (const ruta of ['/api/admin/salir/']) {
     for (const cookie of ['', 'sesion_formularios=manipulada']) {
       const respuesta = await fetch(new URL(ruta, base), {
         method: 'POST',
@@ -42,6 +39,18 @@ test('los endpoints administrativos autentican sin depender del proxy', async ()
       headers: {Origin: 'https://origen-no-permitido.example'},
     });
     assert.equal(origenAjeno.status, 403, ruta);
+  }
+});
+
+test('la bandeja y los endpoints de solicitudes se retiraron sin borrar datos históricos', async () => {
+  for (const ruta of [
+    '/admin/solicitudes/',
+    `/admin/solicitudes/${id}/`,
+    `/api/admin/formularios/${id}/reenviar/`,
+    `/api/admin/formularios/${id}/leida/`,
+  ]) {
+    const respuesta = await fetch(new URL(ruta, base));
+    assert.equal(respuesta.status, 404, ruta);
   }
 });
 
@@ -77,19 +86,54 @@ test('el endpoint público valida tipo, formato, tamaño y honeypot sin enviar a
   assert.match(await sinConsentimiento.text(), /consentimiento/);
 });
 
-test('privacidad y contacto son públicos, sin pedir correo al visitante', async () => {
+test('prepara tokens sin caché y rechaza envíos sin token o con aviso desactualizado', async () => {
+  const preparacion = await fetch(new URL('/api/formularios/', base));
+  assert.equal(preparacion.status, 200);
+  assert.match(preparacion.headers.get('cache-control') ?? '', /no-store/);
+  const datos = (await preparacion.json()) as {token: string};
+  assert.match(datos.token, /^\d+\.[\da-f-]+\.[\da-f]+$/);
+  const cuerpo = {
+    nombre: 'Prueba sin envío',
+    correo: 'prueba@example.org',
+    canal: 'correo',
+    mensaje: 'Esta consulta no debe enviarse.',
+    consentimiento: true,
+    versionAviso: 'desactualizada',
+    token: datos.token,
+  };
+  const respuesta = await fetch(new URL('/api/formularios/', base), {
+    method: 'POST',
+    headers: {Origin: base, 'Content-Type': 'application/json'},
+    body: JSON.stringify(cuerpo),
+  });
+  assert.equal(respuesta.status, 400);
+  assert.match(respuesta.headers.get('cache-control') ?? '', /no-store/);
+  assert.match(await respuesta.text(), /versionAviso/);
+  const sinToken = await fetch(new URL('/api/formularios/', base), {
+    method: 'POST',
+    headers: {Origin: base, 'Content-Type': 'application/json'},
+    body: JSON.stringify({...cuerpo, versionAviso: PRIVACY_VERSION, token: ''}),
+  });
+  assert.equal(sinToken.status, 422);
+  assert.equal(((await sinToken.json()) as {ok: boolean}).ok, false);
+});
+
+test('privacidad y contacto son públicos y permiten responder al visitante', async () => {
   const politica = await fetch(new URL('/privacidad/', base));
   assert.equal(politica.status, 200);
   const texto = await politica.text();
   assert.match(texto, /Daniel Salamanca Jorquera/);
-  assert.match(texto, /doce meses/);
+  assert.match(texto, /máximo de 6 meses/);
   assert.match(texto, /mailto:contacto@dannotech\.cl/);
   const contacto = await fetch(new URL('/contacto/', base));
   assert.equal(contacto.status, 200);
   const html = await contacto.text();
   assert.match(html, /name="consentimiento"/);
   assert.match(html, /href="\/privacidad\/?"/);
-  assert.doesNotMatch(html, /name="(?:correo|email)"|type="email"/);
+  assert.match(html, /name="correo"/);
+  assert.match(html, /name="telefono"/);
+  assert.match(html, /name="canal"/);
+  assert.doesNotMatch(html, /name="(?:rut|direccion|fechaNacimiento)"/);
 });
 
 test('el Worker remoto fuerza HTTPS en páginas y POST sin modificar su destino', async () => {

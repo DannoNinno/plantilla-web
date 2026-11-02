@@ -8,6 +8,10 @@ export interface CatalogoServicios {
     presentacion: string;
     planes: string;
     precios: string;
+    impuestoIncluido: string;
+    pagoDosCuotas: string;
+    pagoInicial: string;
+    descuentoPagoInicial: string;
     plan: string;
     detalle: string;
     verDetalles: string;
@@ -26,11 +30,19 @@ export interface CatalogoServicios {
   };
   comparacion: {
     titulo: string;
+    paginas: string;
+    unaPagina: string;
+    cantidadPaginas: string;
     secciones: string;
     cantidadSecciones: string;
     panelAdministracion: string;
     panelIncluido: string;
     panelNoIncluido: string;
+    correoDominio: string;
+    propiedad: string;
+    activosCliente: string;
+    ajustes: string;
+    ajustesIncluidos: string;
     plazoEntrega: string;
     reuniones: string;
     capacitacion: string;
