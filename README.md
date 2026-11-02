@@ -115,6 +115,8 @@ La dependencia permitida es `portal → boveda`, nunca `boveda → portal`. Las 
 
 Las carpetas dentro de la bóveda comienzan con mayúscula, conservando los guiones: `Formulario-contacto`, `Cotizacion-pasos`, `Secciones/Portada` y `Base/Consulta`. Las importaciones deben respetar exactamente esas mayúsculas; los slugs del registro y las rutas públicas conservan sus nombres originales.
 
+En Windows, un cambio que solo modifica mayúsculas debe registrarse en Git mediante un nombre temporal: `git mv ruta/original ruta/temporal` y luego `git mv ruta/temporal ruta/Original`. Cambiar el nombre solo en el explorador puede dejar el índice en minúsculas aunque el build local pase; Linux y Cloudflare sí distinguen esas rutas. Las pruebas verifican también los nombres versionados por Git.
+
 ## Datos
 
 | Archivo | Contenido |

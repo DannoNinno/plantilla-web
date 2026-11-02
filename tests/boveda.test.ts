@@ -3,6 +3,8 @@ import {test} from 'node:test';
 
 import assert from 'node:assert/strict';
 
+import {execFileSync} from 'node:child_process';
+
 import {existsSync, readdirSync, readFileSync, realpathSync} from 'node:fs';
 
 import path from 'node:path';
@@ -430,6 +432,25 @@ function fuentes(directorio: string): string[] {
     return entrada.isDirectory() ? fuentes(ruta) : [ruta];
   });
 }
+
+test('Git conserva las mayusculas de las carpetas de la boveda para Linux', () => {
+  const prefijo = 'src/infrastructure/componentes/boveda/';
+  const versionados = execFileSync('git', ['ls-files', '-z', '--', prefijo], {
+    encoding: 'utf8',
+  })
+    .split('\0')
+    .filter(Boolean);
+  assert.ok(versionados.length > 0, 'No se encontraron archivos de la boveda en Git.');
+  for (const ruta of versionados) {
+    for (const carpeta of ruta.slice(prefijo.length).split('/').slice(0, -1)) {
+      assert.match(
+        carpeta,
+        /^[A-Z]/,
+        `${ruta}: Git conserva una carpeta en minuscula; renombrar con git mv`,
+      );
+    }
+  }
+});
 
 test('los componentes separan portal y boveda sin dependencias hacia el portal', () => {
   const componentes = path.join('src', 'infrastructure', 'componentes');
