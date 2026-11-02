@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {z} from 'zod';
-import {clasesBoton} from '@/infrastructure/componentes/Boton/estilos';
+import {clasesBoton} from '@/infrastructure/componentes/boveda/Base/Boton/estilos';
 
 const respuestaSchema = z.object({ok: z.boolean(), mensaje: z.string().optional()});
 

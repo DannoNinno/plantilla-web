@@ -1,5 +1,5 @@
 import {getCatalogo, getPaquetes, getSitio} from '@/infrastructure/handlers/datos';
-import PaginaCatalogo from '@/infrastructure/componentes/Catalogo/PaginaCatalogo';
+import PaginaCatalogo from '@/infrastructure/componentes/portal/Catalogo/PaginaCatalogo';
 
 export const metadata = {title: 'Catálogo'};
 

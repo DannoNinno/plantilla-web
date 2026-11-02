@@ -3,7 +3,7 @@ import type {
   ConsultaContacto,
   NombreCampoContacto,
   TextosConsulta,
-} from '../../base/consulta/tipos';
+} from '../Base/Consulta/tipos';
 export interface SolicitudCotizacion extends ConsultaContacto {
   servicio: string;
 }

@@ -1,4 +1,4 @@
-import PaginaContacto from '@/infrastructure/componentes/Contacto/PaginaContacto';
+import PaginaContacto from '@/infrastructure/componentes/portal/Contacto/PaginaContacto';
 import {getPaquetesHabilitados} from '@/infrastructure/handlers/datos';
 import {notFound} from 'next/navigation';
 

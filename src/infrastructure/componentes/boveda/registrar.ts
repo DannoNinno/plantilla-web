@@ -1,10 +1,10 @@
 import {createElement} from 'react';
 import type {ComponentType} from 'react';
-import type {ConsultaContacto} from '../base/consulta/tipos';
-import {obtenerCampos} from './edicion/campos';
-import type {CampoEditable} from './edicion/campos';
-import {actualizarContenido} from './edicion/actualizar';
-import type {ValorEditable} from './edicion/actualizar';
+import type {ConsultaContacto} from './Base/Consulta/tipos';
+import {obtenerCampos} from './Edicion/campos';
+import type {CampoEditable} from './Edicion/campos';
+import {actualizarContenido} from './Edicion/actualizar';
+import type {ValorEditable} from './Edicion/actualizar';
 
 export type PlanBoveda = 'presencia' | 'captacion';
 

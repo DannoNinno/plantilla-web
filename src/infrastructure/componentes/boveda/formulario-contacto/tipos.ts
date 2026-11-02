@@ -3,13 +3,13 @@ import type {
   ConsultaContacto,
   NombreCampoContacto,
   TextosConsulta,
-} from '../../base/consulta/tipos';
+} from '../Base/Consulta/tipos';
 export type {
   CampoContactoProps,
   ConsultaContacto,
   ErroresContacto,
   NombreCampoContacto,
-} from '../../base/consulta/tipos';
+} from '../Base/Consulta/tipos';
 
 export interface FormularioContactoProps {
   campos: Record<NombreCampoContacto, CampoContactoProps>;

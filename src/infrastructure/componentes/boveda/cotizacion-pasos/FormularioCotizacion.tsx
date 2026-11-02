@@ -1,4 +1,4 @@
-import MarcoSeccion from '../../base/MarcoSeccion/MarcoSeccion';
+import MarcoSeccion from '../Base/MarcoSeccion/MarcoSeccion';
 import PasosCotizacion from './PasosCotizacion';
 import type {FormularioCotizacionProps} from './tipos';
 export default function FormularioCotizacion({

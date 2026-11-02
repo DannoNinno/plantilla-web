@@ -13,9 +13,9 @@ import {
   Sparkles,
 } from 'lucide-react';
 import {getPerfil, getSitio} from '@/infrastructure/handlers/datos';
-import {clasesBoton} from '@/infrastructure/componentes/Boton/estilos';
-import FotoPerfil from '@/infrastructure/componentes/FotoPerfil/FotoPerfil';
-import EntradaScroll from '@/infrastructure/componentes/EntradaScroll/EntradaScroll';
+import {clasesBoton} from '@/infrastructure/componentes/boveda/Base/Boton/estilos';
+import FotoPerfil from '@/infrastructure/componentes/portal/FotoPerfil/FotoPerfil';
+import EntradaScroll from '@/infrastructure/componentes/boveda/EntradaScroll/EntradaScroll';
 
 const perfil = getPerfil();
 

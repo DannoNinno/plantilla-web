@@ -24,23 +24,23 @@ import {
 } from '../src/domain/servicios/contacto';
 import {CONTACT_EMAIL, MAX_MESSAGE_WORDS, QUOTES_EMAIL} from '../src/domain/configuracion/contacto';
 import {nombresIconos} from '../src/domain/types/componentes';
-import {iconos} from '../src/infrastructure/componentes/Vitrina/iconos';
-import GrillaComponentes from '../src/infrastructure/componentes/Vitrina/GrillaComponentes';
-import TarjetaComponente from '../src/infrastructure/componentes/Vitrina/TarjetaComponente';
-import PaginaCatalogo from '../src/infrastructure/componentes/Catalogo/PaginaCatalogo';
-import PaginaPaquete from '../src/infrastructure/componentes/DetallePaquete/PaginaPaquete';
-import TarjetaPlan from '../src/infrastructure/componentes/Catalogo/TarjetaPlan';
-import CoverflowCarousel from '../src/infrastructure/componentes/Carousel/CoverflowCarousel';
-import CondicionesCatalogo from '../src/infrastructure/componentes/Catalogo/CondicionesCatalogo';
-import Contacto from '../src/infrastructure/componentes/Contacto/Contacto';
+import {iconos} from '../src/infrastructure/componentes/portal/Vitrina/iconos';
+import GrillaComponentes from '../src/infrastructure/componentes/portal/Vitrina/GrillaComponentes';
+import TarjetaComponente from '../src/infrastructure/componentes/portal/Vitrina/TarjetaComponente';
+import PaginaCatalogo from '../src/infrastructure/componentes/portal/Catalogo/PaginaCatalogo';
+import PaginaPaquete from '../src/infrastructure/componentes/portal/DetallePaquete/PaginaPaquete';
+import TarjetaPlan from '../src/infrastructure/componentes/portal/Catalogo/TarjetaPlan';
+import CoverflowCarousel from '../src/infrastructure/componentes/boveda/Carousel/CoverflowCarousel';
+import CondicionesCatalogo from '../src/infrastructure/componentes/portal/Catalogo/CondicionesCatalogo';
+import Contacto from '../src/infrastructure/componentes/portal/Contacto/Contacto';
 import ListaSolicitudes from '../src/modules/formularios/admin/ListaSolicitudes';
 import {formulariosConfig} from '../src/config/formularios.config';
 import type {Solicitud} from '../src/modules/formularios/core/tipos';
-import DetallePaquete from '../src/infrastructure/componentes/DetallePaquete/DetallePaquete';
-import Entrada from '../src/infrastructure/componentes/Entrada/Entrada';
-import Footer from '../src/infrastructure/componentes/Footer/Footer';
-import {clasesBoton} from '../src/infrastructure/componentes/Boton/estilos';
-import {esEnlaceActivo} from '../src/infrastructure/componentes/Header/navegacion';
+import DetallePaquete from '../src/infrastructure/componentes/portal/DetallePaquete/DetallePaquete';
+import Entrada from '../src/infrastructure/componentes/portal/Entrada/Entrada';
+import Footer from '../src/infrastructure/componentes/portal/Footer/Footer';
+import {clasesBoton} from '../src/infrastructure/componentes/boveda/Base/Boton/estilos';
+import {esEnlaceActivo} from '../src/infrastructure/componentes/portal/Header/navegacion';
 import {precioDesdeCLP} from '../src/domain/servicios/precio';
 import tailwindConfig, {coloresMarca} from '../tailwind.config';
 
@@ -439,8 +439,8 @@ test('la home revela sus cuatro bloques con una sola transicion ligera por conte
   assert.match(css, /\.entrada-ligera\.entrada-visible\s*\{[^}]*transition: none/);
   for (const pagina of [
     'src/app/(portal)/perfil/page.tsx',
-    'src/infrastructure/componentes/Catalogo/PresentacionCatalogo.tsx',
-    'src/infrastructure/componentes/DetallePaquete/PresentacionPaquete.tsx',
+    'src/infrastructure/componentes/portal/Catalogo/PresentacionCatalogo.tsx',
+    'src/infrastructure/componentes/portal/DetallePaquete/PresentacionPaquete.tsx',
   ]) {
     assert.ok(readFileSync(pagina, 'utf8').includes('EntradaScroll'));
   }
@@ -829,7 +829,7 @@ test('se retiran las rutas y herramientas de la demo pero se conserva la bibliot
     'src/demo/planes.ts',
     'src/data/demo/negocio.json',
     'src/infrastructure/componentes/Configurador/Configurador.tsx',
-    'src/infrastructure/componentes/Catalogo/ExploracionCatalogo.tsx',
+    'src/infrastructure/componentes/portal/Catalogo/ExploracionCatalogo.tsx',
   ])
     assert.equal(existsSync(ruta), false, ruta);
   for (const ruta of fuentes('src')) {

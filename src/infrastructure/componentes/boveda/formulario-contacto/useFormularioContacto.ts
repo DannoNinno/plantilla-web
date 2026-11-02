@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from 'react';
 import type {FormEvent} from 'react';
 import {validarConsulta} from './validacion';
-import {useHidratado} from '../../base/consulta/useHidratado';
+import {useHidratado} from '../Base/Consulta/useHidratado';
 import type {ConsultaContacto, ErroresContacto, FormularioContactoProps} from './tipos';
 
 export function useFormularioContacto(props: FormularioContactoProps) {

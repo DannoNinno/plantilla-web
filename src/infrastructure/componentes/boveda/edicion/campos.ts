@@ -1,4 +1,4 @@
-import type {ImagenContenidoDatos} from '../../base/ImagenContenido/ImagenContenido';
+import type {ImagenContenidoDatos} from '../Base/ImagenContenido/ImagenContenido';
 interface RutaEditable {
   ruta: string[];
 }

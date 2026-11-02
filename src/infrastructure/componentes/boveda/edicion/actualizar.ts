@@ -1,4 +1,4 @@
-import type {ImagenContenidoDatos} from '../../base/ImagenContenido/ImagenContenido';
+import type {ImagenContenidoDatos} from '../Base/ImagenContenido/ImagenContenido';
 import {esImagen, esRegistro, obtenerCampos} from './campos';
 export type ValorEditable = string | number | ImagenContenidoDatos;
 export function actualizarContenido<Props extends object>(

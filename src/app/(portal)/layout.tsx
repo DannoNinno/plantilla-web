@@ -1,6 +1,6 @@
-import Header from '@/infrastructure/componentes/Header/Header';
-import Footer from '@/infrastructure/componentes/Footer/Footer';
-import SaltoContenido from '@/infrastructure/componentes/base/SaltoContenido/SaltoContenido';
+import Header from '@/infrastructure/componentes/portal/Header/Header';
+import Footer from '@/infrastructure/componentes/portal/Footer/Footer';
+import SaltoContenido from '@/infrastructure/componentes/boveda/Base/SaltoContenido/SaltoContenido';
 import type {LayoutProps} from '@/domain/types/ui';
 
 export default function PortalLayout({children}: Readonly<LayoutProps>) {

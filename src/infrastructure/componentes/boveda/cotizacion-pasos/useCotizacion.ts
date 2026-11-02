@@ -2,7 +2,7 @@
 import {useEffect, useRef, useState} from 'react';
 import type {FormEvent} from 'react';
 import {erroresPaso, pasoPrimerError, validarSolicitud} from './validacion';
-import {useHidratado} from '../../base/consulta/useHidratado';
+import {useHidratado} from '../Base/Consulta/useHidratado';
 import type {ErroresCotizacion, FormularioCotizacionProps, SolicitudCotizacion} from './tipos';
 const inicial: SolicitudCotizacion = {servicio: '', nombre: '', correo: '', mensaje: ''};
 

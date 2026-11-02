@@ -26,6 +26,6 @@ Sin callback, valida y muestra un resultado local. No realiza peticiones, abre c
 
 Incluir también el token `outlineWidth.foco`: los controles declaran su foco visible sin depender de estilos globales del sitio de demostración.
 
-Copiar esta carpeta **sin `ejemplo.ts` ni `definicion.ts`**, las piezas `base/Boton`, `base/Contenedor`, `base/TituloSeccion`, `base/CampoContacto`, `base/ResultadoContacto`, `base/consulta` y el helper `Boton/estilos.ts`. Mantener las rutas relativas. Requiere React y Tailwind 3 con los tokens `brand`, `seccion`, `fontFamily.sans`, el espaciado `boveda-ancla`, y la variante `fine-pointer`. No depende del negocio, de rutas públicas ni del registro.
+Copiar esta carpeta **sin `ejemplo.ts` ni `definicion.ts`**, las piezas `Base/Boton`, `Base/Contenedor`, `Base/TituloSeccion`, `Base/CampoContacto`, `Base/ResultadoContacto`, `Base/Consulta` y el helper `Base/Boton/estilos.ts`. Mantener las rutas relativas. Requiere React y Tailwind 3 con los tokens `brand`, `seccion`, `fontFamily.sans`, el espaciado `boveda-ancla`, y la variante `fine-pointer`. No depende del negocio, de rutas públicas ni del registro.
 
 La antigua bandeja de la demo fue retirada. Cualquier conexión real debe implementarse en el proyecto que reutilice la pieza.

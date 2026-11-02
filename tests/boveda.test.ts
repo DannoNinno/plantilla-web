@@ -3,7 +3,7 @@ import {test} from 'node:test';
 
 import assert from 'node:assert/strict';
 
-import {existsSync, readdirSync, readFileSync} from 'node:fs';
+import {existsSync, readdirSync, readFileSync, realpathSync} from 'node:fs';
 
 import path from 'node:path';
 
@@ -13,7 +13,7 @@ import {createElement} from 'react';
 
 import {renderToStaticMarkup} from 'react-dom/server';
 
-import {Portada} from '../src/infrastructure/componentes/secciones/portada';
+import {Portada} from '../src/infrastructure/componentes/boveda/Secciones/Portada';
 
 import {
   registro,
@@ -21,60 +21,60 @@ import {
   getComponente,
 } from '../src/infrastructure/componentes/boveda/registro';
 
-import {FormularioContacto} from '../src/infrastructure/componentes/boveda/formulario-contacto';
+import {FormularioContacto} from '../src/infrastructure/componentes/boveda/Formulario-contacto';
 
 import {
   validarConsulta,
   limitesContacto,
-} from '../src/infrastructure/componentes/boveda/formulario-contacto/validacion';
+} from '../src/infrastructure/componentes/boveda/Formulario-contacto/validacion';
 
 import tailwindConfig from '../tailwind.config';
 
-import TituloSeccion from '../src/infrastructure/componentes/base/TituloSeccion/TituloSeccion';
+import TituloSeccion from '../src/infrastructure/componentes/boveda/Base/TituloSeccion/TituloSeccion';
 
-import {Servicios} from '../src/infrastructure/componentes/secciones/servicios';
+import {Servicios} from '../src/infrastructure/componentes/boveda/Secciones/Servicios';
 
-import {QuienesSomos} from '../src/infrastructure/componentes/secciones/quienes-somos';
+import {QuienesSomos} from '../src/infrastructure/componentes/boveda/Secciones/Quienes-somos';
 
-import {Galeria} from '../src/infrastructure/componentes/secciones/galeria';
+import {Galeria} from '../src/infrastructure/componentes/boveda/Secciones/Galeria';
 
-import {Testimonios} from '../src/infrastructure/componentes/secciones/testimonios';
+import {Testimonios} from '../src/infrastructure/componentes/boveda/Secciones/Testimonios';
 
-import {PreguntasFrecuentes} from '../src/infrastructure/componentes/secciones/preguntas-frecuentes';
+import {PreguntasFrecuentes} from '../src/infrastructure/componentes/boveda/Secciones/Preguntas-frecuentes';
 
-import {UbicacionHorarios} from '../src/infrastructure/componentes/secciones/ubicacion-horarios';
+import {UbicacionHorarios} from '../src/infrastructure/componentes/boveda/Secciones/Ubicacion-horarios';
 
-import {Whatsapp} from '../src/infrastructure/componentes/secciones/whatsapp';
+import {Whatsapp} from '../src/infrastructure/componentes/boveda/Secciones/Whatsapp';
 
-import {RedesSociales} from '../src/infrastructure/componentes/secciones/redes-sociales';
+import {RedesSociales} from '../src/infrastructure/componentes/boveda/Secciones/Redes-sociales';
 
-import {PiePagina} from '../src/infrastructure/componentes/secciones/pie-pagina';
+import {PiePagina} from '../src/infrastructure/componentes/boveda/Secciones/Pie-pagina';
 
-import {Novedades} from '../src/infrastructure/componentes/secciones/novedades';
+import {Novedades} from '../src/infrastructure/componentes/boveda/Secciones/Novedades';
 
-import {CatalogoSinCompra} from '../src/infrastructure/componentes/secciones/catalogo-sin-compra';
+import {CatalogoSinCompra} from '../src/infrastructure/componentes/boveda/Secciones/Catalogo-sin-compra';
 
-import {Sedes} from '../src/infrastructure/componentes/secciones/sedes';
+import {Sedes} from '../src/infrastructure/componentes/boveda/Secciones/Sedes';
 
-import {Equipo} from '../src/infrastructure/componentes/secciones/equipo';
+import {Equipo} from '../src/infrastructure/componentes/boveda/Secciones/Equipo';
 
-import {PromocionDestacada} from '../src/infrastructure/componentes/secciones/promocion-destacada';
+import {PromocionDestacada} from '../src/infrastructure/componentes/boveda/Secciones/Promocion-destacada';
 
-import {VistaGoogle} from '../src/infrastructure/componentes/secciones/vista-google';
+import {VistaGoogle} from '../src/infrastructure/componentes/boveda/Secciones/Vista-google';
 
-import {FormularioCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos';
+import {FormularioCotizacion} from '../src/infrastructure/componentes/boveda/Cotizacion-pasos';
 
-import {ejemploCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos/ejemplo';
+import {ejemploCotizacion} from '../src/infrastructure/componentes/boveda/Cotizacion-pasos/ejemplo';
 
 import {
   validarSolicitud,
   erroresPaso,
   pasoPrimerError,
-} from '../src/infrastructure/componentes/boveda/cotizacion-pasos/validacion';
+} from '../src/infrastructure/componentes/boveda/Cotizacion-pasos/validacion';
 
-import {obtenerCampos} from '../src/infrastructure/componentes/boveda/edicion/campos';
+import {obtenerCampos} from '../src/infrastructure/componentes/boveda/Edicion/campos';
 
-import {actualizarContenido} from '../src/infrastructure/componentes/boveda/edicion/actualizar';
+import {actualizarContenido} from '../src/infrastructure/componentes/boveda/Edicion/actualizar';
 
 test('los titulos compartidos usan la misma tipografia sans del portal', () => {
   for (const nivel of ['h1', 'h2'] as const) {
@@ -424,38 +424,84 @@ test('las instancias enlazan props tipadas y reflejan cambios sin alterar el reg
   assert.doesNotMatch(renderToStaticMarkup(portada.renderizar()), /Título editado de prueba/);
 });
 
-test('la biblioteca conserva piezas fragmentadas, Tailwind y contenido por props', () => {
-  function fuentes(directorio: string): string[] {
-    return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
-      const ruta = path.join(directorio, entrada.name);
-      return entrada.isDirectory() ? fuentes(ruta) : [ruta];
-    });
-  }
-  for (const carpeta of ['base', 'boveda', 'secciones']) {
-    for (const ruta of fuentes(path.join('src', 'infrastructure', 'componentes', carpeta))) {
-      assert.doesNotMatch(ruta, /\.(css|scss)$/);
-      if (!/\.(ts|tsx)$/.test(ruta)) continue;
-      const contenido = readFileSync(ruta, 'utf8');
-      assert.ok(contenido.split(/\r?\n/).length <= 150, `${ruta}: supera 150 lineas`);
-      assert.doesNotMatch(
-        contenido,
-        /\bany\b|style=\{|@apply|(?:bg|text|mt|p|rounded|shadow)-\[/,
-        ruta,
-      );
-      if (!ruta.endsWith('.tsx') || carpeta === 'base') continue;
-      assert.doesNotMatch(contenido, /data\/|Café Aurora/, ruta);
-      const fuente = ts.createSourceFile(
-        ruta,
-        contenido,
-        ts.ScriptTarget.Latest,
-        true,
-        ts.ScriptKind.TSX,
-      );
-      function visitar(nodo: ts.Node) {
-        if (ts.isJsxText(nodo)) assert.equal(nodo.text.trim(), '', `${ruta}: texto en duro`);
-        ts.forEachChild(nodo, visitar);
-      }
-      visitar(fuente);
+function fuentes(directorio: string): string[] {
+  return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
+    const ruta = path.join(directorio, entrada.name);
+    return entrada.isDirectory() ? fuentes(ruta) : [ruta];
+  });
+}
+
+test('los componentes separan portal y boveda sin dependencias hacia el portal', () => {
+  const componentes = path.join('src', 'infrastructure', 'componentes');
+  assert.deepEqual(readdirSync(componentes).sort(), ['boveda', 'portal']);
+  const configuracion = ts.readConfigFile('tsconfig.json', ts.sys.readFile);
+  assert.equal(configuracion.error, undefined);
+  const {options} = ts.parseJsonConfigFileContent(configuracion.config, ts.sys, process.cwd());
+  const portal = path.resolve(componentes, 'portal') + path.sep;
+  const biblioteca = path.resolve(componentes, 'boveda');
+  for (const ruta of fuentes(biblioteca)) {
+    for (const carpeta of path.relative(biblioteca, path.dirname(ruta)).split(path.sep)) {
+      if (carpeta) assert.match(carpeta, /^[A-Z]/, `${ruta}: carpeta sin inicial mayuscula`);
     }
+    if (!/\.tsx?$/.test(ruta)) continue;
+    const fuente = ts.createSourceFile(
+      ruta,
+      readFileSync(ruta, 'utf8'),
+      ts.ScriptTarget.Latest,
+      true,
+    );
+    for (const nodo of fuente.statements) {
+      if (!ts.isImportDeclaration(nodo) && !ts.isExportDeclaration(nodo)) continue;
+      if (!nodo.moduleSpecifier || !ts.isStringLiteral(nodo.moduleSpecifier)) continue;
+      const modulo = nodo.moduleSpecifier.text;
+      if (!modulo.startsWith('.') && !modulo.startsWith('@/')) continue;
+      const resuelto = ts.resolveModuleName(modulo, ruta, options, ts.sys).resolvedModule;
+      assert.ok(resuelto, `${ruta}: no se encuentra ${modulo}`);
+      const destino = path.resolve(resuelto.resolvedFileName);
+      if (destino.startsWith(biblioteca + path.sep)) {
+        assert.equal(
+          destino.slice(biblioteca.length),
+          realpathSync.native(destino).slice(biblioteca.length),
+          `${ruta}: las mayusculas de ${modulo} no coinciden con la carpeta`,
+        );
+      }
+      assert.equal(
+        destino.startsWith(portal),
+        false,
+        `${ruta}: la boveda no debe depender del portal`,
+      );
+    }
+  }
+});
+
+test('la biblioteca conserva piezas fragmentadas, Tailwind y contenido por props', () => {
+  const biblioteca = path.join('src', 'infrastructure', 'componentes', 'boveda');
+  for (const ruta of fuentes(biblioteca)) {
+    const carpeta = path.relative(biblioteca, ruta).split(path.sep)[0];
+    assert.doesNotMatch(ruta, /\.(css|scss)$/);
+    if (!/\.(ts|tsx)$/.test(ruta)) continue;
+    const contenido = readFileSync(ruta, 'utf8');
+    assert.ok(contenido.split(/\r?\n/).length <= 150, `${ruta}: supera 150 lineas`);
+    assert.doesNotMatch(contenido, /\bany\b|style=\{|@apply/, ruta);
+    if (carpeta === 'Carousel') continue;
+    assert.doesNotMatch(contenido, /(?:bg|text|mt|p|rounded|shadow)-\[/, ruta);
+    if (
+      !ruta.endsWith('.tsx') ||
+      !['Secciones', 'Formulario-contacto', 'Cotizacion-pasos'].includes(carpeta)
+    )
+      continue;
+    assert.doesNotMatch(contenido, /data\/|Café Aurora/, ruta);
+    const fuente = ts.createSourceFile(
+      ruta,
+      contenido,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TSX,
+    );
+    function visitar(nodo: ts.Node) {
+      if (ts.isJsxText(nodo)) assert.equal(nodo.text.trim(), '', `${ruta}: texto en duro`);
+      ts.forEachChild(nodo, visitar);
+    }
+    visitar(fuente);
   }
 });

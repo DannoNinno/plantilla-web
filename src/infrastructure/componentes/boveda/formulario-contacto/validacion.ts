@@ -1,1 +1,1 @@
-export {limitesContacto, validarConsulta} from '../../base/consulta/validacion';
+export {limitesContacto, validarConsulta} from '../Base/Consulta/validacion';

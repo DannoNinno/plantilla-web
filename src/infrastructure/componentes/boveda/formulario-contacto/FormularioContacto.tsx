@@ -1,5 +1,5 @@
-import Contenedor from '../../base/Contenedor/Contenedor';
-import TituloSeccion from '../../base/TituloSeccion/TituloSeccion';
+import Contenedor from '../Base/Contenedor/Contenedor';
+import TituloSeccion from '../Base/TituloSeccion/TituloSeccion';
 import FormularioInteractivo from './FormularioInteractivo';
 import type {FormularioContactoProps} from './tipos';
 

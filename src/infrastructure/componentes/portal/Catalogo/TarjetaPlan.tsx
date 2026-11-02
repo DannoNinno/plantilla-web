@@ -1,0 +1,105 @@
+import Link from 'next/link';
+import {ArrowUpRight, LockKeyhole} from 'lucide-react';
+import type {Paquete} from '@/domain/types/paquete';
+import type {CatalogoServicios} from '@/domain/types/catalogo';
+import {precioDesdeCLP} from '../../../../domain/servicios/precio';
+import {clasesBoton} from '../../boveda/Base/Boton/estilos';
+
+export interface TarjetaPlanProps {
+  paquete: Paquete;
+  numero: number;
+  textos: CatalogoServicios['textos'];
+  comparacion: CatalogoServicios['comparacion'];
+}
+
+export default function TarjetaPlan({paquete, numero, textos, comparacion}: TarjetaPlanProps) {
+  const datos = paquete.comparacion;
+  if (paquete.habilitado && !datos) {
+    throw new Error(`El plan no tiene una comparacion habilitada: ${paquete.id}`);
+  }
+
+  return (
+    <article
+      aria-disabled={!paquete.habilitado || undefined}
+      className={`flex h-full min-w-0 flex-col rounded-2xl ${
+        paquete.habilitado
+          ? 'bg-white shadow-[0_16px_40px_-16px_rgba(4,24,47,0.4)]'
+          : 'bg-brand-plan-disabled text-brand-ink/70 shadow-none'
+      } p-5 sm:p-6`}
+    >
+      <div className="min-w-0">
+        <span
+          className={`text-xs font-semibold uppercase tracking-widest ${
+            paquete.habilitado ? 'text-brand-sky-text' : 'text-brand-ink/70'
+          }`}
+        >
+          {textos.plan} {numero}
+        </span>
+        <h3 className="mt-4 break-words text-2xl font-bold sm:text-3xl">{paquete.nombre}</h3>
+        {paquete.habilitado ? (
+          <p className="mt-4 text-2xl font-semibold text-brand-sky-text">
+            {precioDesdeCLP(paquete.precioDesde)}
+          </p>
+        ) : (
+          <p className="mt-4 flex w-fit items-center gap-2 rounded-lg bg-brand-ink/10 px-3 py-2 text-sm font-semibold text-brand-ink/75">
+            <LockKeyhole size={18} aria-hidden="true" />
+            {textos.proximamente}
+          </p>
+        )}
+        <p className="mt-4 leading-relaxed text-brand-ink/70">{paquete.resumen}</p>
+      </div>
+      {paquete.habilitado && datos && (
+        <dl className="mt-6 grid gap-4 border-t border-brand-ink/10 pt-5 text-sm">
+          <div>
+            <dt className="font-semibold">{comparacion.secciones}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">
+              {comparacion.cantidadSecciones.replace('{cantidad}', String(datos.seccionesMaximas))}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold">{comparacion.plazoEntrega}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">{datos.plazoEntrega}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold">{comparacion.panelAdministracion}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">
+              {datos.panelAdministracion ? comparacion.panelIncluido : comparacion.panelNoIncluido}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold">{comparacion.capacitacion}</dt>
+            <dd className="mt-2 leading-relaxed text-brand-ink/70">{datos.capacitacion}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold">{comparacion.reuniones}</dt>
+            <dd className="mt-2 text-brand-ink/70">
+              <ul className="list-disc space-y-2 pl-4 leading-relaxed">
+                {datos.reunionesIncluidas.map((reunion) => (
+                  <li key={reunion}>{reunion}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      )}
+      {paquete.habilitado && (
+        <div className="mt-auto flex flex-col gap-3 pt-6">
+          <Link
+            href={`/contacto?paquete=${paquete.id}`}
+            aria-label={`${textos.cotizarPlan}: ${paquete.nombre}`}
+            className={clasesBoton('coral')}
+          >
+            {textos.cotizarPlan} <ArrowUpRight size={18} aria-hidden="true" />
+          </Link>
+          <Link
+            href={`/catalogo/${paquete.id}`}
+            aria-label={`${textos.detalle} ${paquete.nombre}`}
+            className={clasesBoton('borde')}
+          >
+            {textos.verDetalles}
+          </Link>
+        </div>
+      )}
+    </article>
+  );
+}

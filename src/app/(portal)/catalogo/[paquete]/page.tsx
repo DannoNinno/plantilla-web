@@ -6,7 +6,7 @@ import {
   getPaquetes,
   getPaquetesHabilitados,
 } from '@/infrastructure/handlers/datos';
-import PaginaPaquete from '@/infrastructure/componentes/DetallePaquete/PaginaPaquete';
+import PaginaPaquete from '@/infrastructure/componentes/portal/DetallePaquete/PaginaPaquete';
 import type {ContextoPaquete} from '@/domain/types/http';
 
 export const dynamicParams = false;

@@ -1,4 +1,4 @@
-import {validarConsulta} from '../../base/consulta/validacion';
+import {validarConsulta} from '../Base/Consulta/validacion';
 import type {ErroresCotizacion, FormularioCotizacionProps, SolicitudCotizacion} from './tipos';
 export function validarSolicitud(
   valores: SolicitudCotizacion,

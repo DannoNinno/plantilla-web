@@ -4,7 +4,7 @@ Sitio fullstack con Next.js, React, TypeScript y Tailwind sobre Cloudflare Worke
 
 ## Desarrollo
 
-Requiere Node.js 22 o superior para Wrangler; se recomienda Node.js 24 LTS, indicado en [.node-version](./.node-version). [package.json](./package.json) fija pnpm 9.15.9. Usa Next.js 16.4.3; la actualización desde 15 fue necesaria para mantener una versión soportada por el adaptador. Cada página y endpoint privado autentica antes de consultar datos; no depende de proxy ni middleware experimental.
+Requiere Node.js 22 o superior para Wrangler; se recomienda Node.js 24 LTS, indicado en [.node-version](.node-version). [package.json](./package.json) fija pnpm 9.15.9. Usa Next.js 16.4.3; la actualización desde 15 fue necesaria para mantener una versión soportada por el adaptador. Cada página y endpoint privado autentica antes de consultar datos; no depende de proxy ni middleware experimental.
 
 ```sh
 npx pnpm@9.15.9 install --frozen-lockfile
@@ -19,7 +19,7 @@ npm run check
 
 `npm run build` compila Next.js en `.next`. Ya no se usa `output: 'export'` ni se genera `out`: el despliegue está preparado para Cloudflare Workers con OpenNext.
 
-En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambiar la política de ejecución. El empaquetado completo se verificó en Windows con el Modo de desarrollador habilitado por el dueño y `node-linker=hoisted` en [.npmrc](./.npmrc). No se instalaron WSL ni herramientas globales, ni se cambiaron permisos del sistema. En una instalación nueva, si aparecen errores `EPERM` de symlinks, habilita personalmente ese modo o compila en Linux. No ejecutes builds sobre una carpeta `.next` utilizada por otro proceso ni operaciones Wrangler que inicialicen a la vez la misma base local.
+En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambiar la política de ejecución. El empaquetado completo se verificó en Windows con el Modo de desarrollador habilitado por el dueño y `node-linker=hoisted` en [.npmrc](.npmrc). No se instalaron WSL ni herramientas globales, ni se cambiaron permisos del sistema. En una instalación nueva, si aparecen errores `EPERM` de symlinks, habilita personalmente ese modo o compila en Linux. No ejecutes builds sobre una carpeta `.next` utilizada por otro proceso ni operaciones Wrangler que inicialicen a la vez la misma base local.
 
 `npm run lint` usa ESLint CLI sobre `src`, `tests` y `tailwind.config.ts`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier con configuración plana; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance. `npm run check` agrupa lint, tests del módulo/frontend/protección y el paquete completo de OpenNext, no solo el build de Next.js.
 
@@ -39,7 +39,7 @@ npm run preview
 npm run cf-typegen
 ```
 
-El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `preview` vuelve a compilar y ejecuta el sitio en el runtime local de Workers; no despliega. Los tipos generados, `.open-next`, `.wrangler` y los archivos `.dev.vars*` están excluidos de Git, excepto la plantilla vacía [.dev.vars.example](./.dev.vars.example).
+El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `preview` vuelve a compilar y ejecuta el sitio en el runtime local de Workers; no despliega. Los tipos generados, `.open-next`, `.wrangler` y los archivos `.dev.vars*` están excluidos de Git, excepto la plantilla vacía [.dev.vars.example](.dev.vars.example).
 
 [worker.ts](./worker.ts) es el punto de entrada propio: redirige HTTP remoto a HTTPS conservando host, ruta y parámetros (301 en GET/HEAD, 308 en otros métodos), delega al Worker generado y añade HSTS de un año a sus respuestas HTTPS. Solo loopback conserva HTTP para desarrollo. No modifica el Worker generado ni usa proxy experimental. Los assets servidos directamente por Cloudflare pueden no pasar por este punto de entrada; la protección aquí cubre las páginas y endpoints delegados. La cookie administrativa siempre es `Secure` fuera de desarrollo.
 
@@ -47,7 +47,7 @@ El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `pre
 
 Las páginas prerenderizadas utilizan la caché de solo lectura de Workers Static Assets, recomendada por la [guía de OpenNext para sitios SSG](https://opennext.js.org/cloudflare/caching#ssg-site). Esto permite servir los paquetes generados con `generateStaticParams` y `dynamicParams = false` sin recursos externos. No soporta revalidación: los cambios de JSON se publican con un nuevo build y despliegue. Los formularios y el panel son dinámicos y no usan esa caché para las solicitudes.
 
-Para desarrollo, copia [.dev.vars.example](./.dev.vars.example) a `.dev.vars` y completa los secretos locales. La integración usa D1 local y simula los avisos en consola; no envía correos reales en `next dev`. Los scripts de desarrollo, build y tests generan los tipos de los bindings. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
+Para desarrollo, copia [.dev.vars.example](.dev.vars.example) a `.dev.vars` y completa los secretos locales. La integración usa D1 local y simula los avisos en consola; no envía correos reales en `next dev`. Los scripts de desarrollo, build y tests generan los tipos de los bindings. [public/_headers](./public/_headers) configura caché inmutable solo para `/_next/static/*`.
 
 En esta instalación hay credenciales aleatorias **distintas** en `.dev.vars`, `.dev.vars.staging` y `.dev.vars.production`. La contraseña de cada panel se consulta localmente en su archivo ignorado; no se publica, se incluye en comandos ni se añade a Git. `FORMULARIOS_URL` en `staging` hace que los avisos enlacen al panel de ensayo, no al productivo.
 
@@ -55,7 +55,7 @@ Para Workers Builds conectado a GitHub:
 
 - Usa Node.js 24 LTS para compilar.
 - Cloudflare detecta pnpm e instala con `pnpm install --frozen-lockfile`. [pnpm-workspace.yaml](./pnpm-workspace.yaml) declara el proyecto raíz como único paquete; conserva `packages` para que pnpm 9 pueda leer la configuración y mantén [pnpm-lock.yaml](./pnpm-lock.yaml) sincronizado con las dependencias.
-- El archivo versionado [.env.production](./.env.production) define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl`; Next.js lo carga en los builds de producción para resolver los metadatos. No contiene secretos; los archivos `.env.local`, `.env*.local` y `.dev.vars` siguen excluidos de Git. Evita variables del entorno de build con otro valor, ya que tienen prioridad sobre este archivo.
+- El archivo versionado [.env.production](.env.production) define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl`; Next.js lo carga en los builds de producción para resolver los metadatos. No contiene secretos; los archivos `.env.local`, `.env*.local` y `.dev.vars` siguen excluidos de Git. Evita variables del entorno de build con otro valor, ya que tienen prioridad sobre este archivo.
 - Mantén Next.js en una versión soportada por su política oficial (actualmente 16.x en este proyecto). OpenNext aborta el build si detecta una versión EOL; el flag `--dangerouslyUseUnsupportedNextVersion` existe, pero no se recomienda para producción.
 - Comando de build: `npx opennextjs-cloudflare build`.
 - Comando de despliegue, ejecutado por Cloudflare: `npx opennextjs-cloudflare deploy`.
@@ -72,9 +72,9 @@ El dueño revisará y eliminará manualmente las consultas sin contrato después
 
 ### Validación continua y operación
 
-[validar.yml](./.github/workflows/validar.yml) ejecuta en Linux/Node.js 24 la instalación congelada, lint, tests, paquete Worker y pruebas HTTP contra un Worker local con credenciales temporales y D1 emulada. No usa secretos productivos ni despliega. Workers Builds es un proceso separado: revisa ambos resultados al publicar.
+[validar.yml](.github/workflows/validar.yml) ejecuta en Linux/Node.js 24 la instalación congelada, lint, tests, paquete Worker y pruebas HTTP contra un Worker local con credenciales temporales y D1 emulada. No usa secretos productivos ni despliega. Workers Builds es un proceso separado: revisa ambos resultados al publicar.
 
-[dependabot.yml](./.github/dependabot.yml) prepara revisiones mensuales de dependencias menores/parches y de Actions; no actualiza automáticamente versiones mayores ni integra cambios sin revisión. Las Actions están fijadas por commit.
+[dependabot.yml](.github/dependabot.yml) prepara revisiones mensuales de dependencias menores/parches y de Actions; no actualiza automáticamente versiones mayores ni integra cambios sin revisión. Las Actions están fijadas por commit.
 
 Wrangler tiene observabilidad habilitada. Revisa los errores del Worker y los avisos pendientes/fallidos del panel; conservar en D1 no reemplaza revisar esos estados. No hay borrado automático de solicitudes. Usa exportaciones privadas y Time Travel de D1 según la ventana de tu plan, con el procedimiento del [módulo](./src/modules/formularios/README.md). Los respaldos y logs pueden contener datos personales: no los publiques ni los guardes en Git.
 
@@ -88,12 +88,32 @@ src/
     servicios/               Mensajes y enlaces de contacto
     types/                   Tipos de contenido y props del frontend
   infrastructure/
-    componentes/<nombre>/    Componentes visuales
+    componentes/
+      portal/<nombre>/       Piezas exclusivas del portal dannotech
+      boveda/                Piezas reutilizables para cualquier proyecto
+        Base/                Botones, campos, contenedores y utilidades
+        Secciones/           Secciones de contenido reutilizables
+        Carousel/            Carrusel independiente del contenido
+        EntradaScroll/       Entrada progresiva y enlaces entre secciones
+        LoadingModal/        Indicador de carga compartido
+        Formulario-contacto/ Formulario reutilizable con callback
+        Cotizacion-pasos/    Cotización reutilizable con callback
     configuracion/           Configuración de Next.js
     handlers/datos.ts        Funciones simples que leen los JSON
 ```
 
 Los [handlers de datos](./src/infrastructure/handlers/datos.ts) son funciones, no clases ni repositorios. Los JSON se importan directamente; no se consulta ninguna API para cargarlos. Los tipos del frontend permiten verificar su estructura durante la compilación.
+
+### Dónde buscar o agregar un componente
+
+- [portal](./src/infrastructure/componentes/portal): componentes exclusivos de dannotech. Contiene `Entrada`, `Header`, `Footer`, `FotoPerfil`, `Catalogo`, `DetallePaquete`, `Contacto` y `Vitrina`. Aquí se conectan la identidad, los planes y las reglas de este portal.
+- [boveda](./src/infrastructure/componentes/boveda): componentes que pueden reutilizar dannotech y los portales de clientes. Incluye las bases visuales, secciones, carrusel, navegación entre secciones, entrada por scroll y carga. Los estilos compartidos de botones están junto a su componente en [Base/Boton](./src/infrastructure/componentes/boveda/Base/Boton).
+- Una página de cliente debe componer piezas de la bóveda y aportar sus propios datos e integraciones; no debe importar componentes de `portal`. Que dannotech use una pieza no la vuelve exclusiva: si no contiene identidad ni reglas de ese negocio, pertenece a la bóveda.
+- La interfaz y las integraciones internas del módulo de formularios permanecen encapsuladas en [modules/formularios](./src/modules/formularios). No son una biblioteca de componentes para clientes.
+
+La dependencia permitida es `portal → boveda`, nunca `boveda → portal`. Las pruebas verifican la separación de carpetas y las importaciones de la bóveda. Esta clasificación no añade piezas al registro ni cambia las rutas públicas.
+
+Las carpetas dentro de la bóveda comienzan con mayúscula, conservando los guiones: `Formulario-contacto`, `Cotizacion-pasos`, `Secciones/Portada` y `Base/Consulta`. Las importaciones deben respetar exactamente esas mayúsculas; los slugs del registro y las rutas públicas conservan sus nombres originales.
 
 ## Datos
 
@@ -115,7 +135,7 @@ Las descripciones de paquetes y componentes son contenido del catálogo, no func
 
 La [selección de vitrina](./src/domain/casos-de-uso/componentes/seleccion.ts) aplica la herencia de `landing` en `portal`, excluye los componentes cuyo plan mínimo está desactivado y ordena primero los destacados. Presencia Digital muestra sus 11 componentes y el panel atenuado al final; Captación de Clientes muestra los 19 con el panel primero. La página general agrupa los componentes por plan mínimo, sin duplicados. La grilla solo dibuja la lista seleccionada por cada página.
 
-Los [iconos de vitrina](./src/infrastructure/componentes/Vitrina/iconos.ts) usan imports explícitos y claves estrictas; el handler rechaza iconos o planes mínimos inválidos del JSON. Cada descripción propuesta incluye un `TODO(Daniel)` en `revisionDescripcion`, visible en los datos pero no en la interfaz. La introducción también queda pendiente de revisión en `catalogo.json`; las etiquetas de disponibilidad no cambian los límites del plan.
+Los [iconos de vitrina](./src/infrastructure/componentes/portal/Vitrina/iconos.ts) usan imports explícitos y claves estrictas; el handler rechaza iconos o planes mínimos inválidos del JSON. Cada descripción propuesta incluye un `TODO(Daniel)` en `revisionDescripcion`, visible en los datos pero no en la interfaz. La introducción también queda pendiente de revisión en `catalogo.json`; las etiquetas de disponibilidad no cambian los límites del plan.
 
 El catálogo conserva los cuatro planes de [tarifas.md](./tarifas.md). El campo `habilitado` de [paquetes.json](./src/data/paquetes.json) controla su disponibilidad: Presencia Digital y Captación de Clientes están activos; Automatización de Procesos y Comercio Electrónico aparecen atenuados como «Próximamente», sin precio ni enlace. `getPaquetes()` conserva todos los datos para el catálogo; `getPaquetesHabilitados()` y `getPaquete()` solo exponen los activos para detalles, rutas estáticas y contacto. Los planes desactivados responden 404 y no se pueden cotizar en el formulario. Los servicios y costos adicionales aparecen al final del catálogo general. Al actualizar las tarifas, sincroniza los JSON con el documento; las pruebas conservan la verificación de precios y detalle de los cuatro planes.
 
@@ -123,7 +143,7 @@ Las rutas `landing` y `portal` se conservan para Presencia Digital y Captación 
 
 El diseño de referencia es `restore-point` (`8f384f3`, 9 de octubre de 2026). La reforma se incorpora sobre él, sin reemplazar sus páginas. El home conserva el hero con «Explorar el sitio», las cuatro secciones numeradas, ilustraciones, degradados y puertas de Catálogo y Perfil. El perfil conserva `FotoPerfil`, los botones Hablemos, Detalle técnico y LinkedIn, y la sección técnica; no incorpora `BeneficiosPyme`. El grupo de rutas `(portal)` conserva `SaltoContenido`. El interruptor `catalogoHabilitado` sigue controlando los enlaces, la etiqueta «Próximamente» y la redirección del catálogo.
 
-`PaginaCatalogo` conserva sus piezas y concentra el contenido en presentación, planes, condiciones y adicionales. «Elige tu punto de partida» usa [CoverflowCarousel](./src/infrastructure/componentes/Carousel/CoverflowCarousel.tsx): tarjetas verticales, con la seleccionada centrada y sus vecinas reducidas y atenuadas; en móvil solo asoman por los bordes. Cada plan activo muestra resumen, precio y los cinco criterios de `comparacion` en una columna, seguidos de «Cotizar este plan» (a `/contacto?paquete=...`) y «Ver detalles». Las flechas a los lados y las tarjetas vecinas permiten seleccionar; debajo solo se muestra «Plan N de 4», sin indicadores numerados. También hay swipe horizontal y navegación con izquierda/derecha e Inicio/Fin al enfocar el carrusel. No hay bucle, avance automático ni scroll horizontal. Las transiciones duran 400 ms y se desactivan con movimiento reducido. Solo la tarjeta central permite interactuar con su contenido; las vecinas ofrecen un control de selección y el resto queda fuera del árbol accesible y del foco. El cambio se anuncia con `aria-live`. El componente recibe contenido y etiquetas sin depender de planes; [useCarousel](./src/infrastructure/componentes/Carousel/useCarousel.ts) concentra estado, límites, teclado y swipe. Los planes desactivados conservan nombre, resumen y «Próximamente», sin precio, prestaciones ni acciones. El enlace a todos los componentes queda al final del bloque.
+`PaginaCatalogo` conserva sus piezas y concentra el contenido en presentación, planes, condiciones y adicionales. «Elige tu punto de partida» usa [CoverflowCarousel](./src/infrastructure/componentes/boveda/Carousel/CoverflowCarousel.tsx): tarjetas verticales, con la seleccionada centrada y sus vecinas reducidas y atenuadas; en móvil solo asoman por los bordes. Cada plan activo muestra resumen, precio y los cinco criterios de `comparacion` en una columna, seguidos de «Cotizar este plan» (a `/contacto?paquete=...`) y «Ver detalles». Las flechas a los lados y las tarjetas vecinas permiten seleccionar; debajo solo se muestra «Plan N de 4», sin indicadores numerados. También hay swipe horizontal y navegación con izquierda/derecha e Inicio/Fin al enfocar el carrusel. No hay bucle, avance automático ni scroll horizontal. Las transiciones duran 400 ms y se desactivan con movimiento reducido. Solo la tarjeta central permite interactuar con su contenido; las vecinas ofrecen un control de selección y el resto queda fuera del árbol accesible y del foco. El cambio se anuncia con `aria-live`. El componente recibe contenido y etiquetas sin depender de planes; [useCarousel](./src/infrastructure/componentes/boveda/Carousel/useCarousel.ts) concentra estado, límites, teclado y swipe. Los planes desactivados conservan nombre, resumen y «Próximamente», sin precio, prestaciones ni acciones. El enlace a todos los componentes queda al final del bloque.
 
 El fondo de «Elige tu punto de partida» abarca toda esa sección, con cortes rectos, bordes superior e inferior y un degradado celeste–blanco–coral definido con utilidades Tailwind de la paleta de marca. No modifica los fondos de las demás secciones.
 
@@ -139,7 +159,7 @@ El kit visual original está en [public/dannotech-kit](./public/dannotech-kit). 
 
 La paleta tiene una única fuente en [tailwind.config.ts](./tailwind.config.ts): `coloresMarca`. Allí también se definen los tonos derivados, degradados, tipografía, altura de cabecera, transiciones y animaciones. Los metadatos usan esa misma paleta; los colores no se duplican en JSON ni se inyectan mediante estilos inline.
 
-Los botones comparten las variantes Tailwind de [estilos.ts](./src/infrastructure/componentes/Boton/estilos.ts): color, sombra suave y desplazamiento breve al hacer hover con un puntero preciso, con respuesta equivalente al foco por teclado. Los efectos de movimiento respetan `prefers-reduced-motion` y los botones deshabilitados no se elevan ni muestran sombra.
+Los botones comparten las variantes Tailwind de [estilos.ts](./src/infrastructure/componentes/boveda/Base/Boton/estilos.ts): color, sombra suave y desplazamiento breve al hacer hover con un puntero preciso, con respuesta equivalente al foco por teclado. Los efectos de movimiento respetan `prefers-reduced-motion` y los botones deshabilitados no se elevan ni muestran sombra.
 
 El navbar identifica la sección actual con texto celeste, un subrayado fino y `aria-current="page"`. Catálogo permanece marcado en los detalles de sus planes; los enlaces inactivos solo cambian de color al hacer hover, sin un fondo adicional.
 
@@ -159,7 +179,7 @@ Rutas públicas: `/`, `/perfil/`, `/contacto/`, `/catalogo/`, `/catalogo/landing
 
 ## Biblioteca reutilizable
 
-Se conservan [boveda](./src/infrastructure/componentes/boveda), [secciones](./src/infrastructure/componentes/secciones) y sus [bases compartidas](./src/infrastructure/componentes/base), incorporadas en el historial remoto. Son independientes de la vitrina comercial: esta solo describe la oferta y no monta piezas interactivas.
+La biblioteca se concentra en [boveda](./src/infrastructure/componentes/boveda), con sus [secciones](./src/infrastructure/componentes/boveda/Secciones) y [bases compartidas](./src/infrastructure/componentes/boveda/Base). Es independiente de la vitrina comercial de [portal](./src/infrastructure/componentes/portal): esta solo describe la oferta y no monta piezas interactivas.
 
 El [registro](./src/infrastructure/componentes/boveda/registro.ts) mantiene tipos, documentación de props, ejemplos e instancias editables en memoria. Los ejemplos consumen [ejemplos-boveda.json](./src/data/ejemplos-boveda.json) mediante un proveedor propio; las ilustraciones originales están en [public/ejemplos-boveda](./public/ejemplos-boveda). No dependen de módulos ni rutas de demo. Los tokens `seccion`, `canal`, `boveda-ancla` y `boveda-portada` de Tailwind pertenecen a esas piezas y no sustituyen la paleta del sitio.
 
