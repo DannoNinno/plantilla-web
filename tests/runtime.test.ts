@@ -47,9 +47,15 @@ test(
     for (const flag of ['HttpOnly', 'Secure', 'SameSite=strict', 'Path=/admin', 'Max-Age=1800'])
       assert.ok(cabecera.toLowerCase().includes(flag.toLowerCase()), `Falta ${flag}`);
     const cookie = cabecera.split(';')[0];
-    const inicio = await fetch(new URL('/admin/', base), {headers: {Cookie: cookie}});
-    assert.equal(inicio.status, 200);
-    assert.ok((await inicio.text()).includes('Cerrar sesión'));
+    for (const ruta of ['/admin/', '/admin/simulacion/', '/admin/simulacion/emular/?c=invalido']) {
+      const inicio = await fetch(new URL(ruta, base), {headers: {Cookie: cookie}});
+      assert.equal(inicio.status, 200, ruta);
+      assert.match(inicio.headers.get('cache-control') ?? '', /no-store/);
+      assert.match(inicio.headers.get('x-robots-tag') ?? '', /noindex/);
+      assert.ok(
+        (await inicio.text()).includes(ruta.includes('emular') ? 'configuración' : 'Cerrar sesión'),
+      );
+    }
     const renovar = (body: string) =>
       fetch(new URL('/admin/api/sesion/', base), {
         method: 'POST',
@@ -112,7 +118,7 @@ test(
 );
 
 test('el panel rechaza sesiones ausentes o manipuladas', async () => {
-  for (const ruta of ['/admin/']) {
+  for (const ruta of ['/admin/', '/admin/simulacion/', '/admin/simulacion/emular/?c=invalido']) {
     for (const cookie of ['', 'sesion_admin=manipulada']) {
       const respuesta = await fetch(new URL(ruta, base), {
         redirect: 'manual',

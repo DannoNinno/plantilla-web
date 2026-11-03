@@ -27,7 +27,8 @@
     "test:proteccion": "tsc -p tsconfig.tests.json && node --test .test-build/tests/proteccion.test.js",
     "pretest:runtime": "npm run cf-typegen",
     "test:runtime": "tsc -p tsconfig.tests.json && node --test .test-build/tests/runtime.test.js",
-    "check": "npm run lint && npm run test:formularios && npm run test:frontend && npm run test:proteccion && opennextjs-cloudflare build",
+    "test:simulacion": "tsc -p tsconfig.tests.json && node --test .test-build/tests/simulacion.test.js",
+    "check": "npm run lint && npm run test:formularios && npm run test:frontend && npm run test:proteccion && npm run test:simulacion && opennextjs-cloudflare build",
     "db:generate": "drizzle-kit generate",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
@@ -36,9 +37,12 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
     "@opennextjs/cloudflare": "^1.20.13",
     "drizzle-orm": "^0.45.4",
     "lucide-react": "^0.577.0",
+    "lz-string": "^1.5.0",
     "next": "^16.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

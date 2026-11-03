@@ -32,6 +32,8 @@ export default {
         },
         brand: {
           ...coloresMarca,
+          simulacion: `color-mix(in srgb, ${coloresMarca.light} 92%, ${coloresMarca.sky})`,
+          'simulacion-suave': `color-mix(in srgb, ${coloresMarca.light} 84%, ${coloresMarca.sky})`,
           'plan-disabled': `color-mix(in srgb, ${coloresMarca.light} 82%, ${coloresMarca.ink})`,
           'sky-profile': `color-mix(in srgb, ${coloresMarca['sky-text']} 85%, ${coloresMarca.ink})`,
           'catalogo-active': `color-mix(in srgb, rgb(${rgb(coloresMarca['sky-text'])} / 0.96) 80%, rgb(${rgb(coloresMarca.ink)} / 0.96))`,
@@ -72,6 +74,7 @@ export default {
         'capacidad-icono': `0 8px 20px rgb(${rgb(coloresMarca['sky-text'])} / 0.2)`,
       },
       keyframes: {
+        'simulacion-entrada': {from: {opacity: '0'}, to: {opacity: '1'}},
         entrada: {
           from: {opacity: '0', transform: 'translateY(12px)'},
           to: {opacity: '1', transform: 'translateY(0)'},
@@ -96,6 +99,7 @@ export default {
         },
       },
       animation: {
+        'simulacion-entrada': 'simulacion-entrada 240ms ease-out both',
         intro: 'entrada 450ms ease-out both',
         pagina: 'entrada 300ms ease-out both',
         'perfil-icono': 'perfil-icono 900ms cubic-bezier(0.22, 1, 0.36, 1) both',

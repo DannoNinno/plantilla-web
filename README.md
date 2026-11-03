@@ -1,6 +1,6 @@
 # dannotech
 
-Sitio fullstack con Next.js, React, TypeScript y Tailwind sobre Cloudflare Workers/OpenNext. Conserva la portada, perfil, catálogo y estética de marca. El contenido público se obtiene de JSON locales; las consultas nuevas se entregan exclusivamente por correo, sin almacenarlas en el sitio. El panel administrativo protegido queda reservado para otras herramientas. No hay procesamiento de Excel.
+Sitio fullstack con Next.js, React, TypeScript y Tailwind sobre Cloudflare Workers/OpenNext. Conserva la portada, perfil, catálogo y estética de marca. El contenido público se obtiene de JSON locales; las consultas nuevas se entregan exclusivamente por correo, sin almacenarlas en el sitio. El panel administrativo protegido incluye un armador de simulaciones sin persistencia. No hay procesamiento de Excel.
 
 ## Desarrollo
 
@@ -13,6 +13,7 @@ npm run lint
 npm run test:frontend
 npm run test:formularios
 npm run test:proteccion
+npm run test:simulacion
 npm run build
 npm run check
 ```
@@ -204,6 +205,29 @@ npx wrangler d1 migrations apply DB --remote
 Los dos comandos remotos corresponden a ensayo y producción respectivamente; ejecútalos únicamente cuando autorices ese entorno, con sus secretos `ADMIN_SECRET`, `ADMIN_PASSWORD` e `IP_SALT`. Cada página privada y el layout protegido deben comenzar con `await exigirAdmin()`; cada POST privado comprueba origen y sesión antes de cualquier operación. Las consultas continúan siendo exclusivamente por correo.
 
 Las pruebas HTTP de inicio de sesión, bloqueo y revocación se habilitan con `TEST_ADMIN_PASSWORD` y solo admiten una URL loopback en `TEST_BASE_URL`. Usa credenciales locales de prueba, nunca las de producción. Sin esa variable, las demás pruebas HTTP siguen ejecutándose sin intentar autenticarse.
+
+### Simulación de una página
+
+El menú privado incluye **Simulación**, inmediatamente después de Inicio, con el icono `PanelsTopLeft` de Lucide. `/admin/simulacion/` conserva el layout administrativo y permite agregar, arrastrar, ordenar y quitar piezas del inventario. Los botones de subir/bajar ofrecen una alternativa sin arrastre.
+
+[simulacion.ts](./src/infrastructure/handlers/simulacion.ts) concentra el esquema Zod, valores iniciales, adaptación del registro completo de la bóveda, reglas, codec, enlaces y comportamiento de navegación. Los componentes están fragmentados en [Simulacion](./src/infrastructure/componentes/portal/Simulacion). Los nombres, planes mínimos y cómputo se leen de la bóveda; los iconos se obtienen de las fichas comerciales existentes y se conservan al agregar las piezas a la plantilla. La emulación monta los componentes reales mediante el renderizador del registro y sus props ficticias existentes, sin copiar ni modificar la bóveda.
+
+- Una sola página; no se repiten secciones. El máximo es seis secciones computables, incluida PORTADA; redes sociales no consume ese máximo.
+- PORTADA se conserva como sección de la página, pero no genera enlaces en el navbar, sidebar ni menú móvil de la emulación. Si no hay otras secciones, no se muestra el botón de menú móvil vacío.
+- `pagina.esLanding` es independiente del plan: activada, inserta PORTADA al inicio y bloquea moverla/quitarla. Desactivada, PORTADA es opcional y se puede ordenar libremente. Se inicia activada con PORTADA.
+- Las piezas exclusivas de Captación requieren ese plan. Cambiar a Presencia o activar landing con una plantilla incompatible muestra el motivo sin eliminar contenido.
+- Las piezas desactivadas muestran su motivo debajo: ya agregadas, exclusivas de otro plan o máximo alcanzado. Galería pertenece a ambos planes.
+- El logo queda siempre a la izquierda; navegación y pie son oscuros; la muestra usa todo el ancho disponible. No hay selectores para estas tres decisiones. El menú móvil se elige con el switch **Menú móvil tipo drawer**; navegación, pie y WhatsApp conservan selects de tres opciones. El JSON mantiene `logo: izquierda`, `tema: oscuro` y `ancho: completo` para describir la muestra; los enlaces anteriores se normalizan a estos valores sin perder sus secciones.
+- WhatsApp, pie de página y vista Google no aparecen en el inventario; WhatsApp y el pie se configuran como opciones visuales.
+- `lz-string` comprime el JSON en `?c=`. La URL se actualiza al editar y restaura el estado al recargar; compártela solo con administradores autorizados. No hay guardado de simulaciones en D1, archivos ni localStorage. La URL y el historial contienen la configuración, por lo que no deben incluir datos sensibles.
+
+**Simular** abre `/admin/simulacion/emular/?c=...` en otra pestaña. Su [grupo independiente](<./src/app/admin/(emulacion)>) verifica la misma sesión y mantiene el control de inactividad, sin navbar ni drawer administrativos. Emula navbar/sidebar/ninguna, navegación fija, transparencia sobre PORTADA, menú móvil desplegable o drawer, anclajes, scroll suave respetando movimiento reducido y sección activa con IntersectionObserver. Los componentes reales conservan su interacción local, pero el adaptador crea instancias con textos neutros (servicios, productos, preguntas y personas de ejemplo), logo DannoTech e imágenes con un icono nítido, fondo opaco y borde visible. No se muestran la marca, textos ni ilustraciones de Café Aurora y sus ejemplos originales no se modifican. La adaptación Tailwind se limita a la muestra: celeste suave, contenido sin el límite de ancho y un isotipo DannoTech difuminado al fondo, detrás del contenido y sin interceptar clics. Solo la marca de agua usa difuminado; las imágenes de la galería no. Su altura depende del contenido; PORTADA en vista landing ocupa como mínimo una pantalla. Los formularios son simulados, sin transporte ni persistencia. Los enlaces de ejemplo solo desplazan hacia secciones presentes; los destinos ausentes o externos muestran un aviso sin abrir sitios ni enviar mensajes.
+
+Ambos grupos privados tienen un estado `loading` de Next.js con indicador accesible durante la carga real de la ruta y un `template` con entrada breve de opacidad. No se agregan demoras artificiales; se respeta movimiento reducido y no se transforma el contenedor de la navegación/dock fijos.
+
+El dock tiene únicamente **Copiar JSON** (sin comprimir, con dos espacios de sangría) y **Volver a simulación**, conservando exactamente la configuración. Los errores de URL, esquema o portapapeles se muestran explícitamente. Las keys desconocidas bien formadas se conservan para dibujar «Sección no encontrada», respetando el máximo de secciones. Los enlaces malformados no se sustituyen silenciosamente por valores iniciales.
+
+`@dnd-kit/core` y `@dnd-kit/sortable` gestionan arrastre con puntero/teclado; `lz-string` gestiona el codec. Los estilos propios usan exclusivamente clases Tailwind. `npm run test:simulacion` comprueba inventario, opciones, reglas, codec, errores, enlaces y separación del layout; también forma parte de `npm run check`.
 
 ## Biblioteca reutilizable
 
