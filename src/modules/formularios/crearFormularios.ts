@@ -1,13 +1,10 @@
 import 'server-only';
-import {getCloudflareContext} from '@opennextjs/cloudflare';
+import {obtenerEntorno} from '../entornoCloudflare';
 import {formulariosConfig} from '../../config/formularios.config';
 import {CloudflareEmailNotificador} from './adaptadores/CloudflareEmailNotificador';
 import {FormularioService} from './core/FormularioService';
 
-export async function obtenerEntorno() {
-  const {env} = await getCloudflareContext({async: true});
-  return env;
-}
+export {obtenerEntorno};
 
 export async function crearFormularios() {
   const env = await obtenerEntorno();

@@ -1,24 +1,20 @@
 import {NextResponse, type NextRequest} from 'next/server';
-import {NOMBRE_COOKIE} from '@/modules/formularios/admin/sesion';
-import {exigirAdminApi} from '@/modules/formularios/admin/proteccion';
-import {ErrorPeticion, validarOrigen} from '@/modules/formularios/http';
+import {exigirAdminApi} from '@/modules/administracion/proteccion';
+import {validarOrigen} from '@/modules/formularios/http';
+import {cookieAdmin, errorAdmin} from '@/modules/administracion/respuestas';
+import {rutasAdmin} from '@/domain/configuracion/administracion';
 
 export async function POST(request: NextRequest) {
   try {
     validarOrigen(request);
-    await exigirAdminApi(request);
-    const respuesta = NextResponse.redirect(new URL('/admin/acceso/', request.url), 303);
-    respuesta.cookies.set(NOMBRE_COOKIE, '', {
-      httpOnly: true,
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 0,
-    });
-    return respuesta;
+    const {almacen, id} = await exigirAdminApi(request);
+    await almacen.cerrarSesion(id);
+    return cookieAdmin(
+      NextResponse.redirect(new URL(rutasAdmin.acceso, request.url), 303),
+      '',
+      true,
+    );
   } catch (error) {
-    if (error instanceof ErrorPeticion)
-      return new NextResponse(error.message, {status: error.estado});
-    console.error('Error al cerrar sesión.', error);
-    return new NextResponse('No se pudo cerrar sesión.', {status: 503});
+    return errorAdmin(error, request);
   }
 }

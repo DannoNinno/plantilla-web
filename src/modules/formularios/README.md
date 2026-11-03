@@ -60,6 +60,8 @@ ADMIN_PASSWORD=<contraseña de entre 16 y 256 caracteres>
 
 No publiques esos valores ni sobrescribas credenciales existentes. Los archivos `.dev.vars*` están ignorados salvo la plantilla. Nunca reutilices secretos de producción.
 
+La plantilla propone `Admin-local-2026!` como contraseña genérica **solo local**. No funciona con la plantilla por sí sola: crea `.dev.vars` y genera valores aleatorios distintos para `IP_SALT` y `ADMIN_SECRET`. Reinicia el servidor después de modificar estos valores. Entra en `/admin/` con la contraseña de `ADMIN_PASSWORD`; no se solicita usuario. En producción, configura una contraseña única mediante secretos de Cloudflare y nunca uses la genérica.
+
 ```sh
 npm run db:migrate:local
 npm run dev
@@ -99,11 +101,11 @@ Una etiqueta no es una copia independiente: revisa los hilos completos y sus res
 
 `/admin/acceso/` autentica y redirige a `/admin/`, reservado para otras herramientas. Se retiraron `/admin/solicitudes/`, sus detalles y los endpoints de lectura/reenvío. Las consultas se revisan directamente en correo.
 
-Se mantienen D1, esquema y migraciones para no destruir históricos y para limitar el acceso administrativo a cinco intentos por IP cada diez minutos. No hay código de inserción de consultas nuevas. Esta actualización **no elimina** registros anteriores, correos antiguos ni respaldos; su revisión y borrado requieren una decisión expresa y el aviso aplicable a cada registro.
+Se mantienen D1, esquema y migraciones para no destruir históricos. El acceso ahora vive en [administracion](../administracion): cinco fallos consecutivos por hash de IP bloquean quince minutos; un acceso correcto reinicia el contador. [administracion.json](../../data/administracion.json) configura ruta, fallos y duraciones. La migración aditiva `0002_bright_blizzard.sql` crea únicamente las tablas de acceso y sesiones; debe aplicarse a la base autorizada antes de publicar. No hay código de inserción de consultas nuevas. Esta actualización **no elimina** registros anteriores, correos antiguos ni respaldos; su revisión y borrado requieren una decisión expresa y el aviso aplicable a cada registro.
 
-La sesión dura ocho horas, está firmada con HMAC-SHA256 y usa cookie `HttpOnly`, `SameSite=Strict`, `Secure` fuera de desarrollo. Cada página y endpoint privado valida autenticación antes de acceder a datos; los POST comprueban origen. Conserva estas guardas al agregar herramientas. Rotar `ADMIN_SECRET` invalida sesiones; rotar `IP_SALT` invalida tokens públicos y cambia las claves de límites.
+La sesión está firmada con HMAC-SHA256 y respaldada por D1: vence tras treinta minutos inactiva. La cookie usa siempre `HttpOnly`, `SameSite=Strict`, `Secure` y el prefijo del panel. Solo la actividad renueva la sesión; no basta con consultar vigencia. Salir revoca la sesión en D1 y borra la cookie. Cada página, layout protegido y endpoint privado valida autenticación antes de acceder a datos; los POST comprueban origen. No hay enlaces administrativos públicos ni entrada en `robots.txt`; las respuestas envían `noindex` y `no-store`. Conserva estas guardas al agregar herramientas. Rotar `ADMIN_SECRET` invalida sesiones; rotar `IP_SALT` invalida tokens públicos y cambia las claves de límites.
 
-Producción usa `dannotech`/`dannotech-db`; ensayo usa `dannotech-ensayo`/`dannotech-ensayo-db`, con bindings y secretos independientes. No recrees bases ni apliques migraciones destructivas. Un respaldo histórico debe quedar cifrado/restringido fuera de Git y del repositorio. Revisa [Time Travel de D1](https://developers.cloudflare.com/d1/reference/time-travel/) y restaura primero en una base aislada.
+Producción usa `dannotech`/`dannotech-db`; ensayo usa `dannotech-ensayo`/`dannotech-ensayo-db`, con bindings y secretos independientes. [.env.production](../../../.env.production) fija `CLOUDFLARE_ENV=""` para seleccionar explícitamente el entorno raíz cuando OpenNext invoca Wrangler. El selector `--env staging` del script de ensayo tiene prioridad sobre esa variable. No elimines la asignación vacía ni la reemplaces por `production`: no existe un entorno con ese nombre. No recrees bases ni apliques migraciones destructivas. Un respaldo histórico debe quedar cifrado/restringido fuera de Git y del repositorio. Revisa [Time Travel de D1](https://developers.cloudflare.com/d1/reference/time-travel/) y restaura primero en una base aislada.
 
 Antes de una publicación autorizada, configura secretos con `npx wrangler secret put IP_SALT`, `ADMIN_SECRET` y `ADMIN_PASSWORD`; añade `--env staging` si corresponde a ensayo. `npm run deploy:staging` publica ensayo; `npm run deploy` publica producción. El push a la rama conectada puede activar Workers Builds; GitHub CI solo valida.
 

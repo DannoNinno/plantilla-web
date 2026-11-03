@@ -1,5 +1,4 @@
-export const NOMBRE_COOKIE = 'sesion_formularios';
-export const DURACION_SESION = 8 * 60 * 60;
+export const NOMBRE_COOKIE = 'sesion_admin';
 
 async function claveHmac(secreto: string) {
   if (secreto.length < 32) throw new Error('ADMIN_SECRET debe tener al menos 32 caracteres.');
@@ -19,34 +18,30 @@ function codificar(bytes: Uint8Array): string {
     .replace(/=+$/gu, '');
 }
 
-export async function crearSesion(secreto: string, ahora = Date.now()): Promise<string> {
-  const contenido = `${Math.floor(ahora / 1000) + DURACION_SESION}.${crypto.randomUUID()}`;
+export async function crearSesion(secreto: string, id = crypto.randomUUID()): Promise<string> {
   const firma = await crypto.subtle.sign(
     'HMAC',
     await claveHmac(secreto),
-    new TextEncoder().encode(contenido),
+    new TextEncoder().encode(id),
   );
-  return `${contenido}.${codificar(new Uint8Array(firma))}`;
+  return `${id}.${codificar(new Uint8Array(firma))}`;
 }
 
 export async function verificarSesion(
   token: string | undefined,
   secreto: string,
-  ahora = Date.now(),
-): Promise<boolean> {
+): Promise<string | undefined> {
   const clave = await claveHmac(secreto);
-  if (!token || token.length > 200) return false;
+  if (!token || token.length > 100) return undefined;
   const partes = token.split('.');
-  if (partes.length !== 3) return false;
-  const [expira, nonce, firma] = partes;
-  if (!/^\d{10}$/u.test(expira) || !/^[a-f0-9-]{36}$/u.test(nonce) || !/^[\w-]{43}$/u.test(firma))
-    return false;
-  const segundos = Math.floor(ahora / 1000);
-  if (Number(expira) <= segundos || Number(expira) > segundos + DURACION_SESION) return false;
+  if (partes.length !== 2) return undefined;
+  const [id, firma] = partes;
+  if (!/^[a-f0-9-]{36}$/u.test(id) || !/^[\w-]{43}$/u.test(firma)) return undefined;
   const bytes = Uint8Array.from(atob(firma.replace(/-/gu, '+').replace(/_/gu, '/') + '='), (c) =>
     c.charCodeAt(0),
   );
-  return crypto.subtle.verify('HMAC', clave, bytes, new TextEncoder().encode(`${expira}.${nonce}`));
+  const valida = await crypto.subtle.verify('HMAC', clave, bytes, new TextEncoder().encode(id));
+  return valida ? id : undefined;
 }
 
 export async function verificarPassword(ingresada: string, esperada: string, secreto: string) {

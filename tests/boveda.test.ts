@@ -77,6 +77,42 @@ import {
 import {obtenerCampos} from '../src/infrastructure/componentes/boveda/Edicion/campos';
 
 import {actualizarContenido} from '../src/infrastructure/componentes/boveda/Edicion/actualizar';
+import LayoutPanel from '../src/infrastructure/componentes/boveda/PanelAdministracion/LayoutPanel';
+
+test('el layout administrativo recibe marca, menú y acciones sin conocer el portal', () => {
+  const html = renderToStaticMarkup(
+    createElement(
+      LayoutPanel,
+      {
+        nombre: 'Portal de prueba',
+        subtitulo: 'Gestión',
+        marca: createElement('svg', {'aria-hidden': true, width: 48, height: 44}),
+        inicio: '/gestion/',
+        menu: createElement('a', {href: '/gestion/'}, 'Inicio de prueba'),
+        acciones: createElement('button', {type: 'button'}, 'Salir de prueba'),
+      },
+      createElement('h1', {}, 'Contenido de prueba'),
+    ),
+  );
+  assert.match(html, /Portal de prueba/);
+  assert.match(html, /Salir de prueba/);
+  assert.match(html, /Inicio de prueba/);
+  assert.match(html, /Contenido de prueba/);
+  assert.match(html, /aria-expanded="false"/);
+  assert.match(html, /aria-hidden="true" inert=""/);
+  assert.match(html, /fixed inset-x-0 top-0/);
+  assert.match(html, /motion-reduce:transition-none/);
+  assert.match(html, /bg-brand-ink bg-intro text-brand-light/);
+  assert.match(html, /h-panel-header/);
+  assert.match(html, /pt-panel-header/);
+  assert.match(html, /bg-gradient-to-r from-brand-sky to-brand-coral/);
+  assert.doesNotMatch(html, /\bh-header\b|\btop-header\b|theme\(spacing\.header\)/);
+  assert.equal(tailwindConfig.theme.extend.spacing['panel-header'], '5rem');
+  assert.equal(tailwindConfig.theme.extend.spacing.header, '4.5rem');
+  assert.match(html, /<svg aria-hidden="true" width="48" height="44"/);
+  assert.doesNotMatch(html, /(?:class="| )bg-white(?:[ /"])|bg-brand-light/);
+  assert.doesNotMatch(html, /dannotech|\/admin\/|\/api\//i);
+});
 
 test('los titulos compartidos usan la misma tipografia sans del portal', () => {
   for (const nivel of ['h1', 'h2'] as const) {
@@ -260,6 +296,7 @@ test('las imagenes del ejemplo existen y los colores de texto cumplen contraste 
     return canales[0] * 0.2126 + canales[1] * 0.7152 + canales[2] * 0.0722;
   }
   const colores = tailwindConfig.theme.extend.colors.seccion;
+  const marca = tailwindConfig.theme.extend.colors.brand;
   for (const [texto, fondo] of [
     [colores.tinta, colores.fondo],
     ['#FFFFFF', colores.acento],
@@ -267,6 +304,10 @@ test('las imagenes del ejemplo existen y los colores de texto cumplen contraste 
       tailwindConfig.theme.extend.colors.brand.ink,
       tailwindConfig.theme.extend.colors.canal.whatsapp,
     ],
+    [marca.light, marca.ink],
+    [marca.sky, marca.ink],
+    [marca.coral, marca.ink],
+    [marca.ink, marca['coral-dark']],
   ]) {
     const valores = [luminancia(texto), luminancia(fondo)].sort((a, b) => b - a);
     assert.ok((valores[0] + 0.05) / (valores[1] + 0.05) >= 4.5);

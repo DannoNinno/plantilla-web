@@ -23,13 +23,13 @@ En Windows, si PowerShell bloquea `npm.ps1`, usa `npm.cmd` y `npx.cmd` sin cambi
 
 `npm run lint` usa ESLint CLI sobre `src`, `tests` y `tailwind.config.ts`, con cero advertencias permitidas. [eslint.config.mjs](./eslint.config.mjs) mantiene las reglas de Next.js y Prettier con configuración plana; ya no se usa el comando deprecado `next lint`. `npm run lint:fix` aplica las correcciones automáticas con el mismo alcance. `npm run check` agrupa lint, tests del módulo/frontend/protección y el paquete completo de OpenNext, no solo el build de Next.js.
 
-El adaptador aún muestra su advertencia general de soporte de Windows y puede emitir `DEP0190` al desplegar. npm 11 avisa que no reconoce `node-linker`, una opción válida de **pnpm**. Son avisos de las herramientas, no errores de la aplicación; no se silencian ni se modifican dependencias instaladas para ocultarlos. La configuración hoisted y el lockfile deben conservarse. pnpm es el único gestor de instalación: se retiró el segundo lockfile de npm para evitar versiones contradictorias. Se pueden seguir ejecutando scripts con `npm run`.
+El adaptador aún muestra su advertencia general de soporte de Windows y puede emitir `DEP0190` al desplegar por su invocación interna de procesos con shell. pnpm 9 puede emitir `DEP0169` (`url.parse`) con Node.js 24. npm 11 avisa que no reconoce `node-linker`, una opción válida de **pnpm**. Son avisos de las herramientas, no fallos de compilación; no se silencian ni se modifican dependencias instaladas para ocultarlos. La configuración hoisted y el lockfile deben conservarse. pnpm es el único gestor de instalación: se retiró el segundo lockfile de npm para evitar versiones contradictorias. Se pueden seguir ejecutando scripts con `npm run`.
 
 Se actualizaron Drizzle, OpenNext y Wrangler y se renovó `body-parser` dentro de su rango compatible. Los overrides acotados de `glob` (solo `@node-minify/core`) y `undici` (solo Miniflare) aplican parches de seguridad que esos padres aún fijan a versiones anteriores. Revisarlos al actualizar los padres. No se fuerzan cambios mayores de Tailwind o de las herramientas de migración para eliminar avisos moderados de desarrollo.
 
 ## Cloudflare Workers
 
-La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker productivo se llama `dannotech` y sirve los archivos de `.open-next/assets`. El formulario usa `AVISO_EMAIL` (`send_email`) y `FORMULARIOS_LIMITE` (cinco intentos por minuto por hash de IP). `DB` (D1) se conserva para el límite de acceso administrativo y registros históricos, no para consultas nuevas. No usa KV ni R2.
+La configuración está en [wrangler.jsonc](./wrangler.jsonc) y [open-next.config.ts](./open-next.config.ts). El Worker productivo se llama `dannotech` y sirve los archivos de `.open-next/assets`. El formulario usa `AVISO_EMAIL` (`send_email`) y `FORMULARIOS_LIMITE` (cinco intentos por minuto por hash de IP). `DB` (D1) se conserva para el límite de acceso, las sesiones administrativas y registros históricos, no para consultas nuevas. No usa KV ni R2.
 
 Existen dos bases independientes: `dannotech-db` (producción) y `dannotech-ensayo-db` (ensayo). El entorno `staging` utiliza exclusivamente su propia base y el Worker `dannotech-ensayo`, sin rutas de los dominios productivos. Su URL es <https://dannotech-ensayo.daniel-progra-work.workers.dev>. Sigue el [procedimiento del módulo](./src/modules/formularios/README.md) y solicita autorización antes de publicar; un push a la rama conectada puede activar Workers Builds.
 
@@ -41,7 +41,7 @@ npm run cf-typegen
 
 El build del adaptador genera `.open-next/worker.js` y `.open-next/assets`. `preview` vuelve a compilar y ejecuta el sitio en el runtime local de Workers; no despliega. Los tipos generados, `.open-next`, `.wrangler` y los archivos `.dev.vars*` están excluidos de Git, excepto la plantilla vacía [.dev.vars.example](.dev.vars.example).
 
-[worker.ts](./worker.ts) es el punto de entrada propio: redirige HTTP remoto a HTTPS conservando host, ruta y parámetros (301 en GET/HEAD, 308 en otros métodos), delega al Worker generado y añade HSTS de un año a sus respuestas HTTPS. Solo loopback conserva HTTP para desarrollo. No modifica el Worker generado ni usa proxy experimental. Los assets servidos directamente por Cloudflare pueden no pasar por este punto de entrada; la protección aquí cubre las páginas y endpoints delegados. La cookie administrativa siempre es `Secure` fuera de desarrollo.
+[worker.ts](./worker.ts) es el punto de entrada propio: redirige HTTP remoto a HTTPS conservando host, ruta y parámetros (301 en GET/HEAD, 308 en otros métodos), delega al Worker generado y añade HSTS de un año a sus respuestas HTTPS. Solo loopback conserva HTTP para desarrollo. No modifica el Worker generado ni usa proxy experimental. Los assets servidos directamente por Cloudflare pueden no pasar por este punto de entrada; la protección aquí cubre las páginas y endpoints delegados. La cookie administrativa siempre es `Secure`, incluso en desarrollo (usa `localhost` o HTTPS local).
 
 `dev.host: "localhost"` evita que Wrangler reescriba las peticiones del preview local con el primer dominio productivo de `routes`. Así el preview y las pruebas HTTP locales siguen usando loopback sin excepciones remotas en la redirección HTTPS. Este ajuste no cambia el host del Worker desplegado.
 
@@ -55,7 +55,7 @@ Para Workers Builds conectado a GitHub:
 
 - Usa Node.js 24 LTS para compilar.
 - Cloudflare detecta pnpm e instala con `pnpm install --frozen-lockfile`. [pnpm-workspace.yaml](./pnpm-workspace.yaml) declara el proyecto raíz como único paquete; conserva `packages` para que pnpm 9 pueda leer la configuración y mantén [pnpm-lock.yaml](./pnpm-lock.yaml) sincronizado con las dependencias.
-- El archivo versionado [.env.production](.env.production) define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl`; Next.js lo carga en los builds de producción para resolver los metadatos. No contiene secretos; los archivos `.env.local`, `.env*.local` y `.dev.vars` siguen excluidos de Git. Evita variables del entorno de build con otro valor, ya que tienen prioridad sobre este archivo.
+- El archivo versionado [.env.production](.env.production) define `NEXT_PUBLIC_SITE_URL=https://dannotech.cl` y `CLOUDFLARE_ENV=""`. Next.js usa la URL para metadatos y OpenNext carga la variable vacía antes de invocar Wrangler: selecciona explícitamente el entorno raíz (`dannotech`) y evita el aviso de múltiples entornos sin destino. Vacío no significa ausente. OpenNext 1.20.13 descarta el flag CLI vacío al reenviarlo, por lo que `--env=""` por sí solo no resuelve ese aviso. `deploy:staging` conserva `--env staging`, que tiene prioridad y selecciona `dannotech-ensayo`. No contiene secretos; los archivos `.env.local`, `.env*.local` y `.dev.vars` siguen excluidos de Git. Evita variables del entorno de build con otro valor, ya que tienen prioridad sobre este archivo.
 - Mantén Next.js en una versión soportada por su política oficial (actualmente 16.x en este proyecto). OpenNext aborta el build si detecta una versión EOL; el flag `--dangerouslyUseUnsupportedNextVersion` existe, pero no se recomienda para producción.
 - Comando de build: `npx opennextjs-cloudflare build`.
 - Comando de despliegue, ejecutado por Cloudflare: `npx opennextjs-cloudflare deploy`.
@@ -183,7 +183,31 @@ No se ejecuta una migración destructiva: los registros históricos de D1 perman
 
 Rutas públicas: `/`, `/perfil/`, `/contacto/`, `/privacidad/`, `/catalogo/`, `/catalogo/landing/`, `/catalogo/portal/` y `/componentes/`. La vitrina tiene título y descripción propios para buscadores; se accede desde los detalles de los planes. No se publican detalles de componentes ni rutas de demo. Los planes desconocidos o desactivados no generan páginas y devuelven 404.
 
+## Administración privada
+
+El acceso se escribe directamente en `/admin/`: no hay enlaces desde la navegación pública, el pie ni `robots.txt`. Las páginas administrativas heredan `noindex, nofollow`; páginas y API también envían `X-Robots-Tag` y `Cache-Control: private, no-store`. Ocultar la dirección no sustituye la autenticación.
+
+[administracion.json](./src/data/administracion.json) configura `rutaPanel`, `maximosFallos` (5), `bloqueoMinutos` (15) e `inactividadMinutos` (30). Cambiar la ruta requiere reconstruir y publicar: las reescrituras, enlaces, formularios, cookies y redirecciones usan ese prefijo. No elijas una ruta pública ya ocupada ni una ruta reservada de Next.js. Los handlers internos permanecen bajo `/api/admin/`, también protegidos.
+
+[administracion](./src/modules/administracion) valida contraseña y firma HMAC, pero la vigencia depende de D1: cinco fallos consecutivos por hash de IP bloquean el acceso quince minutos, incluso con contraseña correcta. Un acceso correcto reinicia los fallos. La cookie es `HttpOnly`, `Secure`, `SameSite=Strict`, limitada al panel; la sesión vence tras treinta minutos sin actividad. El navegador sincroniza solo cuando detecta actividad; una consulta de vigencia no prolonga una sesión. El servidor rechaza renovaciones vencidas y el cierre de sesión revoca el registro, además de borrar la cookie. No se registran contraseñas ni cuerpos de formularios.
+
+[LayoutPanel](./src/infrastructure/componentes/boveda/PanelAdministracion/LayoutPanel.tsx), su navbar y drawer son reutilizables: reciben marca, enlaces, menú, acciones y contenido. El adaptador [PanelAdmin](./src/infrastructure/componentes/portal/Administracion/PanelAdmin.tsx) conecta DannoTech, la salida y el estado de sesión. El navbar queda fijo; el drawer comienza cerrado, desplaza el contenido desde 1024 px y se superpone en móvil. Incluye Escape, foco contenido en móvil, retorno de foco y movimiento reducido. El inicio está vacío, sin tarjetas ni gestión de consultas.
+
+La migración aditiva [0002_bright_blizzard.sql](./drizzle/0002_bright_blizzard.sql) crea `accesos_admin` y `sesiones_admin`, sin eliminar tablas ni históricos. Antes de publicar este código, aplica las migraciones a la base del entorno autorizado:
+
+```sh
+npm run db:migrate:local
+npx wrangler d1 migrations apply DB --remote --env staging
+npx wrangler d1 migrations apply DB --remote
+```
+
+Los dos comandos remotos corresponden a ensayo y producción respectivamente; ejecútalos únicamente cuando autorices ese entorno, con sus secretos `ADMIN_SECRET`, `ADMIN_PASSWORD` e `IP_SALT`. Cada página privada y el layout protegido deben comenzar con `await exigirAdmin()`; cada POST privado comprueba origen y sesión antes de cualquier operación. Las consultas continúan siendo exclusivamente por correo.
+
+Las pruebas HTTP de inicio de sesión, bloqueo y revocación se habilitan con `TEST_ADMIN_PASSWORD` y solo admiten una URL loopback en `TEST_BASE_URL`. Usa credenciales locales de prueba, nunca las de producción. Sin esa variable, las demás pruebas HTTP siguen ejecutándose sin intentar autenticarse.
+
 ## Biblioteca reutilizable
+
+El panel y su acceso usan fondos azul tinta, texto claro y acentos celestes/coral, sin superficies blancas. La marca gráfica se proporciona al layout como `ReactNode`: DannoTech utiliza el isotipo a color para fondo oscuro, no iniciales ni un logotipo tipográfico. Los controles y contenedores son rectangulares, incluida la opción Inicio del sidebar. Volver al sitio está junto al botón celeste de salida en el navbar; en pantallas pequeñas ambos conservan iconos y nombres accesibles sin desbordar. El navbar mide 5 rem, con una línea inferior en degradado de celeste a coral. El token `panel-header` mantiene alineados el contenido, drawer y fondo móvil sin cambiar la altura del encabezado público.
 
 La biblioteca se concentra en [boveda](./src/infrastructure/componentes/boveda), con sus [secciones](./src/infrastructure/componentes/boveda/Secciones) y [bases compartidas](./src/infrastructure/componentes/boveda/Base). Es independiente de la vitrina comercial de [portal](./src/infrastructure/componentes/portal): esta solo describe la oferta y no monta piezas interactivas.
 

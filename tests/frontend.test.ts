@@ -58,6 +58,7 @@ test('la estructura conserva las capas y todos los datos son JSON', () => {
     'modules',
   ]);
   assert.deepEqual(readdirSync('src/data').sort(), [
+    'administracion.json',
     'catalogo.json',
     'componentes.json',
     'ejemplos-boveda.json',
@@ -67,7 +68,7 @@ test('la estructura conserva las capas y todos los datos son JSON', () => {
     'sitio.json',
   ]);
   assert.equal(existsSync('src/app/api/formularios/route.ts'), true);
-  assert.equal(existsSync('src/app/admin/page.tsx'), true);
+  assert.equal(existsSync('src/app/admin/(panel)/page.tsx'), true);
   assert.equal(existsSync('src/app/admin/solicitudes/page.tsx'), false);
   assert.equal(existsSync('src/infrastructure/repositorios'), false);
 });

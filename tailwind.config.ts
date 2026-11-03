@@ -44,6 +44,7 @@ export default {
       spacing: {
         header: alturaCabecera.base,
         'header-lg': alturaCabecera.amplia,
+        'panel-header': '5rem',
         'boveda-ancla': '4rem',
       },
       outlineWidth: {foco: '3px'},

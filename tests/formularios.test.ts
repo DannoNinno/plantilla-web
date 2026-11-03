@@ -15,14 +15,13 @@ import {
 } from '../src/modules/formularios/core/FormularioService';
 import {crearToken, verificarToken} from '../src/modules/formularios/core/tokenConsulta';
 import {CloudflareEmailNotificador} from '../src/modules/formularios/adaptadores/CloudflareEmailNotificador';
-import {D1Almacen} from '../src/modules/formularios/adaptadores/D1Almacen';
+import {AlmacenAdmin} from '../src/modules/administracion/AlmacenAdmin';
 import {avisoSolicitud} from '../src/modules/formularios/plantillas/avisoSolicitud';
 import {
   crearSesion,
   verificarSesion,
   verificarPassword,
-  DURACION_SESION,
-} from '../src/modules/formularios/admin/sesion';
+} from '../src/modules/administracion/sesion';
 
 const sal = 'secreto-de-pruebas-largo-aislado-1234567890';
 const consulta = {
@@ -294,27 +293,76 @@ after(async () => {
   await plataforma?.dispose();
 });
 
-test('el acceso administrativo conserva su límite atómico sin escribir consultas', async () => {
-  const almacen = new D1Almacen(plataforma.env.DB);
+test('el quinto fallo concurrente bloquea quince minutos sin escribir consultas', async () => {
+  const almacen = new AlmacenAdmin(plataforma.env.DB);
+  const ahora = Date.now();
   const resultados = await Promise.all(
-    Array.from({length: 8}, () => almacen.permitirAcceso('hash-de-acceso')),
+    Array.from({length: 8}, () => almacen.registrarFallo('hash-concurrente', ahora)),
   );
-  assert.equal(resultados.filter(Boolean).length, 5);
+  assert.equal(resultados.filter((bloqueado) => !bloqueado).length, 4);
+  assert.equal(await almacen.estaBloqueado('hash-concurrente', ahora + 899999), true);
+  assert.equal(await almacen.registrarExito('hash-concurrente', ahora + 899999), false);
+  assert.equal(await almacen.estaBloqueado('hash-concurrente', ahora + 900000), false);
+  assert.equal(await almacen.registrarFallo('hash-concurrente', ahora + 900000), false);
   const fila = await plataforma.env.DB.prepare('SELECT COUNT(*) AS total FROM solicitudes').first<{
     total: number;
   }>();
   assert.equal(fila?.total, 0);
 });
 
-test('las sesiones del panel conservan firma, expiración y contraseña', async () => {
+test('un acceso correcto reinicia los fallos consecutivos y la configuración es reutilizable', async () => {
+  const almacen = new AlmacenAdmin(plataforma.env.DB, {
+    rutaPanel: '/gestion',
+    maximosFallos: 2,
+    bloqueoMinutos: 3,
+    inactividadMinutos: 4,
+  });
   const ahora = Date.now();
-  const token = await crearSesion(sal, ahora);
-  assert.equal(await verificarSesion(token, sal, ahora), true);
-  assert.equal(await verificarSesion(token + 'x', sal, ahora), false);
-  assert.equal(await verificarSesion(token, sal, ahora + DURACION_SESION * 1000), false);
+  assert.equal(await almacen.registrarFallo('hash-reinicio', ahora), false);
+  assert.equal(await almacen.registrarExito('hash-reinicio', ahora), true);
+  assert.equal(await almacen.registrarFallo('hash-reinicio', ahora), false);
+  assert.equal(await almacen.registrarFallo('hash-reinicio', ahora), true);
+  assert.equal(await almacen.registrarExito('hash-reinicio', ahora + 179999), false);
+  assert.equal(await almacen.registrarExito('hash-reinicio', ahora + 180000), true);
+});
+
+test('las sesiones vencen exactamente tras treinta minutos inactivas y no pueden revivir', async () => {
+  const almacen = new AlmacenAdmin(plataforma.env.DB);
+  const ahora = Date.now();
+  const id = crypto.randomUUID();
+  await almacen.iniciarSesion(id, ahora);
+  assert.equal(await almacen.sesionVigente(id, ahora + 1799999), true);
+  assert.equal(await almacen.sesionVigente(id, ahora + 1800000), false);
+  assert.equal(await almacen.renovarSesion(id, ahora + 1800000), false);
+  const activa = crypto.randomUUID();
+  await almacen.iniciarSesion(activa, ahora);
+  assert.equal(await almacen.renovarSesion(activa, ahora + 1799999), true);
+  assert.equal(await almacen.sesionVigente(activa, ahora + 1800000), true);
+  await almacen.cerrarSesion(activa);
+  assert.equal(await almacen.sesionVigente(activa, ahora + 1800000), false);
+  assert.equal(await almacen.renovarSesion(activa, ahora + 1800000), false);
+});
+
+test('las sesiones del panel conservan firma y contraseña sin confiar la expiración al navegador', async () => {
+  const id = crypto.randomUUID();
+  const token = await crearSesion(sal, id);
+  assert.equal(await verificarSesion(token, sal), id);
+  assert.equal(await verificarSesion(token + 'x', sal), undefined);
+  assert.equal(await verificarSesion(token, 'otro-secreto-de-prueba-de-32-caracteres'), undefined);
   assert.equal(
     await verificarPassword('password-de-prueba-largo', 'password-de-prueba-largo', sal),
     true,
   );
   assert.equal(await verificarPassword('otro', 'password-de-prueba-largo', sal), false);
+});
+
+test('sincronizar actividad no añade tiempo de inactividad ni retrocede ante peticiones desordenadas', async () => {
+  const almacen = new AlmacenAdmin(plataforma.env.DB);
+  const ahora = Date.now();
+  const id = crypto.randomUUID();
+  await almacen.iniciarSesion(id, ahora);
+  assert.equal(await almacen.renovarSesion(id, ahora + 15000, 10000), true);
+  assert.equal(await almacen.renovarSesion(id, ahora + 16000, 13000), true);
+  assert.equal(await almacen.sesionVigente(id, ahora + 1804999), true);
+  assert.equal(await almacen.sesionVigente(id, ahora + 1805000), false);
 });

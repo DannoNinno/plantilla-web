@@ -15,6 +15,13 @@
       "when": 1792996489400,
       "tag": "0001_tearful_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793714885058,
+      "tag": "0002_bright_blizzard",
+      "breakpoints": true
     }
   ]
 }

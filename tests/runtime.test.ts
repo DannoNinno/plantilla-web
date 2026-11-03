@@ -7,10 +7,113 @@ if (!configurada)
   throw new Error('Configura TEST_BASE_URL con la URL del Worker local o de ensayo.');
 const base = new URL(configurada).origin;
 const id = '00000000-0000-4000-8000-000000000001';
+const passwordAdmin = process.env.TEST_ADMIN_PASSWORD;
+const ipPrueba = () =>
+  `2001:db8:${Array.from(crypto.getRandomValues(new Uint16Array(6)), (n) => n.toString(16)).join(':')}`;
+
+test(
+  'el flujo real autentica, renueva y revoca con cookies protegidas',
+  {skip: !passwordAdmin},
+  async () => {
+    assert.ok(
+      ['localhost', '127.0.0.1', '[::1]'].includes(new URL(base).hostname),
+      'Usa credenciales de prueba solo en loopback.',
+    );
+    assert.ok(passwordAdmin);
+    const ip = ipPrueba();
+    const entrar = (password: string) =>
+      fetch(new URL('/admin/api/acceso/', base), {
+        method: 'POST',
+        redirect: 'manual',
+        headers: {
+          Origin: base,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'CF-Connecting-IP': ip,
+        },
+        body: new URLSearchParams({password}),
+      });
+    for (let intento = 0; intento < 4; intento++) {
+      const rechazo = await entrar('incorrecta-para-prueba');
+      assert.equal(
+        new URL(rechazo.headers.get('location')!, base).searchParams.get('error'),
+        'credenciales',
+      );
+    }
+    const acceso = await entrar(passwordAdmin);
+    assert.equal(acceso.status, 303);
+    assert.equal(new URL(acceso.headers.get('location')!, base).pathname, '/admin/');
+    const cabecera = acceso.headers.get('set-cookie');
+    assert.ok(cabecera, 'El acceso debe emitir una cookie.');
+    for (const flag of ['HttpOnly', 'Secure', 'SameSite=strict', 'Path=/admin', 'Max-Age=1800'])
+      assert.ok(cabecera.toLowerCase().includes(flag.toLowerCase()), `Falta ${flag}`);
+    const cookie = cabecera.split(';')[0];
+    const inicio = await fetch(new URL('/admin/', base), {headers: {Cookie: cookie}});
+    assert.equal(inicio.status, 200);
+    assert.ok((await inicio.text()).includes('Cerrar sesión'));
+    const renovar = (body: string) =>
+      fetch(new URL('/admin/api/sesion/', base), {
+        method: 'POST',
+        redirect: 'manual',
+        headers: {Origin: base, Cookie: cookie, 'Content-Type': 'application/json'},
+        body,
+      });
+    assert.equal((await renovar('{')).status, 400);
+    assert.equal((await renovar(JSON.stringify({inactividadMs: -1}))).status, 400);
+    const renovada = await renovar(JSON.stringify({inactividadMs: 0}));
+    assert.equal(renovada.status, 200);
+    assert.deepEqual(await renovada.json(), {ok: true});
+    const salida = await fetch(new URL('/admin/api/salir/', base), {
+      method: 'POST',
+      redirect: 'manual',
+      headers: {Origin: base, Cookie: cookie},
+    });
+    assert.equal(salida.status, 303);
+    assert.ok(salida.headers.get('set-cookie')?.includes('Max-Age=0'));
+    const revocada = await fetch(new URL('/admin/', base), {
+      redirect: 'manual',
+      headers: {Cookie: cookie},
+    });
+    assert.equal(revocada.status, 307);
+    assert.equal((await renovar(JSON.stringify({inactividadMs: 0}))).status, 303);
+  },
+);
+
+test(
+  'el quinto fallo real bloquea incluso una contraseña correcta',
+  {skip: !passwordAdmin},
+  async () => {
+    assert.ok(
+      ['localhost', '127.0.0.1', '[::1]'].includes(new URL(base).hostname),
+      'Usa credenciales de prueba solo en loopback.',
+    );
+    assert.ok(passwordAdmin);
+    const ip = ipPrueba();
+    for (let intento = 1; intento <= 6; intento++) {
+      const respuesta: Response = await fetch(new URL('/admin/api/acceso/', base), {
+        method: 'POST',
+        redirect: 'manual',
+        headers: {
+          Origin: base,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'CF-Connecting-IP': ip,
+        },
+        body: new URLSearchParams({
+          password: intento === 6 ? passwordAdmin : 'incorrecta-para-prueba',
+        }),
+      });
+      assert.equal(respuesta.status, 303);
+      assert.equal(
+        new URL(respuesta.headers.get('location')!, base).searchParams.get('error'),
+        intento < 5 ? 'credenciales' : 'limite',
+      );
+      assert.equal(respuesta.headers.get('set-cookie'), null);
+    }
+  },
+);
 
 test('el panel rechaza sesiones ausentes o manipuladas', async () => {
   for (const ruta of ['/admin/']) {
-    for (const cookie of ['', 'sesion_formularios=manipulada']) {
+    for (const cookie of ['', 'sesion_admin=manipulada']) {
       const respuesta = await fetch(new URL(ruta, base), {
         redirect: 'manual',
         headers: cookie ? {Cookie: cookie} : {},
@@ -24,14 +127,20 @@ test('el panel rechaza sesiones ausentes o manipuladas', async () => {
 });
 
 test('los endpoints administrativos autentican sin depender del proxy', async () => {
-  for (const ruta of ['/api/admin/salir/']) {
-    for (const cookie of ['', 'sesion_formularios=manipulada']) {
+  for (const ruta of [
+    '/admin/api/salir/',
+    '/admin/api/sesion/',
+    '/api/admin/salir/',
+    '/api/admin/sesion/',
+  ]) {
+    for (const cookie of ['', 'sesion_admin=manipulada']) {
       const respuesta = await fetch(new URL(ruta, base), {
         method: 'POST',
         redirect: 'manual',
         headers: {Origin: base, Cookie: cookie},
       });
-      assert.equal(respuesta.status, 401, ruta);
+      assert.equal(respuesta.status, 303, ruta);
+      assert.equal(new URL(respuesta.headers.get('location')!, base).pathname, '/admin/acceso/');
       assert.match(respuesta.headers.get('cache-control') ?? '', /no-store/);
     }
     const origenAjeno = await fetch(new URL(ruta, base), {
