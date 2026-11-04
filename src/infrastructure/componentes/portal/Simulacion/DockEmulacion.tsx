@@ -34,7 +34,7 @@ export default function DockEmulacion({config}: {config: ConfigSimulacion}) {
           <Copy size={17} className="shrink-0" aria-hidden="true" />
           Copiar JSON
         </button>
-        <Link href={urlSimulacion(config)} className={clase}>
+        <Link href={urlSimulacion(config)} replace className={clase}>
           <ArrowLeft size={17} className="shrink-0" aria-hidden="true" />
           Volver a simulación
         </Link>

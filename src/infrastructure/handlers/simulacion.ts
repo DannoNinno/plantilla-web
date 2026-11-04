@@ -16,6 +16,7 @@ export const seccionesSimulacion = registro
       key: slug,
       nombre: slug === 'portada' ? nombre.toUpperCase() : nombre,
       icono: ficha.icono,
+      descripcion: ficha.descripcion,
       planMinimo,
       cuentaParaTope,
     };
@@ -277,7 +278,23 @@ export function urlSimulacion(config: ConfigSimulacion, emular = false) {
   return `${emular ? rutaEmulacion : rutaSimulacion}?${new URLSearchParams({c: encodeConfig(config)})}`;
 }
 export function formatoJSON(config: ConfigSimulacion) {
-  return JSON.stringify(config, null, 2);
+  return JSON.stringify(
+    {
+      ...config,
+      componentes: config.secciones.map((key) => {
+        const seccion = getSeccionSimulacion(key);
+        return {
+          key,
+          nombre: seccion?.nombre ?? 'Sección no encontrada',
+          descripcion:
+            seccion?.descripcion ??
+            'Componente desconocido en esta bóveda. Requiere revisión antes de implementarlo.',
+        };
+      }),
+    },
+    null,
+    2,
+  );
 }
 export async function copiarJSON(config: ConfigSimulacion): Promise<ResultadoSimulacion<string>> {
   try {

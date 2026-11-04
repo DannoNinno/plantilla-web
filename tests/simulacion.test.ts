@@ -308,9 +308,48 @@ test('el codec restaura exactamente opciones, orden y keys futuras', () => {
   };
   assert.deepEqual(valor(decodeConfig(encodeConfig(config))), config);
   assert.deepEqual(valor(decodeConfig(encodeConfig(inicial()))), inicial());
-  assert.deepEqual(JSON.parse(formatoJSON(config)), config);
+  const {componentes, ...configExportada} = JSON.parse(formatoJSON(config));
+  assert.deepEqual(configExportada, config);
+  assert.deepEqual(
+    componentes.map(({key}: {key: string}) => key),
+    config.secciones,
+  );
   assert.match(formatoJSON(config), /\n {2}"v": 1/);
   assert.match(formatoJSON(config), /\n {4}"esLanding": false/);
+});
+
+test('el JSON guía describe cada componente seleccionado sin modificar la configuración ni el codec', () => {
+  for (const seccion of seccionesSimulacion) {
+    const config = simulacionSchema.parse({
+      plan: 'captacion-clientes',
+      pagina: {esLanding: false},
+      secciones: [seccion.key],
+    });
+    const original = structuredClone(config);
+    const exportado = JSON.parse(formatoJSON(config));
+    const ficha = getComponentes().find(({id}) => id === seccion.key);
+    assert.ok(ficha);
+    assert.deepEqual(exportado.componentes, [
+      {key: seccion.key, nombre: seccion.nombre, descripcion: ficha.descripcion},
+    ]);
+    assert.ok(exportado.componentes[0].descripcion.trim());
+    assert.deepEqual(config, original);
+    assert.deepEqual(valor(decodeConfig(encodeConfig(config))), original);
+  }
+  const futuro = simulacionSchema.parse({
+    pagina: {esLanding: false},
+    secciones: ['futura-seccion'],
+  });
+  assert.deepEqual(JSON.parse(formatoJSON(futuro)).componentes, [
+    {
+      key: 'futura-seccion',
+      nombre: 'Sección no encontrada',
+      descripcion:
+        'Componente desconocido en esta bóveda. Requiere revisión antes de implementarlo.',
+    },
+  ]);
+  const vacio = simulacionSchema.parse({pagina: {esLanding: false}, secciones: []});
+  assert.deepEqual(JSON.parse(formatoJSON(vacio)).componentes, []);
 });
 
 test('el decoder devuelve errores tipados, nunca excepciones ni valores por defecto silenciosos', () => {
@@ -359,7 +398,10 @@ test('copiar entrega JSON completo y los permisos rechazados producen un error e
   try {
     assert.equal(valor(await copiarJSON(inicial())), 'Copiado');
     assert.equal(escrito, formatoJSON(inicial()));
-    assert.deepEqual(JSON.parse(escrito), inicial());
+    const {componentes, ...configExportada} = JSON.parse(escrito);
+    assert.deepEqual(configExportada, inicial());
+    assert.equal(componentes[0].key, 'portada');
+    assert.equal(componentes[0].descripcion, getSeccionSimulacion('portada')?.descripcion);
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
       value: {
@@ -460,6 +502,7 @@ test('la emulación adapta componentes reales sin cambiar el layout protegido ni
   const dock = fuente('infrastructure', 'componentes', 'portal', 'Simulacion', 'DockEmulacion.tsx');
   assert.equal((dock.match(/<button\b/g) ?? []).length, 1);
   assert.equal((dock.match(/<Link\b/g) ?? []).length, 1);
+  assert.match(dock, /<Link href=\{urlSimulacion\(config\)\} replace/);
   const acciones = fuente(
     'infrastructure',
     'componentes',
@@ -467,8 +510,8 @@ test('la emulación adapta componentes reales sin cambiar el layout protegido ni
     'Simulacion',
     'AccionesSimulacion.tsx',
   );
-  assert.match(acciones, /target="_blank"/);
-  assert.match(acciones, /noopener noreferrer/);
+  assert.match(acciones, /<Link[\s\S]*?href=\{urlSimulacion\(config, true\)\}\s+replace/);
+  assert.doesNotMatch(acciones, /target=|pestaña nueva|Solo se emulan cajas/);
 });
 
 test('la carga es de ruta y la entrada no transforma el contenedor de los elementos fijos', () => {
