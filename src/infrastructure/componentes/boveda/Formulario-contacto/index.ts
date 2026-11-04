@@ -1,2 +1,7 @@
 export {default as FormularioContacto} from './FormularioContacto';
-export type {FormularioContactoProps, ConsultaContacto} from './tipos';
+export type {
+  FormularioContactoProps,
+  ConsultaContacto,
+  EnlaceSocialContacto,
+  RedesContactoProps,
+} from './tipos';

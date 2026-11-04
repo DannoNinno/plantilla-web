@@ -71,7 +71,7 @@ export default function OpcionesPagina({
       </div>
       <p className="text-xs text-brand-light/80">
         La navegación y el pie siempre son oscuros, con el logo a la izquierda. La muestra usa todo
-        el ancho disponible. La transparencia solo aplica al navbar sobre PORTADA en vista landing.
+        el ancho disponible. La transparencia solo aplica al navbar sobre Portada en vista landing.
         Nada se guarda en la base de datos.
       </p>
     </section>

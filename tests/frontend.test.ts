@@ -595,14 +595,14 @@ test('el navbar marca la seccion actual y sus rutas hijas sin confundir prefijos
 test('la vitrina hereda los componentes y destaca el panel sin mutar los datos', () => {
   const componentes = getComponentes();
   const original = JSON.stringify(componentes);
-  assert.equal(componentes.length, 19);
+  assert.equal(componentes.length, 18);
   assert.deepEqual(Object.keys(iconos), [...nombresIconos]);
   assert.deepEqual(
     componentes.map((item) => item.icono),
     [...nombresIconos],
   );
   const landing = seleccionarComponentes(componentes, 'landing', getPaquetes());
-  assert.equal(landing.incluidos.length, 11);
+  assert.equal(landing.incluidos.length, 10);
   assert.equal(landing.noIncluidos.length, 8);
   assert.ok(
     landing.incluidos.every((item) => item.incluido && item.componente.planMinimo === 'landing'),
@@ -611,7 +611,7 @@ test('la vitrina hereda los componentes y destaca el panel sin mutar los datos',
     landing.noIncluidos.every((item) => !item.incluido && item.componente.planMinimo === 'portal'),
   );
   const portal = seleccionarComponentes(componentes, 'portal', getPaquetes());
-  assert.equal(portal.incluidos.length, 19);
+  assert.equal(portal.incluidos.length, 18);
   assert.deepEqual(portal.noIncluidos, []);
   assert.equal(portal.incluidos[0].componente.id, 'panel-administracion');
   assert.equal(JSON.stringify(componentes), original);
@@ -627,7 +627,7 @@ test('la vitrina rechaza planes no habilitados y excluye sus componentes', () =>
     habilitado: paquete.id === 'landing',
   }));
   const seleccion = seleccionarComponentes(getComponentes(), 'landing', paquetes);
-  assert.equal(seleccion.incluidos.length, 11);
+  assert.equal(seleccion.incluidos.length, 10);
   assert.deepEqual(seleccion.noIncluidos, []);
   for (const id of ['portal', 'automatizacion', 'comercio-electronico', 'inexistente']) {
     assert.throws(
@@ -667,7 +667,7 @@ test('las tarjetas de vitrina son descriptivas y accesibles, no demos interactiv
       textos,
     }),
   );
-  assert.equal(html.match(/<article\b/g)?.length, 11);
+  assert.equal(html.match(/<article\b/g)?.length, 10);
 });
 
 test('solo los primeros dos planes tienen rutas y tarjetas navegables', () => {

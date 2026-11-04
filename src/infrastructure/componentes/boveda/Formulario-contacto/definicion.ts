@@ -6,7 +6,8 @@ import type {DefinicionRegistro} from '../registrar';
 export const definicionFormulario: DefinicionRegistro<FormularioContactoProps> = {
   slug: 'formulario-contacto',
   nombre: 'Formulario de contacto',
-  descripcionCorta: 'Consulta accesible con validación y resultado local, sin enviar información.',
+  descripcionCorta:
+    'Contacto con redes sociales opcionales, validación y resultado local, sin enviar información.',
   planMinimo: 'presencia',
   cuentaParaTope: true,
   categoria: 'componente',

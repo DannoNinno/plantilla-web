@@ -7,16 +7,176 @@ import {adminConfig} from '../../domain/configuracion/administracion';
 
 const excluidas = new Set(['whatsapp', 'pie-pagina', 'vista-google']);
 const fichas = getComponentes();
+interface RequisitoDato {
+  dato: string;
+  descripcion: string;
+  condicion?: string;
+}
+const requisitoNombreNegocio: RequisitoDato = {
+  dato: 'nombre-negocio',
+  descripcion: 'Nombre comercial del negocio, compartido por la portada, la navegación y el pie.',
+};
+const requisitosComponentes: Record<string, readonly RequisitoDato[]> = {
+  portada: [
+    requisitoNombreNegocio,
+    {
+      dato: 'imagen-portada',
+      descripcion: 'Imagen autorizada para la portada y su descripción accesible.',
+      condicion: 'Si la portada lleva imagen.',
+    },
+    {
+      dato: 'destino-accion',
+      descripcion: 'Sección, página o URL a la que debe llevar el botón principal.',
+      condicion: 'Si la portada lleva un botón.',
+    },
+  ],
+  servicios: [
+    {
+      dato: 'servicios',
+      descripcion: 'Servicios reales que ofrece el negocio y qué incluye cada uno.',
+    },
+  ],
+  'quienes-somos': [
+    {
+      dato: 'imagen-negocio',
+      descripcion: 'Fotografía autorizada del negocio o equipo y su descripción accesible.',
+      condicion: 'Si se incluye una imagen.',
+    },
+  ],
+  galeria: [
+    {
+      dato: 'imagenes',
+      descripcion:
+        'Imágenes autorizadas para la galería, orden y descripción accesible de cada una.',
+    },
+  ],
+  testimonios: [
+    {
+      dato: 'testimonios-reales',
+      descripcion:
+        'Opiniones reales y autorización para publicarlas; nombre del autor si se muestra. Si no hay testimonios reales autorizados, se omite la sección, sin inventar opiniones.',
+    },
+  ],
+  'preguntas-frecuentes': [
+    {dato: 'preguntas', descripcion: 'Lista de preguntas y respuestas reales del negocio.'},
+  ],
+  'ubicacion-horarios': [
+    {dato: 'direccion', descripcion: 'Dirección completa del negocio, con ciudad y comuna.'},
+    {dato: 'horarios', descripcion: 'Días y horas de atención, incluidos cierres o excepciones.'},
+  ],
+  'formulario-contacto': [
+    {
+      dato: 'correo-destinatario',
+      descripcion: 'Correo del negocio que recibirá las consultas reales.',
+    },
+    {
+      dato: 'privacidad',
+      descripcion: 'Responsable del tratamiento de los datos y URL de su política de privacidad.',
+      condicion: 'Al habilitar el envío real de datos personales.',
+    },
+    {
+      dato: 'instagram-url',
+      descripcion: 'URL del perfil oficial de Instagram del negocio.',
+      condicion: 'Si se incluye Instagram entre las redes de contacto.',
+    },
+    {
+      dato: 'whatsapp-numero',
+      descripcion: 'Número de WhatsApp del negocio con código de país.',
+      condicion: 'Si se incluye WhatsApp entre las redes de contacto.',
+    },
+    {
+      dato: 'otras-redes',
+      descripcion: 'Nombre de cada red adicional y URL de su perfil oficial.',
+      condicion: 'Si se incluyen otras redes de contacto.',
+    },
+  ],
+  novedades: [
+    {
+      dato: 'publicaciones',
+      descripcion: 'Noticias o novedades reales que se publicarán y sus fechas, si se muestran.',
+    },
+    {
+      dato: 'imagenes-publicaciones',
+      descripcion:
+        'Imagen autorizada y descripción accesible para cada publicación que lleve imagen.',
+      condicion: 'Si las publicaciones incluyen imágenes.',
+    },
+  ],
+  'catalogo-sin-compra': [
+    {dato: 'productos', descripcion: 'Productos reales del catálogo y sus características.'},
+    {
+      dato: 'precios',
+      descripcion: 'Precios vigentes, moneda e impuestos aplicables a cada producto.',
+      condicion: 'Si se muestran precios.',
+    },
+    {
+      dato: 'imagenes-productos',
+      descripcion: 'Imagen autorizada y descripción accesible de cada producto que lleve imagen.',
+      condicion: 'Si se muestran imágenes de productos.',
+    },
+    {dato: 'destino-consulta', descripcion: 'URL o sección donde se consultará por los productos.'},
+  ],
+  'cotizacion-pasos': [
+    {
+      dato: 'servicios-cotizables',
+      descripcion: 'Servicios reales que el visitante podrá seleccionar.',
+    },
+    {
+      dato: 'correo-destinatario',
+      descripcion: 'Correo del negocio que recibirá las cotizaciones reales.',
+    },
+    {
+      dato: 'privacidad',
+      descripcion: 'Responsable del tratamiento de los datos y URL de su política de privacidad.',
+      condicion: 'Al habilitar el envío real de datos personales.',
+    },
+  ],
+  sedes: [
+    {dato: 'sedes', descripcion: 'Nombre, dirección completa y horarios de atención de cada sede.'},
+    {
+      dato: 'imagenes-sedes',
+      descripcion: 'Fotografías autorizadas de las sedes y sus descripciones accesibles.',
+      condicion: 'Si las sedes llevan imágenes.',
+    },
+  ],
+  'promocion-destacada': [
+    {
+      dato: 'promocion',
+      descripcion: 'Oferta real, beneficio, vigencia y condiciones o restricciones aplicables.',
+    },
+    {
+      dato: 'destino-promocion',
+      descripcion: 'URL o sección donde se accederá a la promoción.',
+      condicion: 'Si se incluye un botón de acción.',
+    },
+    {
+      dato: 'imagen-promocion',
+      descripcion: 'Imagen autorizada de la promoción y su descripción accesible.',
+      condicion: 'Si la promoción lleva imagen.',
+    },
+  ],
+  equipo: [
+    {dato: 'integrantes', descripcion: 'Nombres y cargos reales de las personas que se mostrarán.'},
+    {
+      dato: 'fotografias-equipo',
+      descripcion: 'Fotografías de los integrantes y autorización para publicarlas.',
+      condicion: 'Si se muestran fotografías.',
+    },
+  ],
+};
 export const seccionesSimulacion = registro
   .filter(({slug}) => !excluidas.has(slug))
   .map(({slug, nombre, planMinimo, cuentaParaTope}) => {
     const ficha = fichas.find(({id}) => id === slug);
     if (!ficha) throw new Error(`Falta la ficha de la sección ${slug}.`);
+    const requisitos = requisitosComponentes[slug];
+    if (!requisitos) throw new Error(`Falta definir los requisitos de la sección ${slug}.`);
     return {
       key: slug,
-      nombre: slug === 'portada' ? nombre.toUpperCase() : nombre,
+      nombre,
       icono: ficha.icono,
       descripcion: ficha.descripcion,
+      requisitos,
       planMinimo,
       cuentaParaTope,
     };
@@ -40,7 +200,8 @@ function textoEjemploSimulacion(
     ultimo === 'alt' ||
     ultimo === 'etiquetaDireccion' ||
     ultimo === 'etiquetaHorarios' ||
-    ruta[0] === 'enlaces'
+    ruta[0] === 'enlaces' ||
+    ruta[0] === 'redes'
   )
     return campo.valor;
   if (ruta.includes('parrafos'))
@@ -66,9 +227,7 @@ function textoEjemploSimulacion(
             ? `Sede ${indice}`
             : 'DannoTech';
     case 'etiqueta':
-      return seccion.key === 'redes-sociales'
-        ? 'Redes sociales de ejemplo'
-        : 'DannoTech · Sitio de ejemplo';
+      return 'DannoTech · Sitio de ejemplo';
     case 'texto':
       return ruta.includes('opciones')
         ? `Servicio de ejemplo ${indice}`
@@ -158,6 +317,15 @@ export const simulacionSchema = z
           .max(80)
           .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
       )
+      .transform((keys) =>
+        keys.flatMap((key, indice) =>
+          key !== 'redes-sociales'
+            ? [key]
+            : keys.includes('formulario-contacto') || keys.indexOf(key) !== indice
+              ? []
+              : ['formulario-contacto'],
+        ),
+      )
       .default(['portada']),
   })
   .strict()
@@ -166,7 +334,7 @@ export const simulacionSchema = z
     if (new Set(config.secciones).size !== config.secciones.length)
       error('No se permiten secciones repetidas.');
     if (config.pagina.esLanding && config.secciones[0] !== 'portada')
-      error('En vista landing, PORTADA debe estar en la primera posición.');
+      error('En vista landing, Portada debe estar en la primera posición.');
     if (config.secciones.some((key) => excluidas.has(key)))
       error(
         'WhatsApp y el pie se configuran como opciones de página; la vista Google no es una sección.',
@@ -179,11 +347,51 @@ export const simulacionSchema = z
         'Quita las secciones exclusivas de Captación de Clientes antes de usar Presencia Digital.',
       );
     if (contarSecciones(config.secciones) > MAX_SECCIONES)
-      error('El máximo es de seis secciones computables por página, incluida PORTADA.');
+      error('El máximo es de seis secciones computables por página, incluida Portada.');
   });
 export type ConfigSimulacion = z.infer<typeof simulacionSchema>;
 export type PaginaSimulacion = ConfigSimulacion['pagina'];
 export const valoresPorDefecto = simulacionSchema.parse({});
+function requisitosPagina(pagina: PaginaSimulacion) {
+  return {
+    esLanding: [],
+    navegacion: pagina.navegacion === 'ninguna' ? [] : [requisitoNombreNegocio],
+    fija: [],
+    transparenteSobreLanding: [],
+    logo:
+      pagina.navegacion === 'ninguna'
+        ? []
+        : [{dato: 'logo', descripcion: 'Archivo del logo del negocio y su nombre accesible.'}],
+    menuMovil: [],
+    footer:
+      pagina.footer === 'ninguno'
+        ? []
+        : [
+            requisitoNombreNegocio,
+            {
+              dato: 'titular-sitio',
+              descripcion:
+                'Nombre legal de la persona o empresa titular del copyright; puede ser distinto del nombre comercial del negocio.',
+              condicion:
+                'Solo si el titular del copyright es distinto del nombre comercial. En caso contrario, reutilizar nombre-negocio sin solicitar otro nombre.',
+            },
+          ],
+    tema: [],
+    ancho: [],
+    scrollSuave: [],
+    seccionActiva: [],
+    whatsapp:
+      pagina.whatsapp === 'ninguno'
+        ? []
+        : [
+            {
+              dato: 'whatsapp-numero',
+              descripcion: 'Número de WhatsApp del negocio con código de país.',
+            },
+          ],
+    volverArriba: [],
+  } satisfies Record<keyof PaginaSimulacion, RequisitoDato[]>;
+}
 export type ResultadoSimulacion<T> =
   | {ok: true; valor: T}
   | {
@@ -246,12 +454,12 @@ export function quitarSeccion(config: ConfigSimulacion, key: string) {
   if (!config.secciones.includes(key))
     return fallo('configuracion', 'La sección no está en la plantilla.');
   if (config.pagina.esLanding && key === 'portada')
-    return fallo('configuracion', 'Desactiva la vista landing para quitar PORTADA.');
+    return fallo('configuracion', 'Desactiva la vista landing para quitar Portada.');
   return validarSimulacion({...config, secciones: config.secciones.filter((s) => s !== key)});
 }
 export function moverSeccion(config: ConfigSimulacion, key: string, posicion: number) {
   if (config.pagina.esLanding && key === 'portada')
-    return fallo('configuracion', 'PORTADA está bloqueada al principio de la vista landing.');
+    return fallo('configuracion', 'Portada está bloqueada al principio de la vista landing.');
   if (!config.secciones.includes(key))
     return fallo('configuracion', 'La sección no está en la plantilla.');
   const secciones = config.secciones.filter((s) => s !== key);
@@ -281,6 +489,7 @@ export function formatoJSON(config: ConfigSimulacion) {
   return JSON.stringify(
     {
       ...config,
+      requisitosPagina: requisitosPagina(config.pagina),
       componentes: config.secciones.map((key) => {
         const seccion = getSeccionSimulacion(key);
         return {
@@ -289,6 +498,12 @@ export function formatoJSON(config: ConfigSimulacion) {
           descripcion:
             seccion?.descripcion ??
             'Componente desconocido en esta bóveda. Requiere revisión antes de implementarlo.',
+          requisitos: seccion?.requisitos ?? [
+            {
+              dato: 'definicion-componente',
+              descripcion: 'Especificar el componente desconocido y los datos que necesita.',
+            },
+          ],
         };
       }),
     },
@@ -317,9 +532,9 @@ export const opcionesSeleccion = [
   },
 ] as const;
 export const opcionesSwitch = [
-  {key: 'esLanding', nombre: 'Vista landing: PORTADA fija al principio'},
+  {key: 'esLanding', nombre: 'Vista landing: Portada fija al principio'},
   {key: 'fija', nombre: 'Navegación fija'},
-  {key: 'transparenteSobreLanding', nombre: 'Navbar transparente sobre PORTADA'},
+  {key: 'transparenteSobreLanding', nombre: 'Navbar transparente sobre Portada'},
   {key: 'scrollSuave', nombre: 'Desplazamiento suave'},
   {key: 'seccionActiva', nombre: 'Resaltar sección visible'},
   {key: 'volverArriba', nombre: 'Botón volver arriba'},

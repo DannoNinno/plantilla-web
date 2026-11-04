@@ -8,7 +8,6 @@ import {definicionPreguntas} from './Secciones/Preguntas-frecuentes/definicion';
 import {definicionUbicacion} from './Secciones/Ubicacion-horarios/definicion';
 import {definicionFormulario} from './Formulario-contacto/definicion';
 import {definicionWhatsapp} from './Secciones/Whatsapp/definicion';
-import {definicionRedes} from './Secciones/Redes-sociales/definicion';
 import {definicionPie} from './Secciones/Pie-pagina/definicion';
 import {definicionNovedades} from './Secciones/Novedades/definicion';
 import {definicionCatalogo} from './Secciones/Catalogo-sin-compra/definicion';
@@ -37,7 +36,6 @@ export const registro = [
   registrar(definicionEquipo),
   registrar(definicionGoogle),
   registrar(definicionWhatsapp),
-  registrar(definicionRedes),
   registrar(definicionPie),
 ];
 

@@ -89,10 +89,10 @@ test('Portada permanece en la página, pero nunca en los enlaces de navegación'
   assert.match(enlaces, /seccionesNavegables\(keys\)/);
 });
 
-test('el inventario adapta las 15 piezas del registro completo sin duplicar metadatos', () => {
+test('el inventario adapta las 14 piezas del registro completo sin duplicar metadatos', () => {
   const excluidas = new Set(['whatsapp', 'pie-pagina', 'vista-google']);
   const elegibles = registro.filter(({slug}) => !excluidas.has(slug));
-  assert.equal(seccionesSimulacion.length, 15);
+  assert.equal(seccionesSimulacion.length, 14);
   assert.deepEqual(
     seccionesSimulacion.map(({key}) => key),
     elegibles.map(({slug}) => slug),
@@ -100,14 +100,14 @@ test('el inventario adapta las 15 piezas del registro completo sin duplicar meta
   for (const pieza of seccionesSimulacion) {
     const origen = registro.find(({slug}) => slug === pieza.key);
     assert.ok(origen);
-    assert.equal(pieza.nombre, pieza.key === 'portada' ? 'PORTADA' : origen.nombre);
+    assert.equal(pieza.nombre, origen.nombre);
     assert.equal(pieza.planMinimo, origen.planMinimo);
     assert.equal(pieza.cuentaParaTope, origen.cuentaParaTope);
     assert.equal(pieza.icono, getComponentes().find(({id}) => id === pieza.key)?.icono);
   }
   assert.ok(getSeccionSimulacion('formulario-contacto'));
   assert.ok(getSeccionSimulacion('cotizacion-pasos'));
-  assert.ok(getSeccionSimulacion('redes-sociales'));
+  assert.equal(getSeccionSimulacion('redes-sociales'), undefined);
   assert.equal(getSeccionSimulacion('panel-administracion'), undefined);
 });
 
@@ -165,7 +165,7 @@ test('los enlaces anteriores conservan secciones y normalizan las opciones que a
   assert.equal(actual.pagina.ancho, 'completo');
 });
 
-test('la muestra renderiza los 15 componentes originales con sus props ficticias sin mutar la bóveda', () => {
+test('la muestra renderiza los 14 componentes originales con sus props ficticias sin mutar la bóveda', () => {
   for (const {key} of seccionesSimulacion) {
     const original = registro.find(({slug}) => slug === key);
     assert.ok(original);
@@ -203,7 +203,7 @@ test('la muestra renderiza los 15 componentes originales con sus props ficticias
   }
 });
 
-test('PORTADA se bloquea por vista landing, independientemente del plan', () => {
+test('Portada se bloquea por vista landing, independientemente del plan', () => {
   for (const plan of ['presencia-digital', 'captacion-clientes']) {
     let config = valor(cambiarPlan(inicial(), plan));
     invalido(quitarSeccion(config, 'portada'), /landing/i);
@@ -238,17 +238,21 @@ test('agregar, mover y quitar preservan el original y nunca duplican secciones',
   invalido(quitarSeccion(config, 'ausente'), /no está/i);
 });
 
-test('el máximo es seis computables, PORTADA cuenta y redes sociales no', () => {
+test('el máximo es seis computables y el contacto con redes cuenta una sola vez', () => {
   assert.equal(MAX_SECCIONES, 6);
-  const seis = ['portada', 'servicios', 'galeria', 'testimonios', 'preguntas-frecuentes', 'equipo'];
+  const seis = [
+    'portada',
+    'servicios',
+    'galeria',
+    'testimonios',
+    'preguntas-frecuentes',
+    'formulario-contacto',
+  ];
   const config = valor(
     validarSimulacion({...inicial(), plan: 'captacion-clientes', secciones: seis}),
   );
   assert.equal(contarSecciones(config.secciones), 6);
-  const conRedes = valor(agregarSeccion(config, 'redes-sociales'));
-  assert.equal(conRedes.secciones.length, 7);
-  assert.equal(contarSecciones(conRedes.secciones), 6);
-  invalido(agregarSeccion(conRedes, 'quienes-somos'), /seis/i);
+  invalido(agregarSeccion(config, 'quienes-somos'), /seis/i);
   assert.equal(contarSecciones(['key-desconocida']), 1);
   const sinPortada = valor(
     validarSimulacion({
@@ -304,11 +308,12 @@ test('el codec restaura exactamente opciones, orden y keys futuras', () => {
       whatsapp: 'abajo-izquierda',
       volverArriba: true,
     },
-    secciones: ['equipo', 'portada', 'futura-seccion', 'cotizacion-pasos', 'redes-sociales'],
+    secciones: ['equipo', 'portada', 'futura-seccion', 'cotizacion-pasos', 'formulario-contacto'],
   };
   assert.deepEqual(valor(decodeConfig(encodeConfig(config))), config);
   assert.deepEqual(valor(decodeConfig(encodeConfig(inicial()))), inicial());
-  const {componentes, ...configExportada} = JSON.parse(formatoJSON(config));
+  const {componentes, requisitosPagina, ...configExportada} = JSON.parse(formatoJSON(config));
+  assert.ok(requisitosPagina);
   assert.deepEqual(configExportada, config);
   assert.deepEqual(
     componentes.map(({key}: {key: string}) => key),
@@ -316,6 +321,133 @@ test('el codec restaura exactamente opciones, orden y keys futuras', () => {
   );
   assert.match(formatoJSON(config), /\n {2}"v": 1/);
   assert.match(formatoJSON(config), /\n {4}"esLanding": false/);
+});
+
+test('los enlaces antiguos integran redes en contacto sin duplicar ni reordenar otras secciones', () => {
+  for (const [antes, despues] of [
+    [
+      ['portada', 'redes-sociales', 'galeria'],
+      ['portada', 'formulario-contacto', 'galeria'],
+    ],
+    [
+      ['portada', 'redes-sociales', 'galeria', 'formulario-contacto'],
+      ['portada', 'galeria', 'formulario-contacto'],
+    ],
+    [
+      ['portada', 'formulario-contacto', 'redes-sociales'],
+      ['portada', 'formulario-contacto'],
+    ],
+  ]) {
+    const config = valor(decodeConfig(comprimir({...inicial(), secciones: antes})));
+    assert.deepEqual(config.secciones, despues);
+    assert.deepEqual(valor(decodeConfig(encodeConfig(config))), config);
+    assert.equal(contarSecciones(config.secciones), despues.length);
+  }
+  invalido(
+    decodeConfig(
+      comprimir({
+        ...inicial(),
+        secciones: ['portada', 'formulario-contacto', 'formulario-contacto'],
+      }),
+    ),
+    /repetidas/i,
+  );
+  invalido(
+    decodeConfig(
+      comprimir({
+        ...inicial(),
+        secciones: [
+          'portada',
+          'servicios',
+          'galeria',
+          'testimonios',
+          'preguntas-frecuentes',
+          'quienes-somos',
+          'redes-sociales',
+        ],
+      }),
+    ),
+    /seis/i,
+  );
+});
+
+test('el JSON detalla datos concretos y condiciones sin inventar requisitos de redacción', () => {
+  for (const seccion of seccionesSimulacion) {
+    const datos = new Set<string>();
+    for (const requisito of seccion.requisitos) {
+      assert.match(requisito.dato, /^[a-z]+(?:-[a-z]+)*$/);
+      assert.ok(requisito.descripcion.trim());
+      assert.equal(datos.has(requisito.dato), false);
+      datos.add(requisito.dato);
+    }
+  }
+  const ubicacion = getSeccionSimulacion('ubicacion-horarios');
+  assert.deepEqual(
+    ubicacion?.requisitos.map(({dato}) => dato),
+    ['direccion', 'horarios'],
+  );
+  const contacto = getSeccionSimulacion('formulario-contacto');
+  assert.ok(contacto?.requisitos.some(({dato}) => dato === 'correo-destinatario'));
+  for (const dato of ['instagram-url', 'whatsapp-numero', 'otras-redes']) {
+    assert.ok(contacto?.requisitos.find((requisito) => requisito.dato === dato)?.condicion);
+  }
+  const todos = JSON.stringify(seccionesSimulacion.map(({requisitos}) => requisitos));
+  assert.doesNotMatch(todos, /misi[oó]n|visi[oó]n/i);
+  assert.deepEqual(getSeccionSimulacion('preguntas-frecuentes')?.requisitos, [
+    {dato: 'preguntas', descripcion: 'Lista de preguntas y respuestas reales del negocio.'},
+  ]);
+  const base = JSON.parse(formatoJSON(inicial()));
+  assert.deepEqual(Object.keys(base.requisitosPagina).sort(), Object.keys(inicial().pagina).sort());
+  assert.deepEqual(base.requisitosPagina.whatsapp, []);
+  const habilitado = JSON.parse(
+    formatoJSON({
+      ...inicial(),
+      pagina: {...inicial().pagina, whatsapp: 'abajo-derecha'},
+    }),
+  );
+  assert.equal(habilitado.requisitosPagina.whatsapp[0].dato, 'whatsapp-numero');
+  const sinNavegacion = JSON.parse(
+    formatoJSON({
+      ...inicial(),
+      pagina: {...inicial().pagina, navegacion: 'ninguna', footer: 'ninguno'},
+    }),
+  );
+  assert.deepEqual(sinNavegacion.requisitosPagina.navegacion, []);
+  assert.deepEqual(sinNavegacion.requisitosPagina.logo, []);
+  assert.deepEqual(sinNavegacion.requisitosPagina.footer, []);
+});
+
+test('el JSON usa Portada, unifica el nombre comercial y permite omitir testimonios sin datos reales', () => {
+  const config = simulacionSchema.parse({
+    secciones: ['portada', 'preguntas-frecuentes', 'testimonios'],
+  });
+  const exportado = JSON.parse(formatoJSON(config));
+  assert.equal(exportado.componentes[0].nombre, 'Portada');
+  assert.equal(exportado.componentes[0].key, 'portada');
+  assert.deepEqual(exportado.componentes[1].requisitos, [
+    {dato: 'preguntas', descripcion: 'Lista de preguntas y respuestas reales del negocio.'},
+  ]);
+  const nombre = getSeccionSimulacion('portada')?.requisitos.find(
+    ({dato}) => dato === 'nombre-negocio',
+  );
+  assert.ok(nombre);
+  assert.deepEqual(exportado.requisitosPagina.navegacion, [nombre]);
+  assert.deepEqual(exportado.requisitosPagina.footer[0], nombre);
+  assert.doesNotMatch(JSON.stringify(exportado), /nombre-sitio/);
+  const titular = exportado.requisitosPagina.footer.find(
+    ({dato}: {dato: string}) => dato === 'titular-sitio',
+  );
+  assert.match(titular.descripcion, /nombre legal/i);
+  assert.match(titular.condicion, /distinto del nombre comercial/);
+  assert.match(titular.condicion, /reutilizar nombre-negocio sin solicitar otro nombre/);
+  const testimonios = exportado.componentes[2].requisitos[0];
+  assert.equal(testimonios.dato, 'testimonios-reales');
+  assert.match(
+    testimonios.descripcion,
+    /Si no hay testimonios reales autorizados, se omite la sección/,
+  );
+  assert.match(testimonios.descripcion, /sin inventar opiniones/);
+  assert.deepEqual(valor(decodeConfig(encodeConfig(config))), config);
 });
 
 test('el JSON guía describe cada componente seleccionado sin modificar la configuración ni el codec', () => {
@@ -330,7 +462,12 @@ test('el JSON guía describe cada componente seleccionado sin modificar la confi
     const ficha = getComponentes().find(({id}) => id === seccion.key);
     assert.ok(ficha);
     assert.deepEqual(exportado.componentes, [
-      {key: seccion.key, nombre: seccion.nombre, descripcion: ficha.descripcion},
+      {
+        key: seccion.key,
+        nombre: seccion.nombre,
+        descripcion: ficha.descripcion,
+        requisitos: seccion.requisitos,
+      },
     ]);
     assert.ok(exportado.componentes[0].descripcion.trim());
     assert.deepEqual(config, original);
@@ -346,6 +483,12 @@ test('el JSON guía describe cada componente seleccionado sin modificar la confi
       nombre: 'Sección no encontrada',
       descripcion:
         'Componente desconocido en esta bóveda. Requiere revisión antes de implementarlo.',
+      requisitos: [
+        {
+          dato: 'definicion-componente',
+          descripcion: 'Especificar el componente desconocido y los datos que necesita.',
+        },
+      ],
     },
   ]);
   const vacio = simulacionSchema.parse({pagina: {esLanding: false}, secciones: []});
@@ -398,7 +541,8 @@ test('copiar entrega JSON completo y los permisos rechazados producen un error e
   try {
     assert.equal(valor(await copiarJSON(inicial())), 'Copiado');
     assert.equal(escrito, formatoJSON(inicial()));
-    const {componentes, ...configExportada} = JSON.parse(escrito);
+    const {componentes, requisitosPagina, ...configExportada} = JSON.parse(escrito);
+    assert.ok(requisitosPagina);
     assert.deepEqual(configExportada, inicial());
     assert.equal(componentes[0].key, 'portada');
     assert.equal(componentes[0].descripcion, getSeccionSimulacion('portada')?.descripcion);

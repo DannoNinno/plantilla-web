@@ -21,6 +21,13 @@ export const propsFormularioContacto = [
   },
   {nombre: 'nivelTitulo', tipo: "'h1' | 'h2'", requerida: false, descripcion: 'h2 por defecto.'},
   {
+    nombre: 'redes',
+    tipo: '{etiqueta: string, enlaces: readonly {id, texto, href}[]}',
+    requerida: false,
+    descripcion:
+      'Redes integradas en el contacto. Usa id instagram, whatsapp o facebook para su icono Lucide; otros IDs usan un icono de enlace. Sin enlaces no se muestra navegación.',
+  },
+  {
     nombre: 'onConsulta',
     tipo: '(consulta: ConsultaContacto) => void',
     requerida: false,

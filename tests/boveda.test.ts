@@ -48,8 +48,6 @@ import {UbicacionHorarios} from '../src/infrastructure/componentes/boveda/Seccio
 
 import {Whatsapp} from '../src/infrastructure/componentes/boveda/Secciones/Whatsapp';
 
-import {RedesSociales} from '../src/infrastructure/componentes/boveda/Secciones/Redes-sociales';
-
 import {PiePagina} from '../src/infrastructure/componentes/boveda/Secciones/Pie-pagina';
 
 import {Novedades} from '../src/infrastructure/componentes/boveda/Secciones/Novedades';
@@ -210,23 +208,61 @@ test('la galeria y ubicacion usan recursos propios dimensionados sin mapas exter
 
 test('las piezas incluidas no contactan numeros ni perfiles reales en el ejemplo', () => {
   const whatsapp = renderToStaticMarkup(createElement(Whatsapp, negocio.whatsapp));
-  const redes = renderToStaticMarkup(createElement(RedesSociales, negocio.redes));
+  const redes = renderToStaticMarkup(createElement(FormularioContacto, negocio.contacto));
   const pie = renderToStaticMarkup(
     createElement(PiePagina, {nombre: negocio.nombre, ...negocio.pie}),
   );
   assert.ok(whatsapp.includes('href="#contacto"'));
   assert.ok(whatsapp.includes('fixed bottom-28'));
   assert.ok(whatsapp.includes('WhatsApp de ejemplo'));
-  assert.equal(redes.match(/href="#contacto"/g)?.length, negocio.redes.enlaces.length);
+  assert.equal(redes.match(/href="#contacto"/g)?.length, negocio.contacto.redes.enlaces.length);
+  assert.match(redes, /lucide-instagram/);
+  assert.match(redes, /lucide-message-circle/);
+  assert.match(redes, /<nav aria-label="Redes sociales de ejemplo"/);
   assert.doesNotMatch(`${whatsapp}${redes}`, /href="https?:|wa\.me|tel:|mailto:/);
   assert.ok(pie.includes('<footer'));
   assert.ok(pie.includes('href="#portada"'));
-  const vacias = renderToStaticMarkup(createElement(RedesSociales, {etiqueta: 'Redes'}));
-  assert.doesNotMatch(vacias, /<li\b|href=/);
+  const vacias = renderToStaticMarkup(
+    createElement(FormularioContacto, {
+      campos: negocio.contacto.campos,
+      textos: negocio.contacto.textos,
+      redes: {etiqueta: 'Redes', enlaces: []},
+    }),
+  );
+  assert.doesNotMatch(vacias, /<nav\b|<li\b|href=/);
+  assert.match(vacias, /data-introduccion="false"/);
   const minimo = renderToStaticMarkup(
     createElement(PiePagina, {nombre: 'Negocio', copyright: 'Ejemplo'}),
   );
   assert.doesNotMatch(minimo, /<a\b|Café Aurora/);
+});
+
+test('el contacto integra redes opcionales sin fijar cuentas ni requerir textos introductorios', () => {
+  const html = renderToStaticMarkup(
+    createElement(FormularioContacto, {
+      campos: negocio.contacto.campos,
+      textos: negocio.contacto.textos,
+      redes: {
+        etiqueta: 'Canales de contacto',
+        enlaces: [
+          {id: 'instagram', texto: 'Mi Instagram', href: 'https://instagram.com/ejemplo'},
+          {id: 'whatsapp', texto: 'Mi WhatsApp', href: 'https://wa.me/56912345678'},
+          {id: 'otro', texto: 'Otro canal', href: '/canal/'},
+        ],
+      },
+    }),
+  );
+  assert.match(html, /data-introduccion="true"/);
+  assert.match(html, /href="https:\/\/instagram.com\/ejemplo"/);
+  assert.match(html, /href="https:\/\/wa.me\/56912345678"/);
+  assert.match(html, /lucide-link/);
+  assert.equal((html.match(/<nav\b/g) ?? []).length, 1);
+  assert.equal((html.match(/<form\b/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /<h1\b|<h2\b/);
+  assert.equal(
+    registro.some(({slug}) => slug === 'redes-sociales'),
+    false,
+  );
 });
 
 test('el formulario valida vacios, correo, espacios y limites exactos', () => {

@@ -63,15 +63,6 @@
     "revisionDescripcion": "TODO(Daniel): Revisar descripción de Ubicación y horarios."
   },
   {
-    "id": "redes-sociales",
-    "nombre": "Redes sociales",
-    "icono": "Share2",
-    "descripcion": "Reúne los enlaces a las redes de tu negocio.",
-    "planMinimo": "landing",
-    "destacado": false,
-    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Redes sociales."
-  },
-  {
     "id": "whatsapp",
     "nombre": "Botón de WhatsApp",
     "icono": "MessageCircle",
@@ -84,7 +75,7 @@
     "id": "formulario-contacto",
     "nombre": "Formulario de contacto",
     "icono": "Mail",
-    "descripcion": "Recibe los datos y consultas de tus clientes.",
+    "descripcion": "Reúne las consultas de tus clientes y los enlaces a tus redes sociales.",
     "planMinimo": "landing",
     "destacado": false,
     "revisionDescripcion": "TODO(Daniel): Revisar descripción de Formulario de contacto."
