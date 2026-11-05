@@ -55,6 +55,11 @@ export default function PiezaPlantilla({
         <Icono size={22} className="shrink-0 text-brand-sky" aria-hidden="true" />
         <p className="min-w-0 flex-1 text-sm font-bold">
           {indice + 1}. {nombre}
+          {seccion?.planMinimo === 'captacion' && (
+            <span className="mt-1 inline-block border border-brand-sky/40 px-2 py-1 text-xs font-normal text-brand-sky">
+              Configurable · Incluye panel de administración
+            </span>
+          )}
           {bloqueada && (
             <span className="mt-1 block text-xs text-brand-sky">Fija en vista landing</span>
           )}

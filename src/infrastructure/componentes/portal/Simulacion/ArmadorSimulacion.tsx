@@ -16,7 +16,6 @@ import {sortableKeyboardCoordinates} from '@dnd-kit/sortable';
 import {
   agregarSeccion,
   cambiarOpcion,
-  cambiarPlan,
   decodeConfig,
   getSeccionSimulacion,
   moverSeccion,
@@ -82,10 +81,6 @@ export default function ArmadorSimulacion({inicial}: {inicial: ConfigSimulacion}
     <div className="space-y-6">
       <div className="space-y-3">
         <h1 className="text-3xl font-bold">Simulación</h1>
-        <p className="max-w-3xl text-sm text-brand-light/80">
-          Arma una sola página desde la bóveda y prueba su estructura en otra pestaña. Tu
-          configuración viaja comprimida en la URL.
-        </p>
       </div>
       {error && (
         <p
@@ -119,7 +114,6 @@ export default function ArmadorSimulacion({inicial}: {inicial: ConfigSimulacion}
             <OpcionesPagina
               config={config}
               opcion={(key, valor) => aplicar(cambiarOpcion(config, key, valor))}
-              plan={(valor) => aplicar(cambiarPlan(config, valor))}
             />
             <AccionesSimulacion config={config} />
           </div>

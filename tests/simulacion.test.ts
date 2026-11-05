@@ -20,7 +20,6 @@ import {
   formatoJSON,
   getSeccionSimulacion,
   irASeccion,
-  MAX_SECCIONES,
   moverSeccion,
   opcionesSeleccion,
   opcionesSwitch,
@@ -111,7 +110,7 @@ test('el inventario adapta las 14 piezas del registro completo sin duplicar meta
   assert.equal(getSeccionSimulacion('panel-administracion'), undefined);
 });
 
-test('los valores iniciales y controles cubren todas las opciones de página', () => {
+test('los controles solo exponen navegación, pie y portada fija sin perder opciones antiguas', () => {
   assert.deepEqual(valoresPorDefecto, {
     v: 1,
     plan: 'presencia-digital',
@@ -135,10 +134,22 @@ test('los valores iniciales y controles cubren todas las opciones de página', (
   assert.deepEqual(simulacionSchema.parse({}), valoresPorDefecto);
   const controles = [...opcionesSeleccion, ...opcionesSwitch].map(({key}) => key);
   assert.equal(new Set(controles).size, controles.length);
-  assert.deepEqual(
-    [...controles, 'menuMovil', 'logo', 'tema', 'ancho'].sort(),
-    Object.keys(paginaSimulacionSchema.shape).sort(),
-  );
+  assert.deepEqual(controles, ['navegacion', 'footer', 'esLanding']);
+  assert.deepEqual(Object.keys(paginaSimulacionSchema.shape).sort(), [
+    'ancho',
+    'esLanding',
+    'fija',
+    'footer',
+    'logo',
+    'menuMovil',
+    'navegacion',
+    'scrollSuave',
+    'seccionActiva',
+    'tema',
+    'transparenteSobreLanding',
+    'volverArriba',
+    'whatsapp',
+  ]);
   const opciones = fuente(
     'infrastructure',
     'componentes',
@@ -146,11 +157,43 @@ test('los valores iniciales y controles cubren todas las opciones de página', (
     'Simulacion',
     'OpcionesPagina.tsx',
   );
-  assert.match(opciones, /Menú móvil tipo drawer/);
   assert.doesNotMatch(
     opciones,
-    /Posición del logo|Tema de navegación y pie|Ancho de las secciones/,
+    /Menú móvil tipo drawer|<select value=\{config.plan\}|WhatsApp|transparencia/,
   );
+});
+
+test('el sidebar se abre como panel lateral en escritorio y móvil con foco modal', () => {
+  const navegacion = fuente(
+    'infrastructure',
+    'componentes',
+    'portal',
+    'Simulacion',
+    'NavegacionEmulada.tsx',
+  );
+  assert.match(navegacion, /abierto && \(lateral \|\| movil\)/);
+  assert.doesNotMatch(navegacion, /<aside/);
+  const menu = fuente(
+    'infrastructure',
+    'componentes',
+    'portal',
+    'Simulacion',
+    'MenuMovilEmulado.tsx',
+  );
+  assert.match(menu, /const drawer = lateral \|\|/);
+  assert.match(menu, /lateral \? '' : 'lg:hidden'/);
+  assert.match(menu, /aria-modal="true"/);
+  assert.match(menu, /cerrar=\{cerrar\}/);
+  const emulacion = fuente(
+    'infrastructure',
+    'componentes',
+    'portal',
+    'Simulacion',
+    'Emulacion.tsx',
+  );
+  assert.match(emulacion, /useDrawerPanel\(config.pagina.navegacion === 'sidebar'\)/);
+  assert.match(emulacion, /inert=\{menu.abierto && menu.modal\}/);
+  assert.doesNotMatch(emulacion, /lg:pl-72|lg:grid-cols/);
 });
 
 test('los enlaces anteriores conservan secciones y normalizan las opciones que ahora son fijas', () => {
@@ -238,8 +281,7 @@ test('agregar, mover y quitar preservan el original y nunca duplican secciones',
   invalido(quitarSeccion(config, 'ausente'), /no está/i);
 });
 
-test('el máximo es seis computables y el contacto con redes cuenta una sola vez', () => {
-  assert.equal(MAX_SECCIONES, 6);
+test('el simulador admite todo el inventario sin tope comercial de secciones', () => {
   const seis = [
     'portada',
     'servicios',
@@ -252,7 +294,19 @@ test('el máximo es seis computables y el contacto con redes cuenta una sola vez
     validarSimulacion({...inicial(), plan: 'captacion-clientes', secciones: seis}),
   );
   assert.equal(contarSecciones(config.secciones), 6);
-  invalido(agregarSeccion(config, 'quienes-somos'), /seis/i);
+  assert.equal(valor(agregarSeccion(config, 'quienes-somos')).secciones.length, 7);
+  const completa = valor(
+    validarSimulacion({...inicial(), secciones: seccionesSimulacion.map(({key}) => key)}),
+  );
+  assert.equal(completa.secciones.length, seccionesSimulacion.length);
+  assert.deepEqual(valor(decodeConfig(encodeConfig(completa))), completa);
+  const exportada = JSON.parse(formatoJSON(completa));
+  for (const componente of exportada.componentes) {
+    assert.equal(
+      componente.incluyePanelAdministracion,
+      getSeccionSimulacion(componente.key)?.planMinimo === 'captacion',
+    );
+  }
   assert.equal(contarSecciones(['key-desconocida']), 1);
   const sinPortada = valor(
     validarSimulacion({
@@ -268,7 +322,7 @@ test('el máximo es seis computables y el contacto con redes cuenta una sola vez
       ],
     }),
   );
-  invalido(cambiarOpcion(sinPortada, 'esLanding', true), /seis/i);
+  assert.equal(valor(cambiarOpcion(sinPortada, 'esLanding', true)).secciones.length, 7);
   assert.equal(sinPortada.secciones.includes('portada'), false);
 });
 
@@ -276,11 +330,11 @@ test('los planes, exclusiones y errores de opciones no borran selecciones', () =
   const base = inicial();
   for (const pieza of seccionesSimulacion) {
     const resultado = agregarSeccion(base, pieza.key);
-    if (pieza.key === 'portada' || pieza.planMinimo === 'captacion') invalido(resultado);
+    if (pieza.key === 'portada') invalido(resultado);
     else valor(resultado);
   }
   const config = valor(agregarSeccion(valor(cambiarPlan(base, 'captacion-clientes')), 'equipo'));
-  invalido(cambiarPlan(config, 'presencia-digital'), /Captación/i);
+  assert.deepEqual(valor(cambiarPlan(config, 'presencia-digital')).secciones, config.secciones);
   assert.deepEqual(config.secciones, ['portada', 'equipo']);
   for (const key of ['whatsapp', 'pie-pagina', 'vista-google'])
     invalido(agregarSeccion(config, key));
@@ -314,7 +368,11 @@ test('el codec restaura exactamente opciones, orden y keys futuras', () => {
   assert.deepEqual(valor(decodeConfig(encodeConfig(inicial()))), inicial());
   const {componentes, requisitosPagina, ...configExportada} = JSON.parse(formatoJSON(config));
   assert.ok(requisitosPagina);
-  assert.deepEqual(configExportada, config);
+  assert.deepEqual(configExportada, {
+    v: config.v,
+    pagina: config.pagina,
+    secciones: config.secciones,
+  });
   assert.deepEqual(
     componentes.map(({key}: {key: string}) => key),
     config.secciones,
@@ -352,7 +410,7 @@ test('los enlaces antiguos integran redes en contacto sin duplicar ni reordenar 
     ),
     /repetidas/i,
   );
-  invalido(
+  valor(
     decodeConfig(
       comprimir({
         ...inicial(),
@@ -367,7 +425,6 @@ test('los enlaces antiguos integran redes en contacto sin duplicar ni reordenar 
         ],
       }),
     ),
-    /seis/i,
   );
 });
 
@@ -465,6 +522,7 @@ test('el JSON guía describe cada componente seleccionado sin modificar la confi
       {
         key: seccion.key,
         nombre: seccion.nombre,
+        incluyePanelAdministracion: seccion.planMinimo === 'captacion',
         descripcion: ficha.descripcion,
         requisitos: seccion.requisitos,
       },
@@ -481,6 +539,7 @@ test('el JSON guía describe cada componente seleccionado sin modificar la confi
     {
       key: 'futura-seccion',
       nombre: 'Sección no encontrada',
+      incluyePanelAdministracion: false,
       descripcion:
         'Componente desconocido en esta bóveda. Requiere revisión antes de implementarlo.',
       requisitos: [
@@ -543,7 +602,11 @@ test('copiar entrega JSON completo y los permisos rechazados producen un error e
     assert.equal(escrito, formatoJSON(inicial()));
     const {componentes, requisitosPagina, ...configExportada} = JSON.parse(escrito);
     assert.ok(requisitosPagina);
-    assert.deepEqual(configExportada, inicial());
+    assert.deepEqual(configExportada, {
+      v: inicial().v,
+      pagina: inicial().pagina,
+      secciones: inicial().secciones,
+    });
     assert.equal(componentes[0].key, 'portada');
     assert.equal(componentes[0].descripcion, getSeccionSimulacion('portada')?.descripcion);
     Object.defineProperty(navigator, 'clipboard', {
@@ -597,7 +660,7 @@ test('los anclajes compensan solo la navegación fija y respetan scroll suave y 
     assert.equal(desplazamientos.at(-1)?.behavior, 'instant');
     config = valor(cambiarOpcion(config, 'navegacion', 'sidebar'));
     irASeccion('portada', config);
-    assert.equal(desplazamientos.at(-1)?.top, 300);
+    assert.equal(desplazamientos.at(-1)?.top, 220);
     ventana.innerWidth = 390;
     irASeccion('portada', config);
     assert.equal(desplazamientos.at(-1)?.top, 220);

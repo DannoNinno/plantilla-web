@@ -45,9 +45,11 @@ function Pieza({
           <Icono size={20} className="shrink-0 text-brand-sky" aria-hidden="true" />
           <span className="min-w-0 flex-1">
             {seccion.nombre}
-            <span className="mt-1 block text-xs text-brand-light/80">
-              {seccion.planMinimo === 'captacion' ? 'Captación de Clientes' : 'Presencia Digital'}
-            </span>
+            {seccion.planMinimo === 'captacion' && (
+              <span className="mt-1 inline-block border border-brand-sky/40 px-2 py-1 text-xs font-normal text-brand-sky">
+                Configurable · Incluye panel de administración
+              </span>
+            )}
           </span>
           <Plus size={16} aria-hidden="true" />
         </button>
@@ -84,10 +86,6 @@ export default function Inventario({
       <h2 id="inventario-titulo" className="text-xl font-bold">
         Inventario de secciones
       </h2>
-      <p className="text-sm text-brand-light/80">
-        Agrega con un clic o arrastra el asa a la plantilla. Las piezas no disponibles indican el
-        motivo debajo: ya agregadas, exclusivas de otro plan o máximo de secciones alcanzado.
-      </p>
       <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
         {seccionesSimulacion.map((seccion) => (
           <Pieza key={seccion.key} seccion={seccion} config={config} agregar={agregar} />

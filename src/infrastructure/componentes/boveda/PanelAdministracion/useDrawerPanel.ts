@@ -8,7 +8,7 @@ function suscribir(cambio: () => void) {
   return () => consulta.removeEventListener('change', cambio);
 }
 
-export function useDrawerPanel() {
+export function useDrawerPanel(modalEnEscritorio = false) {
   const [abierto, setAbierto] = useState(false);
   const panelRef = useRef<HTMLElement>(null);
   const movil = useSyncExternalStore(
@@ -16,11 +16,12 @@ export function useDrawerPanel() {
     () => window.matchMedia('(max-width: 1023px)').matches,
     () => false,
   );
+  const modal = movil || modalEnEscritorio;
   useEffect(() => {
     if (!abierto) return;
     const anterior = document.activeElement;
     const overflow = document.body.style.overflow;
-    if (movil) {
+    if (modal) {
       document.body.style.overflow = 'hidden';
       panelRef.current?.querySelector<HTMLElement>('button, a[href]')?.focus();
     }
@@ -29,7 +30,7 @@ export function useDrawerPanel() {
         evento.preventDefault();
         setAbierto(false);
       }
-      if (!movil || evento.key !== 'Tab') return;
+      if (!modal || evento.key !== 'Tab') return;
       const elementos = Array.from(
         panelRef.current?.querySelectorAll<HTMLElement>(
           'button:not([disabled]), a[href], [tabindex="0"]',
@@ -51,6 +52,6 @@ export function useDrawerPanel() {
       document.removeEventListener('keydown', teclado);
       if (anterior instanceof HTMLElement && anterior.isConnected) anterior.focus();
     };
-  }, [abierto, movil]);
-  return {abierto, setAbierto, movil, panelRef};
+  }, [abierto, modal]);
+  return {abierto, setAbierto, movil, modal, panelRef};
 }

@@ -11,7 +11,7 @@ import DockEmulacion from './DockEmulacion';
 import {useDrawerPanel} from '../../boveda/PanelAdministracion/useDrawerPanel';
 
 export default function Emulacion({config}: {config: ConfigSimulacion}) {
-  const menu = useDrawerPanel();
+  const menu = useDrawerPanel(config.pagina.navegacion === 'sidebar');
   const [aviso, setAviso] = useState('');
   const [vista, setVista] = useState<VistaEmulacion>({
     activa: config.secciones[0] ?? '',
@@ -19,18 +19,16 @@ export default function Emulacion({config}: {config: ConfigSimulacion}) {
   });
   useEffect(() => observarEmulacion(config, setVista), [config]);
   const p = config.pagina;
-  const lateral = p.navegacion === 'sidebar';
   const espacio =
     p.fija &&
-    (lateral || (p.navegacion === 'navbar' && !(p.esLanding && p.transparenteSobreLanding)));
+    p.navegacion !== 'ninguna' &&
+    !(p.navegacion === 'navbar' && p.esLanding && p.transparenteSobreLanding);
   return (
-    <div
-      className={`relative min-h-dvh bg-brand-simulacion text-brand-ink ${lateral && !p.fija ? 'lg:grid lg:grid-cols-[18rem_minmax(0,1fr)]' : ''}`}
-    >
+    <div className="relative min-h-dvh bg-brand-simulacion text-brand-ink">
       <NavegacionEmulada config={config} vista={vista} menu={menu} />
       <div
-        inert={menu.abierto && menu.movil}
-        className={`min-w-0 pb-28 ${espacio ? (lateral ? 'pt-panel-header lg:pl-72 lg:pt-0' : 'pt-panel-header') : ''}`}
+        inert={menu.abierto && menu.modal}
+        className={`min-w-0 pb-28 ${espacio ? 'pt-panel-header' : ''}`}
       >
         <main
           id="contenido-emulado"
@@ -58,7 +56,7 @@ export default function Emulacion({config}: {config: ConfigSimulacion}) {
         </main>
         <FooterEmulado pagina={p} />
       </div>
-      <div className="contents" inert={menu.abierto && menu.movil}>
+      <div className="contents" inert={menu.abierto && menu.modal}>
         <ExtrasEmulados config={config} />
         <DockEmulacion config={config} />
       </div>

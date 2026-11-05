@@ -2,7 +2,6 @@
 
 import {useDroppable} from '@dnd-kit/core';
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
-import {contarSecciones, MAX_SECCIONES} from '@/infrastructure/handlers/simulacion';
 import type {ConfigSimulacion} from '@/infrastructure/handlers/simulacion';
 import PiezaPlantilla from './PiezaPlantilla';
 
@@ -23,12 +22,9 @@ export default function Plantilla({
           Plantilla
         </h2>
         <p className="text-sm text-brand-sky" aria-live="polite">
-          {contarSecciones(config.secciones)} / {MAX_SECCIONES} secciones computables
+          {config.secciones.length} secciones
         </p>
       </div>
-      <p className="text-sm text-brand-light/80">
-        Arrastra para ordenar o usa las flechas. Redes sociales no cuenta para el tope.
-      </p>
       <div
         ref={setNodeRef}
         data-testid="plantilla"

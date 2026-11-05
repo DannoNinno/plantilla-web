@@ -276,7 +276,6 @@ export function renderizarSeccionSimulacion(key: string) {
   }
   return instancia.renderizar();
 }
-export const MAX_SECCIONES = 6;
 const MAX_CODIFICADO = 4096;
 
 export const paginaSimulacionSchema = z
@@ -339,15 +338,6 @@ export const simulacionSchema = z
       error(
         'WhatsApp y el pie se configuran como opciones de página; la vista Google no es una sección.',
       );
-    if (
-      config.plan === 'presencia-digital' &&
-      config.secciones.some((key) => getSeccionSimulacion(key)?.planMinimo === 'captacion')
-    )
-      error(
-        'Quita las secciones exclusivas de Captación de Clientes antes de usar Presencia Digital.',
-      );
-    if (contarSecciones(config.secciones) > MAX_SECCIONES)
-      error('El máximo es de seis secciones computables por página, incluida Portada.');
   });
 export type ConfigSimulacion = z.infer<typeof simulacionSchema>;
 export type PaginaSimulacion = ConfigSimulacion['pagina'];
@@ -488,13 +478,16 @@ export function urlSimulacion(config: ConfigSimulacion, emular = false) {
 export function formatoJSON(config: ConfigSimulacion) {
   return JSON.stringify(
     {
-      ...config,
+      v: config.v,
+      pagina: config.pagina,
+      secciones: config.secciones,
       requisitosPagina: requisitosPagina(config.pagina),
       componentes: config.secciones.map((key) => {
         const seccion = getSeccionSimulacion(key);
         return {
           key,
           nombre: seccion?.nombre ?? 'Sección no encontrada',
+          incluyePanelAdministracion: seccion?.planMinimo === 'captacion',
           descripcion:
             seccion?.descripcion ??
             'Componente desconocido en esta bóveda. Requiere revisión antes de implementarlo.',
@@ -525,20 +518,8 @@ export async function copiarJSON(config: ConfigSimulacion): Promise<ResultadoSim
 export const opcionesSeleccion = [
   {key: 'navegacion', nombre: 'Navegación', valores: ['navbar', 'sidebar', 'ninguna']},
   {key: 'footer', nombre: 'Pie de página', valores: ['simple', 'completo', 'ninguno']},
-  {
-    key: 'whatsapp',
-    nombre: 'WhatsApp visual',
-    valores: ['ninguno', 'abajo-derecha', 'abajo-izquierda'],
-  },
 ] as const;
-export const opcionesSwitch = [
-  {key: 'esLanding', nombre: 'Vista landing: Portada fija al principio'},
-  {key: 'fija', nombre: 'Navegación fija'},
-  {key: 'transparenteSobreLanding', nombre: 'Navbar transparente sobre Portada'},
-  {key: 'scrollSuave', nombre: 'Desplazamiento suave'},
-  {key: 'seccionActiva', nombre: 'Resaltar sección visible'},
-  {key: 'volverArriba', nombre: 'Botón volver arriba'},
-] as const;
+export const opcionesSwitch = [{key: 'esLanding', nombre: 'Portada fija al principio'}] as const;
 export const anclaSeccion = (key: string) => `seccion-${key}`;
 export function seguirEnlaceEjemplo(href: string, config: ConfigSimulacion) {
   const destino = href.startsWith('#') ? document.getElementById(href.slice(1)) : null;
@@ -552,10 +533,7 @@ export function seguirEnlaceEjemplo(href: string, config: ConfigSimulacion) {
 export function irASeccion(key: string, config: ConfigSimulacion) {
   const elemento = document.getElementById(anclaSeccion(key));
   if (!elemento) throw new Error(`No existe el anclaje de la sección ${key}.`);
-  const compensa =
-    config.pagina.fija &&
-    (config.pagina.navegacion === 'navbar' ||
-      (config.pagina.navegacion === 'sidebar' && window.innerWidth < 1024));
+  const compensa = config.pagina.fija && config.pagina.navegacion !== 'ninguna';
   window.scrollTo({
     top: window.scrollY + elemento.getBoundingClientRect().top - (compensa ? 80 : 0),
     behavior:

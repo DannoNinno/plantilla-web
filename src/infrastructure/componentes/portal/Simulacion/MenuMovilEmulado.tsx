@@ -16,7 +16,8 @@ export default function MenuMovilEmulado({
   panelRef: RefObject<HTMLElement | null>;
   id: string;
 }) {
-  const drawer = config.pagina.menuMovil === 'drawer';
+  const lateral = config.pagina.navegacion === 'sidebar';
+  const drawer = lateral || config.pagina.menuMovil === 'drawer';
   return (
     <>
       <button
@@ -24,7 +25,7 @@ export default function MenuMovilEmulado({
         aria-label="Cerrar menú de la página"
         tabIndex={-1}
         onClick={cerrar}
-        className="fixed inset-x-0 bottom-0 top-panel-header z-40 bg-brand-ink/70 lg:hidden"
+        className={`fixed inset-x-0 bottom-0 top-panel-header z-40 bg-brand-ink/70 ${lateral ? '' : 'lg:hidden'}`}
       />
       <aside
         ref={panelRef}
@@ -32,7 +33,7 @@ export default function MenuMovilEmulado({
         role="dialog"
         aria-modal="true"
         aria-label="Menú de la página"
-        className={`fixed top-panel-header z-50 max-h-[calc(100dvh-theme(spacing.panel-header))] overflow-y-auto overscroll-contain border p-4 shadow-xl lg:hidden ${
+        className={`fixed top-panel-header z-50 max-h-[calc(100dvh-theme(spacing.panel-header))] overflow-y-auto overscroll-contain border p-4 shadow-xl ${lateral ? '' : 'lg:hidden'} ${
           drawer ? 'bottom-0 left-0 w-[min(18rem,calc(100vw-2rem))]' : 'inset-x-0'
         } border-brand-sky/40 bg-brand-ink text-brand-light`}
       >

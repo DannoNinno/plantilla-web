@@ -36,7 +36,7 @@ export default function NavegacionEmulada({
     <>
       <header
         data-testid="navegacion-emulada"
-        className={`z-30 h-panel-header border-b ${posicion} ${lateral ? 'lg:hidden' : ''}
+        className={`z-30 h-panel-header border-b ${posicion}
       ${transparente ? 'border-transparent bg-transparent text-brand-light' : tema}`}
       >
         <div className="flex h-full w-full items-center justify-between gap-3 px-4 sm:px-6">
@@ -53,23 +53,14 @@ export default function NavegacionEmulada({
               aria-expanded={abierto}
               aria-controls={id}
               onClick={() => setAbierto(!abierto)}
-              className="grid h-11 w-11 place-items-center border border-current focus-visible:outline-brand-coral lg:hidden"
+              className={`grid h-11 w-11 place-items-center border border-current focus-visible:outline-brand-coral ${lateral ? '' : 'lg:hidden'}`}
             >
               {abierto ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
             </button>
           )}
         </div>
       </header>
-      {lateral && (
-        <aside
-          aria-label="Navegación lateral de la página"
-          className={`hidden min-h-dvh w-72 flex-col gap-6 border-r p-5 lg:flex ${tema} ${p.fija ? 'fixed inset-y-0 left-0 z-30 overflow-y-auto' : 'relative self-start'}`}
-        >
-          <LogoSimulacion oscuro />
-          <EnlacesEmulados config={config} activa={vista.activa} oscuro vertical />
-        </aside>
-      )}
-      {tieneEnlaces && abierto && movil && (
+      {tieneEnlaces && abierto && (lateral || movil) && (
         <MenuMovilEmulado
           config={config}
           activa={vista.activa}
