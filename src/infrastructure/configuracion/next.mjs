@@ -5,6 +5,7 @@ import administracion from '../../data/administracion.json' with {type: 'json'};
 const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {agentUpgrade: 'security'},
   distDir: process.env.NEXT_BUILD_DIR || '.next',
   trailingSlash: true,
   images: {unoptimized: true},
