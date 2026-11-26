@@ -1,4 +1,4 @@
-import {Menu, X} from 'lucide-react';
+import BotonDrawer from './BotonDrawer';
 import type {ReactNode} from 'react';
 
 export default function NavbarPanel({
@@ -24,16 +24,7 @@ export default function NavbarPanel({
     <header className="fixed inset-x-0 top-0 z-50 h-panel-header bg-brand-ink text-brand-light shadow-lg">
       <div className="flex h-full items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={alternar}
-            aria-expanded={abierto}
-            aria-controls={idPanel}
-            aria-label={abierto ? 'Cerrar navegación' : 'Abrir navegación'}
-            className="grid h-10 w-10 shrink-0 place-items-center border border-brand-sky/60 text-brand-sky hover:bg-brand-sky/15 focus-visible:outline-brand-sky"
-          >
-            {abierto ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
-          </button>
+          <BotonDrawer abierto={abierto} alternar={alternar} idPanel={idPanel} />
           <a
             href={inicio}
             aria-label={`${nombre}: ${subtitulo}`}

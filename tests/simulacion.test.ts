@@ -163,7 +163,7 @@ test('los controles solo exponen navegación, pie y portada fija sin perder opci
   );
 });
 
-test('el sidebar se abre como panel lateral en escritorio y móvil con foco modal', () => {
+test('el sidebar usa el botón del admin, desplaza la página en escritorio y es modal solo en móvil', () => {
   const navegacion = fuente(
     'infrastructure',
     'componentes',
@@ -171,8 +171,10 @@ test('el sidebar se abre como panel lateral en escritorio y móvil con foco moda
     'Simulacion',
     'NavegacionEmulada.tsx',
   );
-  assert.match(navegacion, /abierto && \(lateral \|\| movil\)/);
+  assert.match(navegacion, /tieneEnlaces && \(lateral \|\| movil\)/);
   assert.doesNotMatch(navegacion, /<aside/);
+  assert.match(navegacion, /<BotonDrawer[\s\S]*?<LogoSimulacion/);
+  assert.match(navegacion, /dialogoLateral = lateral && movil && abierto/);
   const menu = fuente(
     'infrastructure',
     'componentes',
@@ -182,8 +184,11 @@ test('el sidebar se abre como panel lateral en escritorio y móvil con foco moda
   );
   assert.match(menu, /const drawer = lateral \|\|/);
   assert.match(menu, /lateral \? '' : 'lg:hidden'/);
-  assert.match(menu, /aria-modal="true"/);
-  assert.match(menu, /cerrar=\{cerrar\}/);
+  assert.match(menu, /animacionDrawer\(abierto\)/);
+  assert.match(menu, /movil && abierto &&/);
+  assert.match(menu, /!lateral && \(\s*<button/);
+  assert.match(menu, /inert=\{!abierto\}/);
+  assert.match(menu, /cerrar=\{movil \? cerrar : undefined\}/);
   const emulacion = fuente(
     'infrastructure',
     'componentes',
@@ -191,9 +196,9 @@ test('el sidebar se abre como panel lateral en escritorio y móvil con foco moda
     'Simulacion',
     'Emulacion.tsx',
   );
-  assert.match(emulacion, /useDrawerPanel\(config.pagina.navegacion === 'sidebar'\)/);
+  assert.match(emulacion, /useDrawerPanel\(\)/);
   assert.match(emulacion, /inert=\{menu.abierto && menu.modal\}/);
-  assert.doesNotMatch(emulacion, /lg:pl-72|lg:grid-cols/);
+  assert.match(emulacion, /menu.abierto \? 'lg:ml-72'/);
 });
 
 test('los enlaces anteriores conservan secciones y normalizan las opciones que ahora son fijas', () => {

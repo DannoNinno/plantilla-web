@@ -11,7 +11,7 @@ import DockEmulacion from './DockEmulacion';
 import {useDrawerPanel} from '../../boveda/PanelAdministracion/useDrawerPanel';
 
 export default function Emulacion({config}: {config: ConfigSimulacion}) {
-  const menu = useDrawerPanel(config.pagina.navegacion === 'sidebar');
+  const menu = useDrawerPanel();
   const [aviso, setAviso] = useState('');
   const [vista, setVista] = useState<VistaEmulacion>({
     activa: config.secciones[0] ?? '',
@@ -28,7 +28,11 @@ export default function Emulacion({config}: {config: ConfigSimulacion}) {
       <NavegacionEmulada config={config} vista={vista} menu={menu} />
       <div
         inert={menu.abierto && menu.modal}
-        className={`min-w-0 pb-28 ${espacio ? 'pt-panel-header' : ''}`}
+        className={`min-w-0 pb-28 ${espacio ? 'pt-panel-header' : ''} ${
+          p.navegacion === 'sidebar'
+            ? `transition-[margin-left] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${menu.abierto ? 'lg:ml-72' : ''}`
+            : ''
+        }`}
       >
         <main
           id="contenido-emulado"

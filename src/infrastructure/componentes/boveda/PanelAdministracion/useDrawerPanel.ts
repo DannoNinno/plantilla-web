@@ -8,7 +8,7 @@ function suscribir(cambio: () => void) {
   return () => consulta.removeEventListener('change', cambio);
 }
 
-export function useDrawerPanel(modalEnEscritorio = false) {
+export function useDrawerPanel() {
   const [abierto, setAbierto] = useState(false);
   const panelRef = useRef<HTMLElement>(null);
   const movil = useSyncExternalStore(
@@ -16,7 +16,7 @@ export function useDrawerPanel(modalEnEscritorio = false) {
     () => window.matchMedia('(max-width: 1023px)').matches,
     () => false,
   );
-  const modal = movil || modalEnEscritorio;
+  const modal = movil;
   useEffect(() => {
     if (!abierto) return;
     const anterior = document.activeElement;
@@ -33,7 +33,7 @@ export function useDrawerPanel(modalEnEscritorio = false) {
       if (!modal || evento.key !== 'Tab') return;
       const elementos = Array.from(
         panelRef.current?.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), a[href], [tabindex="0"]',
+          'button:not([disabled]):not([tabindex="-1"]), a[href], [tabindex="0"]',
         ) ?? [],
       );
       const primero = elementos[0];

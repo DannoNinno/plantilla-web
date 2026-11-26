@@ -5,7 +5,7 @@ export default function CargandoVista() {
     <div
       role="status"
       aria-live="polite"
-      className="flex min-h-64 items-center justify-center gap-3 bg-brand-ink p-8 text-brand-light"
+      className="flex min-h-64 items-center justify-center gap-3 bg-brand-ink p-8 text-brand-light motion-reduce:animate-none"
     >
       <LoaderCircle
         aria-hidden="true"

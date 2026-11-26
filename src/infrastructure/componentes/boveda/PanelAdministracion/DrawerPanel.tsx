@@ -1,5 +1,6 @@
 import {ShieldCheck, X} from 'lucide-react';
 import type {ReactNode, RefObject} from 'react';
+import {animacionDrawer} from './animacionDrawer';
 
 export default function DrawerPanel({
   abierto,
@@ -39,9 +40,7 @@ export default function DrawerPanel({
         aria-modal={movil && abierto ? true : undefined}
         aria-hidden={!abierto}
         inert={!abierto}
-        className={`fixed bottom-0 left-0 top-panel-header z-40 flex w-[min(18rem,calc(100vw-2rem))] flex-col border-r border-brand-sky/40 bg-brand-ink text-brand-light shadow-xl transition-[transform,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:relative lg:inset-auto lg:h-[calc(100dvh-theme(spacing.panel-header))] lg:w-72 ${
-          abierto ? 'visible translate-x-0' : 'invisible -translate-x-full'
-        }`}
+        className={`fixed bottom-0 left-0 top-panel-header z-40 flex w-[min(18rem,calc(100vw-2rem))] flex-col border-r border-brand-sky/40 bg-brand-ink text-brand-light shadow-xl lg:relative lg:inset-auto lg:h-[calc(100dvh-theme(spacing.panel-header))] lg:w-72 ${animacionDrawer(abierto)}`}
       >
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-brand-sky/30 p-5">
           <div className="flex items-center gap-3">

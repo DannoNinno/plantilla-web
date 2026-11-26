@@ -75,6 +75,10 @@ export default {
       },
       keyframes: {
         'simulacion-entrada': {from: {opacity: '0'}, to: {opacity: '1'}},
+        skeleton: {
+          '0%, 100%': {opacity: '0.45'},
+          '50%': {opacity: '1'},
+        },
         entrada: {
           from: {opacity: '0', transform: 'translateY(12px)'},
           to: {opacity: '1', transform: 'translateY(0)'},
@@ -100,6 +104,7 @@ export default {
       },
       animation: {
         'simulacion-entrada': 'simulacion-entrada 240ms ease-out both',
+        skeleton: 'skeleton 1.35s ease-in-out infinite',
         intro: 'entrada 450ms ease-out both',
         pagina: 'entrada 300ms ease-out both',
         'perfil-icono': 'perfil-icono 900ms cubic-bezier(0.22, 1, 0.36, 1) both',

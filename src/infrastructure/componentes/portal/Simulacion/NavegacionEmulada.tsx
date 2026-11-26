@@ -8,6 +8,7 @@ import type {useDrawerPanel} from '../../boveda/PanelAdministracion/useDrawerPan
 import LogoSimulacion from './LogoSimulacion';
 import EnlacesEmulados from './EnlacesEmulados';
 import MenuMovilEmulado from './MenuMovilEmulado';
+import BotonDrawer from '../../boveda/PanelAdministracion/BotonDrawer';
 
 export default function NavegacionEmulada({
   config,
@@ -32,43 +33,56 @@ export default function NavegacionEmulada({
     : superpuesta
       ? 'absolute inset-x-0 top-0'
       : 'relative';
+  const dialogoLateral = lateral && movil && abierto;
   return (
-    <>
+    <section
+      ref={lateral ? panelRef : undefined}
+      role={dialogoLateral ? 'dialog' : undefined}
+      aria-modal={dialogoLateral || undefined}
+      aria-label="Navegación de la página"
+    >
       <header
         data-testid="navegacion-emulada"
         className={`z-30 h-panel-header border-b ${posicion}
       ${transparente ? 'border-transparent bg-transparent text-brand-light' : tema}`}
       >
         <div className="flex h-full w-full items-center justify-between gap-3 px-4 sm:px-6">
-          <LogoSimulacion oscuro />
+          <div className="flex items-center gap-2">
+            {lateral && tieneEnlaces && (
+              <BotonDrawer abierto={abierto} alternar={() => setAbierto(!abierto)} idPanel={id} />
+            )}
+            <LogoSimulacion oscuro />
+          </div>
           {!lateral && (
             <div className="hidden min-w-0 flex-1 lg:flex">
               <EnlacesEmulados config={config} activa={vista.activa} oscuro />
             </div>
           )}
-          {tieneEnlaces && (
+          {!lateral && tieneEnlaces && (
             <button
               type="button"
               aria-label={abierto ? 'Cerrar menú de la página' : 'Abrir menú de la página'}
               aria-expanded={abierto}
               aria-controls={id}
               onClick={() => setAbierto(!abierto)}
-              className={`grid h-11 w-11 place-items-center border border-current focus-visible:outline-brand-coral ${lateral ? '' : 'lg:hidden'}`}
+              className="grid h-11 w-11 place-items-center border border-current focus-visible:outline-brand-coral lg:hidden"
             >
               {abierto ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
             </button>
           )}
         </div>
       </header>
-      {tieneEnlaces && abierto && (lateral || movil) && (
+      {tieneEnlaces && (lateral || movil) && (
         <MenuMovilEmulado
+          abierto={abierto}
           config={config}
           activa={vista.activa}
           cerrar={() => setAbierto(false)}
-          panelRef={panelRef}
+          movil={movil}
+          panelRef={lateral ? undefined : panelRef}
           id={id}
         />
       )}
-    </>
+    </section>
   );
 }

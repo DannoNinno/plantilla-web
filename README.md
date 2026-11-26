@@ -208,6 +208,8 @@ Las pruebas HTTP de inicio de sesión, bloqueo y revocación se habilitan con `T
 
 ### Simulación de una página
 
+El menú lateral de la simulación usa el mismo botón que administración, a la izquierda del logo, tanto para abrir como para cerrar. En escritorio desplaza el contenido sin bloquearlo; en móvil se superpone y también se puede cerrar tocando el fondo o eligiendo un enlace. La transición dura 500 ms y es inmediata con movimiento reducido.
+
 El menú privado incluye **Simulación**, inmediatamente después de Inicio, con el icono `PanelsTopLeft` de Lucide. `/admin/simulacion/` conserva el layout administrativo y permite agregar, arrastrar, ordenar y quitar piezas del inventario. Los botones de subir/bajar ofrecen una alternativa sin arrastre.
 
 [simulacion.ts](./src/infrastructure/handlers/simulacion.ts) concentra el esquema Zod, valores iniciales, adaptación del registro completo de la bóveda, reglas, codec, enlaces y comportamiento de navegación. Los componentes están fragmentados en [Simulacion](./src/infrastructure/componentes/portal/Simulacion). Los nombres, planes mínimos y cómputo se leen de la bóveda; los iconos se obtienen de las fichas comerciales existentes y se conservan al agregar las piezas a la plantilla. La emulación monta los componentes reales mediante el renderizador del registro y sus props ficticias existentes, sin copiar ni modificar la bóveda.
