@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {ArrowUpRight, LockKeyhole} from 'lucide-react';
+import {ArrowUpRight, Check, LockKeyhole} from 'lucide-react';
 import type {Paquete} from '@/domain/types/paquete';
 import type {CatalogoServicios} from '@/domain/types/catalogo';
 import PrecioPlan from './PrecioPlan';
@@ -7,15 +7,12 @@ import {clasesBoton} from '../../boveda/Base/Boton/estilos';
 
 export interface TarjetaPlanProps {
   paquete: Paquete;
-  numero: number;
   textos: CatalogoServicios['textos'];
-  comparacion: CatalogoServicios['comparacion'];
 }
 
-export default function TarjetaPlan({paquete, numero, textos, comparacion}: TarjetaPlanProps) {
-  const datos = paquete.comparacion;
-  if (paquete.habilitado && !datos) {
-    throw new Error(`El plan no tiene una comparacion habilitada: ${paquete.id}`);
+export default function TarjetaPlan({paquete, textos}: TarjetaPlanProps) {
+  if (paquete.habilitado && !paquete.puntos?.length) {
+    throw new Error(`El plan habilitado no tiene puntos clave: ${paquete.id}`);
   }
 
   return (
@@ -27,103 +24,46 @@ export default function TarjetaPlan({paquete, numero, textos, comparacion}: Tarj
           : 'bg-brand-plan-disabled text-brand-ink/70 shadow-none'
       } p-5 sm:p-6`}
     >
-      <div className="min-w-0">
-        <span
-          className={`text-xs font-semibold uppercase tracking-widest ${
-            paquete.habilitado ? 'text-brand-sky-text' : 'text-brand-ink/70'
-          }`}
-        >
-          {textos.plan} {numero}
-        </span>
-        <h3 className="mt-4 break-words text-2xl font-bold sm:text-3xl">{paquete.nombre}</h3>
-        {paquete.habilitado ? (
-          <PrecioPlan paquete={paquete} textos={textos} className="mt-4" />
-        ) : (
-          <p className="mt-4 flex w-fit items-center gap-2 rounded-lg bg-brand-ink/10 px-3 py-2 text-sm font-semibold text-brand-ink/75">
-            <LockKeyhole size={18} aria-hidden="true" />
-            {textos.proximamente}
-          </p>
-        )}
-        <p className="mt-4 leading-relaxed text-brand-ink/70">{paquete.resumen}</p>
-      </div>
-      {paquete.habilitado && datos && (
-        <dl className="mt-6 grid gap-4 border-t border-brand-ink/10 pt-5 text-sm">
-          <div>
-            <dt className="font-semibold">{comparacion.paginas}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">
-              {datos.paginasMaximas === 1
-                ? comparacion.unaPagina
-                : comparacion.cantidadPaginas.replace('{cantidad}', String(datos.paginasMaximas))}
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.secciones}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">
-              {comparacion.cantidadSecciones.replace(
-                '{cantidad}',
-                String(datos.seccionesPorPagina),
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.plazoEntrega}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">{datos.plazoEntrega}</dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.panelAdministracion}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">
-              {datos.panelAdministracion ? comparacion.panelIncluido : comparacion.panelNoIncluido}
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.correoDominio}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">
-              {datos.correoDominio ? comparacion.panelIncluido : comparacion.panelNoIncluido}
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.propiedad}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">{comparacion.activosCliente}</dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.ajustes}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">
-              {comparacion.ajustesIncluidos}
-            </dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.capacitacion}</dt>
-            <dd className="mt-2 leading-relaxed text-brand-ink/70">{datos.capacitacion}</dd>
-          </div>
-          <div>
-            <dt className="font-semibold">{comparacion.reuniones}</dt>
-            <dd className="mt-2 text-brand-ink/70">
-              <ul className="list-disc space-y-2 pl-4 leading-relaxed">
-                {datos.reunionesIncluidas.map((reunion) => (
-                  <li key={reunion}>{reunion}</li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        </dl>
+      <h3 className="break-words text-2xl font-bold">{paquete.nombre}</h3>
+      <p className="mt-2 leading-relaxed text-brand-ink/70">{paquete.resumen}</p>
+      {!paquete.habilitado && (
+        <p className="mt-4 flex w-fit items-center gap-2 rounded-lg bg-brand-ink/10 px-3 py-2 text-sm font-semibold text-brand-ink/75">
+          <LockKeyhole size={18} aria-hidden="true" />
+          {textos.proximamente}
+        </p>
       )}
       {paquete.habilitado && (
-        <div className="mt-auto flex flex-col gap-3 pt-6">
-          <Link
-            href={`/contacto?paquete=${paquete.id}`}
-            aria-label={`${textos.cotizarPlan}: ${paquete.nombre}`}
-            className={clasesBoton('coral')}
-          >
-            {textos.cotizarPlan} <ArrowUpRight size={18} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/catalogo/${paquete.id}`}
-            aria-label={`${textos.detalle} ${paquete.nombre}`}
-            className={clasesBoton('borde')}
-          >
-            {textos.verDetalles}
-          </Link>
-        </div>
+        <>
+          <PrecioPlan paquete={paquete} textos={textos} className="mt-4" />
+          <ul className="mt-5 space-y-2 border-t border-brand-ink/10 pt-5 text-sm leading-relaxed">
+            {paquete.puntos?.map((punto) => (
+              <li key={punto} className="flex gap-2">
+                <Check
+                  size={18}
+                  className="mt-0.5 shrink-0 text-brand-sky-text"
+                  aria-hidden="true"
+                />
+                {punto}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-auto flex flex-col items-center gap-2 pt-6">
+            <Link
+              href={`/contacto?paquete=${paquete.id}`}
+              aria-label={`${textos.cotizarPlan}: ${paquete.nombre}`}
+              className={clasesBoton('coral', 'w-full')}
+            >
+              {textos.cotizarPlan} <ArrowUpRight size={18} aria-hidden="true" />
+            </Link>
+            <Link
+              href={`/catalogo/${paquete.id}`}
+              aria-label={`${textos.detalle} ${paquete.nombre}`}
+              className="inline-flex min-h-12 items-center rounded text-sm font-semibold text-brand-sky-text underline underline-offset-4"
+            >
+              {textos.verDetalles}
+            </Link>
+          </div>
+        </>
       )}
     </article>
   );

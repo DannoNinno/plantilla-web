@@ -2,6 +2,7 @@ import Link from 'next/link';
 import {getNavegacion, getSitio} from '../../../handlers/datos';
 import {CONTACT_EMAIL} from '../../../../domain/configuracion/contacto';
 import {enlaceCorreo} from '../../../../domain/servicios/contacto';
+import PlazoRespuesta from '../Contacto/PlazoRespuesta';
 
 const sitio = getSitio();
 const links = getNavegacion().pie;
@@ -9,7 +10,7 @@ const links = getNavegacion().pie;
 const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-brand-ink text-white/70">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-8 text-sm">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 pb-24 pt-8 text-sm">
         <p>
           &copy; {new Date().getFullYear()} {sitio.nombre} / {sitio.persona}
         </p>
@@ -29,6 +30,7 @@ const Footer: React.FC = () => {
           >
             {CONTACT_EMAIL}
           </a>
+          <PlazoRespuesta />
         </div>
       </div>
     </footer>

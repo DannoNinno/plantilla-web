@@ -83,6 +83,10 @@ export default {
           from: {opacity: '0', transform: 'translateY(12px)'},
           to: {opacity: '1', transform: 'translateY(0)'},
         },
+        subida: {
+          from: {transform: 'translateY(10px)'},
+          to: {transform: 'translateY(0)'},
+        },
         'perfil-icono': {
           '0%, 100%': {transform: 'translateY(0) rotate(0) scale(1)'},
           '35%': {transform: 'translateY(-2px) rotate(-7deg) scale(1.08)'},
@@ -105,7 +109,7 @@ export default {
       animation: {
         'simulacion-entrada': 'simulacion-entrada 240ms ease-out both',
         skeleton: 'skeleton 1.35s ease-in-out infinite',
-        intro: 'entrada 450ms ease-out both',
+        subida: 'subida 350ms ease-out both',
         pagina: 'entrada 300ms ease-out both',
         'perfil-icono': 'perfil-icono 900ms cubic-bezier(0.22, 1, 0.36, 1) both',
         'perfil-titulo': 'perfil-titulo 650ms ease-out both',

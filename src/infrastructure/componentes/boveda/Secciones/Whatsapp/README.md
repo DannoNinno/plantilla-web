@@ -7,6 +7,8 @@ Enlace flotante con destino configurable. Siempre incluido en ambos planes; no c
 | texto | string | Sí        |
 | href  | string | Sí        |
 
+`posicion` es opcional: `elevada` (por defecto) o `esquina`, para sitios sin botonera inferior.
+
 El texto define el nombre accesible y el tooltip. En un proyecto cliente `href` puede apuntar al canal que el cliente autorice. En esta demo apunta a `#contacto`: no hay un número real, conversación externa ni envío. El nombre accesible avisa que es una demostración.
 
 La posición deja espacio para la botonera de la demo (`bottom-28`). Un hover breve y el foco visible respetan movimiento reducido. No necesita JavaScript.

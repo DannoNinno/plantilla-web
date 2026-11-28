@@ -5,6 +5,8 @@ export interface ConfiguracionSitio {
   logo: string;
   catalogoHabilitado: boolean;
   demosHabilitadas: boolean;
+  whatsapp: string;
+  plazoRespuesta: string;
 }
 
 export interface EnlaceNavegacion {

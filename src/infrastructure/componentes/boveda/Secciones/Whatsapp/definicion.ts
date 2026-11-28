@@ -19,5 +19,11 @@ export const definicionWhatsapp: DefinicionRegistro<WhatsappProps> = {
       requerida: true,
       descripcion: 'En la ejemplo apunta al formulario local, no a un número real.',
     },
+    {
+      nombre: 'posicion',
+      tipo: "'elevada' | 'esquina'",
+      requerida: false,
+      descripcion: 'Altura del botón. Por defecto, elevada.',
+    },
   ],
 };

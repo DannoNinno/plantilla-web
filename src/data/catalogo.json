@@ -3,47 +3,29 @@
     "etiqueta": "Mis servicios",
     "titulo": "Te ayudo a hacer crecer tu negocio.",
     "identidad": "Soy {persona}, y {marca} es mi marca personal.",
-    "presentacion": "Trabajo directamente contigo para mejorar tu presencia digital, captar clientes, automatizar procesos o llevar tus productos a una tienda online.",
+    "presentacion": "Trabajo directamente contigo para mejorar tu presencia digital, captar clientes o automatizar procesos.",
     "planes": "Elige tu punto de partida",
-    "precios": "Precios finales desde, con impuesto incluido: no pagas un impuesto extra sobre el valor publicado. Elige dos pagos de 50 % o pago completo al inicio con un descuento aproximado del 15 %. Defino contigo el alcance antes de comenzar.",
-    "impuestoIncluido": "impuesto incluido",
-    "pagoDosCuotas": "En dos pagos de 50 %",
-    "pagoInicial": "Pago completo al inicio",
+    "impuestoIncluido": "Impuesto incluido",
+    "pagoDosCuotas": "o 2 pagos desde {monto}",
+    "pagoInicial": "Pago único",
     "descuentoPagoInicial": "descuento aproximado del 15 %",
-    "plan": "Plan",
     "detalle": "Ver detalle de",
     "verDetalles": "Ver detalles",
-    "cotizarPlan": "Cotizar este plan",
+    "cotizarPlan": "Cotizar",
     "cotizacion": "Cotizo según lo que necesita tu negocio. No hay pagos ni compras en este sitio.",
-    "alcance": "Gestión de alcance",
-    "principios": "Mis compromisos contigo",
+    "alcance": "Condiciones de pago y alcance",
     "adicionales": "Servicios y costos adicionales",
     "detalleAdicionales": "No hay soporte incluido, salvo 1 hora de ajustes sin costo tras la entrega. Para más cambios agendamos una reunión; el valor hora está por definir y se acuerda antes del pago. Aplico los cambios en un máximo de 2 días hábiles después del pago.",
     "volver": "Volver al catálogo",
-    "verAlcance": "Gestión de alcance y mis compromisos",
+    "verAlcance": "Ver condiciones de pago y alcance",
     "verAdicionales": "Consultar costos adicionales",
     "verBase": "Ver la base incluida de Presencia Digital",
     "consulta": "Conversemos sobre tu proyecto",
-    "proximamente": "Próximamente"
+    "proximamente": "Próximamente",
+    "alcanceInicial": "El alcance se define en la reunión inicial."
   },
   "comparacion": {
     "titulo": "Planes de servicios",
-    "paginas": "Páginas (vistas)",
-    "unaPagina": "1 página.",
-    "cantidadPaginas": "Hasta {cantidad} páginas.",
-    "secciones": "Secciones por página",
-    "cantidadSecciones": "Hasta {cantidad} secciones por página.",
-    "panelAdministracion": "Panel de administración",
-    "panelIncluido": "Incluido",
-    "panelNoIncluido": "No incluido",
-    "correoDominio": "Correo con tu dominio",
-    "propiedad": "Sitio, dominio y cuentas",
-    "activosCliente": "A tu nombre.",
-    "ajustes": "Ajustes tras la entrega",
-    "ajustesIncluidos": "1 hora sin costo. Sin soporte adicional incluido.",
-    "plazoEntrega": "Plazo de entrega",
-    "reuniones": "Reuniones incluidas",
-    "capacitacion": "Capacitación incluida",
     "anterior": "Plan anterior",
     "siguiente": "Plan siguiente",
     "ayudaCarrusel": "Recorre los planes con las flechas, selecciona una tarjeta lateral o desliza en móvil. Al llegar a un extremo, continúas por el otro. Con el carrusel enfocado también puedes usar las teclas de dirección.",
@@ -53,13 +35,8 @@
     "posicion": "Plan {actual} de {total}"
   },
   "vitrina": {
-    "titulo": "Componentes para tu sitio",
-    "descripcion": "Conoce los componentes disponibles: Presencia Digital incluye 1 página y Captación de Clientes hasta 5 páginas, ambas con hasta 6 secciones por página. Seleccionamos las piezas dentro de ese alcance.",
-    "tituloDetalle": "Qué puede incluir tu sitio",
-    "introduccionDetalle": "Defino contigo las piezas que necesita tu negocio, con hasta 6 secciones por página dentro del alcance de tu plan. Las páginas adicionales se cotizan aparte.",
-    "revisionDetalle": "TODO(Daniel): Revisar introducción de la vitrina y alcance de los componentes.",
-    "sumaPlan": "Suma {plan}",
-    "verTodos": "Ver todos los componentes",
+    "tituloDetalle": "Componentes",
+    "introduccionDetalle": "Incluye todos los componentes básicos que necesites, con los textos e imágenes que me envíes hasta la fecha límite. Lo que llegue después se cotiza aparte. Los 7 días hábiles comienzan cuando tengo todo el material.",
     "etiquetas": {
       "incluidoEn": "Incluido en {plan}",
       "incluidoSinPlan": "Incluido en tu plan",
@@ -68,46 +45,16 @@
       "componenteClave": "Componente clave"
     }
   },
-  "filosofia": {
-    "titulo": "No solo desarrollo páginas web.",
-    "introduccion": "Te ayudo a:",
-    "objetivos": [
-      "Conseguir más clientes.",
-      "Mejorar tu presencia digital.",
-      "Automatizar procesos manuales.",
-      "Ahorrar tiempo operativo.",
-      "Centralizar información.",
-      "Crear soluciones escalables para tu negocio."
-    ],
-    "conclusion": "Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecnológica."
-  },
   "alcance": {
-    "introduccion": "Para cuidar la calidad de mi trabajo y cumplir los plazos que acordamos:",
     "condiciones": [
-      "Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.",
-      "Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.",
-      "Las páginas que repiten el mismo diseño cuentan como una sola: el listado de noticias y el detalle de cada noticia cuentan como una página.",
-      "No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración.",
-      "Las páginas adicionales y los requerimientos fuera del alcance se cotizan aparte.",
-      "Ambos planes se entregan en 7 días hábiles desde la entrega de tus textos, logo y fotos.",
-      "Hitos: día 1 reunión inicial, día 4 primera versión, día 6 ajustes y día 7 entrega.",
+      "El alcance se define en la reunión inicial.",
+      "Los precios publicados son desde e incluyen impuesto: no pagas un impuesto extra.",
       "En dos pagos de 50 %: el primero antes de la reunión inicial (día 1) y el segundo al aprobar la versión final, antes de publicar (día 7).",
       "Puedes pagar todo al inicio con un descuento aproximado del 15 % y los montos finales publicados.",
       "No publico el sitio hasta recibir el pago total.",
-      "No hay soporte incluido, salvo 1 hora de ajustes sin costo tras la entrega.",
-      "Para más cambios agendamos una reunión y acordamos el valor hora, por definir, antes del pago.",
-      "Aplico los cambios adicionales en un máximo de 2 días hábiles después del pago."
+      "Los requerimientos fuera del alcance se cotizan aparte."
     ]
   },
-  "principios": [
-    "Te explico los costos con transparencia.",
-    "Defino contigo el alcance antes de comenzar.",
-    "Mantengo una comunicación constante contigo.",
-    "Desarrollo soluciones que puedas mantener en el tiempo.",
-    "Me enfoco en lo que aporta valor a tu negocio.",
-    "Te entrego documentación básica cuando corresponde.",
-    "Tu sitio, dominio, cuentas y activos digitales quedan siempre a tu nombre."
-  ],
   "adicionales": [
     {
       "nombre": "Reuniones Adicionales",

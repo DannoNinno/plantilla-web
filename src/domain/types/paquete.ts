@@ -1,13 +1,3 @@
-export interface ComparacionPlan {
-  paginasMaximas: number;
-  seccionesPorPagina: number;
-  panelAdministracion: boolean;
-  correoDominio: boolean;
-  plazoEntrega: string;
-  reunionesIncluidas: string[];
-  capacitacion: string;
-}
-
 export interface Paquete {
   id: string;
   habilitado: boolean;
@@ -16,7 +6,7 @@ export interface Paquete {
   descripcion: string;
   precioDesde: number;
   precioPagoInicial?: number;
-  comparacion?: ComparacionPlan;
+  puntos?: string[];
   secciones: {
     titulo: string;
     descripcion?: string;

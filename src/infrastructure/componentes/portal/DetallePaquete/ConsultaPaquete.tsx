@@ -1,5 +1,6 @@
 import type {Paquete} from '@/domain/types/paquete';
 import Contacto from '../Contacto/Contacto';
+import PlazoRespuesta from '../Contacto/PlazoRespuesta';
 import EntradaScroll from '../../boveda/EntradaScroll/EntradaScroll';
 
 export interface ConsultaPaqueteProps {
@@ -12,6 +13,7 @@ export default function ConsultaPaquete({paquete, paquetes, titulo}: ConsultaPaq
   return (
     <EntradaScroll id="consulta" className="mt-12 scroll-mt-28 border-t border-brand-ink/10 pt-8">
       <h2 className="text-2xl font-bold">{titulo}</h2>
+      <PlazoRespuesta className="mt-3 text-brand-ink/70" />
       <Contacto key={paquete.id} paquetes={paquetes} paqueteInicial={paquete.id} />
     </EntradaScroll>
   );

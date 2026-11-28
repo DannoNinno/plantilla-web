@@ -7,10 +7,10 @@ export const consultaConfig: ConfiguracionConsulta = {
   responsable: 'Daniel Salamanca Jorquera',
   correoContacto: CONTACT_EMAIL,
   mesesConservacion: 6,
-  plazoRespuesta: '2 a 3 días hábiles',
+  plazoRespuesta: '24 horas hábiles',
   proveedores: 'Cloudflare y Google (Gmail)',
   proveedoresFueraDeChile: true,
-  aviso: {version: PRIVACY_VERSION, fecha: '2 de noviembre de 2026'},
+  aviso: {version: PRIVACY_VERSION, fecha: '28 de noviembre de 2026'},
   planes: paquetes.filter((plan) => plan.habilitado).map(({id, nombre}) => ({id, nombre})),
   whatsapp: {activo: false, numero: '', mensaje: 'Hola, quisiera hacer una consulta.'},
 };

@@ -1,11 +1,10 @@
 import Link from 'next/link';
-import {ArrowDown, ArrowUpRight, LockKeyhole, PanelsTopLeft, UserRound} from 'lucide-react';
+import {ArrowUpRight, LockKeyhole, PanelsTopLeft, UserRound} from 'lucide-react';
 import {getPaquete, getSitio} from '../../../handlers/datos';
 import {precioDesdeCLP} from '../../../../domain/servicios/precio';
-import {clasesBoton} from '../../boveda/Base/Boton/estilos';
 import EntradaScroll from '../../boveda/EntradaScroll/EntradaScroll';
 import IlustracionServicio from './IlustracionServicio';
-import {EnlaceSeccion} from '../../boveda/EntradaScroll/EnlaceSeccion';
+import AccionesInicio from './AccionesInicio';
 
 const sitio = getSitio();
 const precioInicial = getPaquete('landing')?.precioPagoInicial;
@@ -47,20 +46,18 @@ export default function Entrada() {
         tabIndex={-1}
         className="relative flex min-h-intro scroll-mt-header flex-col bg-brand-ink bg-intro text-white sm:min-h-intro-lg sm:scroll-mt-header-lg"
       >
-        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-start justify-center px-6 py-16 sm:py-20">
+        <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-start justify-center px-6 py-16 motion-safe:animate-subida sm:py-20">
           <p className="mb-6 text-sm font-medium uppercase tracking-[0.2em] text-brand-sky">
             {sitio.persona} / {sitio.nombre}
           </p>
-          <h1 className="max-w-4xl text-4xl font-bold leading-tight motion-safe:animate-intro sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-4xl text-4xl font-bold leading-tight sm:text-6xl lg:text-7xl">
             Tu negocio, mi experiencia.{' '}
             <span className="block text-brand-sky">Tecnología para avanzar.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/75">
             Soy {sitio.persona}, y {sitio.nombre} es mi marca personal. {sitio.descripcion}
           </p>
-          <EnlaceSeccion destino="que-hago" className={clasesBoton('coral', 'mt-8')}>
-            Explorar el sitio <ArrowDown size={18} aria-hidden="true" />
-          </EnlaceSeccion>
+          <AccionesInicio mostrarPlanes={sitio.catalogoHabilitado} />
         </div>
       </section>
       <EntradaScroll
@@ -205,7 +202,7 @@ export default function Entrada() {
               <h3 className="text-4xl font-bold sm:text-5xl">Perfil</h3>
               <p
                 id="perfil-descripcion"
-                className="mt-4 max-w-sm text-lg leading-relaxed text-brand-ink/75 transition-[opacity,color] duration-puerta ease-out group-focus-visible:text-white group-focus-visible:opacity-100 fine-pointer:opacity-0 fine-pointer:group-hover:text-white fine-pointer:group-hover:opacity-100"
+                className="mt-4 max-w-sm text-lg leading-relaxed text-brand-ink/75 transition-colors duration-puerta ease-out group-focus-visible:text-white fine-pointer:group-hover:text-white"
               >
                 Soy {sitio.persona}. Conoce un poco de mí y de cómo puedo ayudarte con tu negocio.
               </p>

@@ -94,11 +94,7 @@
     "nombre": "Panel de administración",
     "icono": "LayoutDashboard",
     "descripcion": "Actualiza los textos y las imágenes de tu sitio.",
-    "detalles": [
-      "Edita textos e imágenes sin modificar el código del sitio.",
-      "Gestiona hasta 5 páginas, con hasta 6 secciones por página, dentro del alcance de Captación de Clientes.",
-      "Incluye una capacitación inicial de 1 hora para aprender a administrarlo."
-    ],
+    "detalles": ["Edita textos e imágenes sin modificar el código del sitio."],
     "planMinimo": "portal",
     "destacado": true,
     "revisionDescripcion": "TODO(Daniel): Revisar descripción y detalles de Panel de administración."

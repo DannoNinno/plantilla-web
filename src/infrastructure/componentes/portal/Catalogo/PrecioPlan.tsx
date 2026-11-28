@@ -1,6 +1,6 @@
 import type {Paquete} from '@/domain/types/paquete';
 import type {CatalogoServicios} from '@/domain/types/catalogo';
-import {precioDesdeCLP} from '../../../../domain/servicios/precio';
+import {cuotaCLP, precioDesdeCLP} from '../../../../domain/servicios/precio';
 
 export default function PrecioPlan({
   paquete,
@@ -16,16 +16,16 @@ export default function PrecioPlan({
   }
   return (
     <div className={className}>
-      <p className="text-2xl font-semibold text-brand-sky-text">
-        {precioDesdeCLP(paquete.precioDesde)} · {textos.impuestoIncluido}
-      </p>
-      <p className="mt-1 text-sm text-brand-ink/70">{textos.pagoDosCuotas}</p>
-      <p className="mt-3 font-semibold text-brand-sky-text">
-        {precioDesdeCLP(paquete.precioPagoInicial)} · {textos.impuestoIncluido}
-      </p>
-      <p className="mt-1 text-sm text-brand-ink/70">
+      <p className="text-xs font-semibold uppercase tracking-widest text-brand-ink/70">
         {textos.pagoInicial} · {textos.descuentoPagoInicial}
       </p>
+      <p className="mt-1 text-3xl font-bold text-brand-coral-dark">
+        {precioDesdeCLP(paquete.precioPagoInicial)}
+      </p>
+      <p className="mt-3 font-semibold">
+        {textos.pagoDosCuotas.replace('{monto}', cuotaCLP(paquete.precioDesde, 2))}
+      </p>
+      <p className="mt-2 text-xs text-brand-ink/70">{textos.impuestoIncluido}</p>
     </div>
   );
 }

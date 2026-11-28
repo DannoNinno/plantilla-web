@@ -84,7 +84,7 @@ export default function CoverflowCarousel({items, labels}: CoverflowCarouselProp
                 inert={!active && !neighbor ? true : undefined}
                 className={`relative col-start-1 row-start-1 w-full max-w-[30rem] transition-[transform,opacity,filter] duration-[400ms] ease-out motion-reduce:transition-none sm:w-[68%] lg:w-[48%] ${translation} ${
                   active
-                    ? 'z-20 scale-100 opacity-100 blur-none motion-safe:max-sm:animate-intro'
+                    ? 'z-20 scale-100 opacity-100 blur-none motion-safe:max-sm:animate-subida'
                     : neighbor
                       ? 'hidden z-10 scale-[0.85] opacity-50 blur-[2px] sm:block'
                       : 'pointer-events-none z-0 hidden scale-[0.85] opacity-0 blur-[4px] sm:block'
