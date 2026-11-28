@@ -63,15 +63,6 @@
     "revisionDescripcion": "TODO(Daniel): Revisar descripción de Ubicación y horarios."
   },
   {
-    "id": "redes-sociales",
-    "nombre": "Redes sociales",
-    "icono": "Share2",
-    "descripcion": "Reúne los enlaces a las redes de tu negocio.",
-    "planMinimo": "landing",
-    "destacado": false,
-    "revisionDescripcion": "TODO(Daniel): Revisar descripción de Redes sociales."
-  },
-  {
     "id": "whatsapp",
     "nombre": "Botón de WhatsApp",
     "icono": "MessageCircle",
@@ -84,7 +75,7 @@
     "id": "formulario-contacto",
     "nombre": "Formulario de contacto",
     "icono": "Mail",
-    "descripcion": "Recibe los datos y consultas de tus clientes.",
+    "descripcion": "Reúne las consultas de tus clientes y los enlaces a tus redes sociales.",
     "planMinimo": "landing",
     "destacado": false,
     "revisionDescripcion": "TODO(Daniel): Revisar descripción de Formulario de contacto."
@@ -105,7 +96,7 @@
     "descripcion": "Actualiza los textos y las imágenes de tu sitio.",
     "detalles": [
       "Edita textos e imágenes sin modificar el código del sitio.",
-      "Gestiona el contenido de las vistas o secciones incluidas en tu plan.",
+      "Gestiona hasta 5 páginas, con hasta 6 secciones por página, dentro del alcance de Captación de Clientes.",
       "Incluye una capacitación inicial de 1 hora para aprender a administrarlo."
     ],
     "planMinimo": "portal",

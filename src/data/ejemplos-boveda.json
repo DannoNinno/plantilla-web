@@ -27,6 +27,13 @@
     "id": "contacto",
     "titulo": "Te estamos escuchando.",
     "descripcion": "¿Quieres conocer nuestros cafés o preparar un encuentro? Déjanos tu consulta. Este formulario es una simulación y no envía información.",
+    "redes": {
+      "etiqueta": "Redes sociales de ejemplo",
+      "enlaces": [
+        {"id": "instagram", "texto": "Instagram", "href": "#contacto"},
+        {"id": "whatsapp", "texto": "WhatsApp", "href": "#contacto"}
+      ]
+    },
     "campos": {
       "nombre": {
         "etiqueta": "Tu nombre",
@@ -234,22 +241,6 @@
   "whatsapp": {
     "texto": "WhatsApp de ejemplo: ir al formulario simulado",
     "href": "#contacto"
-  },
-  "redes": {
-    "etiqueta": "Redes sociales de ejemplo",
-    "descripcion": "Enlaces de ejemplo: abren el contacto simulado, no perfiles reales.",
-    "enlaces": [
-      {
-        "id": "instagram",
-        "texto": "Instagram",
-        "href": "#contacto"
-      },
-      {
-        "id": "facebook",
-        "texto": "Facebook",
-        "href": "#contacto"
-      }
-    ]
   },
   "pie": {
     "descripcion": "Un buen café, una pausa y una historia por compartir.",

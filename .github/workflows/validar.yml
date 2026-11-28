@@ -1,0 +1,69 @@
+name: Validar aplicación
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'feat/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: '.node-version'
+          cache: pnpm
+      - name: Instalar versiones bloqueadas
+        run: pnpm install --frozen-lockfile
+      - name: Validar código y paquete de Cloudflare
+        run: pnpm run check
+      - name: Probar autenticación y HTTP en el runtime de Workers
+        shell: bash
+        env:
+          TEST_BASE_URL: http://localhost:3108
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFileSync} from 'node:fs';
+          import {randomBytes} from 'node:crypto';
+          writeFileSync('.dev.vars', [
+            'NEXTJS_ENV=development',
+            ...['IP_SALT', 'ADMIN_SECRET', 'ADMIN_PASSWORD']
+              .map((clave) => `${clave}=${randomBytes(32).toString('hex')}`),
+          ].join('\n') + '\n', {flag: 'wx'});
+          JS
+          pnpm run db:migrate:local
+          pnpm exec opennextjs-cloudflare preview --port 3108 > worker-test.log 2>&1 &
+          WORKER_PID=$!
+          trap 'kill "$WORKER_PID" 2>/dev/null || true' EXIT
+          READY=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent "$TEST_BASE_URL/admin/acceso/" > /dev/null; then
+              READY=true
+              break
+            fi
+            sleep 2
+          done
+          if [ "$READY" != true ]; then
+            cat worker-test.log
+            exit 1
+          fi
+          pnpm run test:runtime

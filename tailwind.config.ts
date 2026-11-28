@@ -32,6 +32,9 @@ export default {
         },
         brand: {
           ...coloresMarca,
+          simulacion: `color-mix(in srgb, ${coloresMarca.light} 92%, ${coloresMarca.sky})`,
+          'simulacion-suave': `color-mix(in srgb, ${coloresMarca.light} 84%, ${coloresMarca.sky})`,
+          'plan-disabled': `color-mix(in srgb, ${coloresMarca.light} 82%, ${coloresMarca.ink})`,
           'sky-profile': `color-mix(in srgb, ${coloresMarca['sky-text']} 85%, ${coloresMarca.ink})`,
           'catalogo-active': `color-mix(in srgb, rgb(${rgb(coloresMarca['sky-text'])} / 0.96) 80%, rgb(${rgb(coloresMarca.ink)} / 0.96))`,
           'perfil-active': `color-mix(in srgb, rgb(${rgb(coloresMarca['coral-dark'])} / 0.96) 80%, rgb(${rgb(coloresMarca.ink)} / 0.96))`,
@@ -43,6 +46,7 @@ export default {
       spacing: {
         header: alturaCabecera.base,
         'header-lg': alturaCabecera.amplia,
+        'panel-header': '5rem',
         'boveda-ancla': '4rem',
       },
       outlineWidth: {foco: '3px'},
@@ -70,6 +74,11 @@ export default {
         'capacidad-icono': `0 8px 20px rgb(${rgb(coloresMarca['sky-text'])} / 0.2)`,
       },
       keyframes: {
+        'simulacion-entrada': {from: {opacity: '0'}, to: {opacity: '1'}},
+        skeleton: {
+          '0%, 100%': {opacity: '0.45'},
+          '50%': {opacity: '1'},
+        },
         entrada: {
           from: {opacity: '0', transform: 'translateY(12px)'},
           to: {opacity: '1', transform: 'translateY(0)'},
@@ -94,6 +103,8 @@ export default {
         },
       },
       animation: {
+        'simulacion-entrada': 'simulacion-entrada 240ms ease-out both',
+        skeleton: 'skeleton 1.35s ease-in-out infinite',
         intro: 'entrada 450ms ease-out both',
         pagina: 'entrada 300ms ease-out both',
         'perfil-icono': 'perfil-icono 900ms cubic-bezier(0.22, 1, 0.36, 1) both',

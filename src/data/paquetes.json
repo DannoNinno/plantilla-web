@@ -4,15 +4,18 @@
     "habilitado": true,
     "nombre": "Presencia Digital",
     "resumen": "Te ayudo a dar a conocer tu negocio y facilitar el primer contacto.",
-    "descripcion": "Diseño y desarrollo tu landing page adaptable a móviles, con hasta 5 vistas o secciones y canales de contacto para comenzar tu presencia online.",
-    "precioDesde": 150000,
+    "descripcion": "Diseño y desarrollo 1 página adaptable a móviles, con hasta 6 secciones: inicio, servicios, quiénes somos, galería o testimonios, preguntas frecuentes y contacto.",
+    "precioDesde": 177000,
+    "precioPagoInicial": 150000,
     "comparacion": {
-      "seccionesMaximas": 5,
+      "paginasMaximas": 1,
+      "seccionesPorPagina": 6,
       "panelAdministracion": false,
-      "plazoEntrega": "Hasta 5 días hábiles.",
+      "correoDominio": false,
+      "plazoEntrega": "7 días hábiles desde la entrega de tus textos, logo y fotos.",
       "reunionesIncluidas": [
-        "1 reunión de levantamiento (máximo 2 horas).",
-        "1 reunión de revisión y entrega (máximo 2 horas)."
+        "Día 1: reunión inicial (máximo 2 horas).",
+        "Día 7: reunión de revisión y entrega (máximo 2 horas)."
       ],
       "capacitacion": "1 sesión de capacitación incluida (máximo 1 hora)."
     },
@@ -30,25 +33,31 @@
         "titulo": "Incluye",
         "elementos": [
           "Landing Page responsive.",
-          "Hasta 5 vistas o secciones.",
+          "1 página (vista), con hasta 6 secciones.",
           "Formulario de contacto.",
           "Integración WhatsApp.",
           "Integración redes sociales.",
           "Diseño adaptable a dispositivos móviles.",
-          "Configuración técnica básica."
+          "Configuración técnica básica.",
+          "Sitio, dominio y cuentas a tu nombre.",
+          "1 hora de ajustes sin costo tras la entrega."
         ]
       },
       {
         "titulo": "Reuniones Incluidas",
         "elementos": [
-          "1 reunión de levantamiento (máximo 2 horas).",
-          "1 reunión de revisión y entrega (máximo 2 horas)."
+          "Día 1: reunión inicial (máximo 2 horas).",
+          "Día 7: reunión de revisión y entrega (máximo 2 horas)."
         ]
       },
       {
         "titulo": "Plazo de entrega",
         "elementos": [
-          "Hasta 5 días hábiles.",
+          "7 días hábiles desde la entrega de tus textos, logo y fotos.",
+          "Día 1: reunión inicial.",
+          "Día 4: primera versión.",
+          "Día 6: ajustes.",
+          "Día 7: entrega.",
           "Las reuniones incluidas se realizan dentro de ese período."
         ]
       },
@@ -60,6 +69,7 @@
         "titulo": "No Incluye",
         "elementos": [
           "Panel de administración.",
+          "Correo con tu dominio.",
           "Gestión de usuarios.",
           "Base de datos.",
           "Integraciones externas.",
@@ -70,9 +80,35 @@
       {
         "titulo": "Consideraciones",
         "elementos": [
-          "El dominio lo compras tú y queda a tu nombre.",
-          "Puedo ayudarte con la configuración del dominio.",
-          "Incluyo 1 ronda de ajustes posterior a la entrega."
+          "El sitio, el dominio y las cuentas quedan siempre a tu nombre.",
+          "Las páginas adicionales se cotizan aparte."
+        ]
+      },
+      {
+        "titulo": "Páginas y secciones",
+        "elementos": [
+          "Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.",
+          "Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.",
+          "Las páginas que repiten el mismo diseño cuentan como una sola: el listado de noticias y el detalle de cada noticia cuentan como una página.",
+          "No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración."
+        ]
+      },
+      {
+        "titulo": "Formas de pago",
+        "elementos": [
+          "Desde $177.000 CLP en dos pagos de 50 %, impuesto incluido.",
+          "Pago 1: antes de la reunión inicial (día 1).",
+          "Pago 2: al aprobar la versión final, antes de publicar el sitio (día 7).",
+          "Pago completo al inicio: desde $150.000 CLP, impuesto incluido, con un descuento aproximado del 15 %.",
+          "No se publica el sitio hasta recibir el pago total."
+        ]
+      },
+      {
+        "titulo": "Después de la entrega",
+        "elementos": [
+          "No hay soporte incluido, salvo 1 hora de ajustes sin costo.",
+          "Para más cambios agendamos una reunión y acordamos el valor hora, por definir, antes del pago.",
+          "Los cambios adicionales se aplican en un máximo de 2 días hábiles después del pago."
         ]
       }
     ]
@@ -82,17 +118,20 @@
     "habilitado": true,
     "nombre": "Captación de Clientes",
     "resumen": "Desarrollo tu sitio para captar contactos y administrar tu contenido.",
-    "descripcion": "Desarrollo tu sitio con panel de administración, hasta 10 vistas o secciones, formularios avanzados y SEO básico para ayudarte a captar nuevos clientes.",
-    "precioDesde": 350000,
+    "descripcion": "Desarrollo hasta 5 páginas con hasta 6 secciones por página, editables desde el panel: inicio, servicios o productos, noticias, sedes y contacto o cotización. Incluye correo con tu dominio.",
+    "precioDesde": 413000,
+    "precioPagoInicial": 350000,
     "comparacion": {
-      "seccionesMaximas": 10,
+      "paginasMaximas": 5,
+      "seccionesPorPagina": 6,
       "panelAdministracion": true,
-      "plazoEntrega": "Hasta 5 días hábiles.",
+      "correoDominio": true,
+      "plazoEntrega": "7 días hábiles desde la entrega de tus textos, logo y fotos.",
       "reunionesIncluidas": [
-        "Reunión de levantamiento.",
-        "Revisión intermedia.",
-        "Validación y pruebas.",
-        "Entrega final."
+        "Día 1: reunión inicial.",
+        "Día 4: revisión de la primera versión.",
+        "Día 6: revisión de ajustes.",
+        "Día 7: entrega final."
       ],
       "capacitacion": "Capacitación inicial incluida (1 hora)."
     },
@@ -113,18 +152,21 @@
           "Gestión de contenido.",
           "Actualización de textos.",
           "Actualización de imágenes.",
-          "Hasta 10 vistas o secciones.",
+          "Hasta 5 páginas (vistas), con hasta 6 secciones por página.",
+          "Correo con tu dominio.",
           "Formularios avanzados.",
-          "Optimización básica para motores de búsqueda (SEO)."
+          "Optimización básica para motores de búsqueda (SEO).",
+          "Sitio, dominio y cuentas a tu nombre.",
+          "1 hora de ajustes sin costo tras la entrega."
         ]
       },
       {
         "titulo": "Reuniones Incluidas",
         "elementos": [
-          "Reunión de levantamiento.",
-          "Revisión intermedia.",
-          "Validación y pruebas.",
-          "Entrega final."
+          "Día 1: reunión inicial.",
+          "Día 4: revisión de la primera versión.",
+          "Día 6: revisión de ajustes.",
+          "Día 7: entrega final."
         ]
       },
       {
@@ -134,13 +176,17 @@
       {
         "titulo": "Plazo de entrega",
         "elementos": [
-          "Hasta 5 días hábiles.",
+          "7 días hábiles desde la entrega de tus textos, logo y fotos.",
+          "Día 1: reunión inicial.",
+          "Día 4: primera versión.",
+          "Día 6: ajustes.",
+          "Día 7: entrega.",
           "Las reuniones incluidas se realizan dentro de ese período."
         ]
       },
       {
         "titulo": "Ajustes",
-        "elementos": ["Hasta 2 rondas de correcciones."]
+        "elementos": ["1 hora de ajustes sin costo tras la entrega."]
       },
       {
         "titulo": "No Incluye",
@@ -148,6 +194,34 @@
           "E-commerce.",
           "Integraciones empresariales complejas.",
           "Automatizaciones avanzadas."
+        ]
+      },
+      {
+        "titulo": "Páginas y secciones",
+        "elementos": [
+          "Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.",
+          "Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.",
+          "Las páginas que repiten el mismo diseño cuentan como una sola: el listado de noticias y el detalle de cada noticia cuentan como una página.",
+          "No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración.",
+          "Las páginas adicionales se cotizan aparte."
+        ]
+      },
+      {
+        "titulo": "Formas de pago",
+        "elementos": [
+          "Desde $413.000 CLP en dos pagos de 50 %, impuesto incluido.",
+          "Pago 1: antes de la reunión inicial (día 1).",
+          "Pago 2: al aprobar la versión final, antes de publicar el sitio (día 7).",
+          "Pago completo al inicio: desde $350.000 CLP, impuesto incluido, con un descuento aproximado del 15 %.",
+          "No se publica el sitio hasta recibir el pago total."
+        ]
+      },
+      {
+        "titulo": "Después de la entrega",
+        "elementos": [
+          "No hay soporte incluido, salvo 1 hora de ajustes sin costo.",
+          "Para más cambios agendamos una reunión y acordamos el valor hora, por definir, antes del pago.",
+          "Los cambios adicionales se aplican en un máximo de 2 días hábiles después del pago."
         ]
       }
     ]

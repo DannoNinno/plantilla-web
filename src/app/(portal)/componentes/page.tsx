@@ -6,8 +6,8 @@ import {
 } from '@/infrastructure/handlers/datos';
 import {seleccionarComponentes} from '@/domain/casos-de-uso/componentes/seleccion';
 import {planesVitrina} from '@/domain/types/componentes';
-import GrillaComponentes from '@/infrastructure/componentes/Vitrina/GrillaComponentes';
-import EntradaScroll from '@/infrastructure/componentes/EntradaScroll/EntradaScroll';
+import GrillaComponentes from '@/infrastructure/componentes/portal/Vitrina/GrillaComponentes';
+import EntradaScroll from '@/infrastructure/componentes/boveda/EntradaScroll/EntradaScroll';
 
 const {vitrina} = getCatalogo();
 export const metadata = {title: vitrina.titulo, description: vitrina.descripcion};

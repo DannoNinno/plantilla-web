@@ -3,7 +3,9 @@ import {test} from 'node:test';
 
 import assert from 'node:assert/strict';
 
-import {existsSync, readdirSync, readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+
+import {existsSync, readdirSync, readFileSync, realpathSync} from 'node:fs';
 
 import path from 'node:path';
 
@@ -13,7 +15,7 @@ import {createElement} from 'react';
 
 import {renderToStaticMarkup} from 'react-dom/server';
 
-import {Portada} from '../src/infrastructure/componentes/secciones/portada';
+import {Portada} from '../src/infrastructure/componentes/boveda/Secciones/Portada';
 
 import {
   registro,
@@ -21,60 +23,94 @@ import {
   getComponente,
 } from '../src/infrastructure/componentes/boveda/registro';
 
-import {FormularioContacto} from '../src/infrastructure/componentes/boveda/formulario-contacto';
+import {FormularioContacto} from '../src/infrastructure/componentes/boveda/Formulario-contacto';
 
 import {
   validarConsulta,
   limitesContacto,
-} from '../src/infrastructure/componentes/boveda/formulario-contacto/validacion';
+} from '../src/infrastructure/componentes/boveda/Formulario-contacto/validacion';
 
 import tailwindConfig from '../tailwind.config';
 
-import TituloSeccion from '../src/infrastructure/componentes/base/TituloSeccion/TituloSeccion';
+import TituloSeccion from '../src/infrastructure/componentes/boveda/Base/TituloSeccion/TituloSeccion';
 
-import {Servicios} from '../src/infrastructure/componentes/secciones/servicios';
+import {Servicios} from '../src/infrastructure/componentes/boveda/Secciones/Servicios';
 
-import {QuienesSomos} from '../src/infrastructure/componentes/secciones/quienes-somos';
+import {QuienesSomos} from '../src/infrastructure/componentes/boveda/Secciones/Quienes-somos';
 
-import {Galeria} from '../src/infrastructure/componentes/secciones/galeria';
+import {Galeria} from '../src/infrastructure/componentes/boveda/Secciones/Galeria';
 
-import {Testimonios} from '../src/infrastructure/componentes/secciones/testimonios';
+import {Testimonios} from '../src/infrastructure/componentes/boveda/Secciones/Testimonios';
 
-import {PreguntasFrecuentes} from '../src/infrastructure/componentes/secciones/preguntas-frecuentes';
+import {PreguntasFrecuentes} from '../src/infrastructure/componentes/boveda/Secciones/Preguntas-frecuentes';
 
-import {UbicacionHorarios} from '../src/infrastructure/componentes/secciones/ubicacion-horarios';
+import {UbicacionHorarios} from '../src/infrastructure/componentes/boveda/Secciones/Ubicacion-horarios';
 
-import {Whatsapp} from '../src/infrastructure/componentes/secciones/whatsapp';
+import {Whatsapp} from '../src/infrastructure/componentes/boveda/Secciones/Whatsapp';
 
-import {RedesSociales} from '../src/infrastructure/componentes/secciones/redes-sociales';
+import {PiePagina} from '../src/infrastructure/componentes/boveda/Secciones/Pie-pagina';
 
-import {PiePagina} from '../src/infrastructure/componentes/secciones/pie-pagina';
+import {Novedades} from '../src/infrastructure/componentes/boveda/Secciones/Novedades';
 
-import {Novedades} from '../src/infrastructure/componentes/secciones/novedades';
+import {CatalogoSinCompra} from '../src/infrastructure/componentes/boveda/Secciones/Catalogo-sin-compra';
 
-import {CatalogoSinCompra} from '../src/infrastructure/componentes/secciones/catalogo-sin-compra';
+import {Sedes} from '../src/infrastructure/componentes/boveda/Secciones/Sedes';
 
-import {Sedes} from '../src/infrastructure/componentes/secciones/sedes';
+import {Equipo} from '../src/infrastructure/componentes/boveda/Secciones/Equipo';
 
-import {Equipo} from '../src/infrastructure/componentes/secciones/equipo';
+import {PromocionDestacada} from '../src/infrastructure/componentes/boveda/Secciones/Promocion-destacada';
 
-import {PromocionDestacada} from '../src/infrastructure/componentes/secciones/promocion-destacada';
+import {VistaGoogle} from '../src/infrastructure/componentes/boveda/Secciones/Vista-google';
 
-import {VistaGoogle} from '../src/infrastructure/componentes/secciones/vista-google';
+import {FormularioCotizacion} from '../src/infrastructure/componentes/boveda/Cotizacion-pasos';
 
-import {FormularioCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos';
-
-import {ejemploCotizacion} from '../src/infrastructure/componentes/boveda/cotizacion-pasos/ejemplo';
+import {ejemploCotizacion} from '../src/infrastructure/componentes/boveda/Cotizacion-pasos/ejemplo';
 
 import {
   validarSolicitud,
   erroresPaso,
   pasoPrimerError,
-} from '../src/infrastructure/componentes/boveda/cotizacion-pasos/validacion';
+} from '../src/infrastructure/componentes/boveda/Cotizacion-pasos/validacion';
 
-import {obtenerCampos} from '../src/infrastructure/componentes/boveda/edicion/campos';
+import {obtenerCampos} from '../src/infrastructure/componentes/boveda/Edicion/campos';
 
-import {actualizarContenido} from '../src/infrastructure/componentes/boveda/edicion/actualizar';
+import {actualizarContenido} from '../src/infrastructure/componentes/boveda/Edicion/actualizar';
+import LayoutPanel from '../src/infrastructure/componentes/boveda/PanelAdministracion/LayoutPanel';
+
+test('el layout administrativo recibe marca, menú y acciones sin conocer el portal', () => {
+  const html = renderToStaticMarkup(
+    createElement(
+      LayoutPanel,
+      {
+        nombre: 'Portal de prueba',
+        subtitulo: 'Gestión',
+        marca: createElement('svg', {'aria-hidden': true, width: 48, height: 44}),
+        inicio: '/gestion/',
+        menu: createElement('a', {href: '/gestion/'}, 'Inicio de prueba'),
+        acciones: createElement('button', {type: 'button'}, 'Salir de prueba'),
+      },
+      createElement('h1', {}, 'Contenido de prueba'),
+    ),
+  );
+  assert.match(html, /Portal de prueba/);
+  assert.match(html, /Salir de prueba/);
+  assert.match(html, /Inicio de prueba/);
+  assert.match(html, /Contenido de prueba/);
+  assert.match(html, /aria-expanded="false"/);
+  assert.match(html, /aria-hidden="true" inert=""/);
+  assert.match(html, /fixed inset-x-0 top-0/);
+  assert.match(html, /motion-reduce:transition-none/);
+  assert.match(html, /bg-brand-ink bg-intro text-brand-light/);
+  assert.match(html, /h-panel-header/);
+  assert.match(html, /pt-panel-header/);
+  assert.match(html, /bg-gradient-to-r from-brand-sky to-brand-coral/);
+  assert.doesNotMatch(html, /\bh-header\b|\btop-header\b|theme\(spacing\.header\)/);
+  assert.equal(tailwindConfig.theme.extend.spacing['panel-header'], '5rem');
+  assert.equal(tailwindConfig.theme.extend.spacing.header, '4.5rem');
+  assert.match(html, /<svg aria-hidden="true" width="48" height="44"/);
+  assert.doesNotMatch(html, /(?:class="| )bg-white(?:[ /"])|bg-brand-light/);
+  assert.doesNotMatch(html, /dannotech|\/admin\/|\/api\//i);
+});
 
 test('los titulos compartidos usan la misma tipografia sans del portal', () => {
   for (const nivel of ['h1', 'h2'] as const) {
@@ -172,23 +208,61 @@ test('la galeria y ubicacion usan recursos propios dimensionados sin mapas exter
 
 test('las piezas incluidas no contactan numeros ni perfiles reales en el ejemplo', () => {
   const whatsapp = renderToStaticMarkup(createElement(Whatsapp, negocio.whatsapp));
-  const redes = renderToStaticMarkup(createElement(RedesSociales, negocio.redes));
+  const redes = renderToStaticMarkup(createElement(FormularioContacto, negocio.contacto));
   const pie = renderToStaticMarkup(
     createElement(PiePagina, {nombre: negocio.nombre, ...negocio.pie}),
   );
   assert.ok(whatsapp.includes('href="#contacto"'));
   assert.ok(whatsapp.includes('fixed bottom-28'));
   assert.ok(whatsapp.includes('WhatsApp de ejemplo'));
-  assert.equal(redes.match(/href="#contacto"/g)?.length, negocio.redes.enlaces.length);
+  assert.equal(redes.match(/href="#contacto"/g)?.length, negocio.contacto.redes.enlaces.length);
+  assert.match(redes, /lucide-instagram/);
+  assert.match(redes, /lucide-message-circle/);
+  assert.match(redes, /<nav aria-label="Redes sociales de ejemplo"/);
   assert.doesNotMatch(`${whatsapp}${redes}`, /href="https?:|wa\.me|tel:|mailto:/);
   assert.ok(pie.includes('<footer'));
   assert.ok(pie.includes('href="#portada"'));
-  const vacias = renderToStaticMarkup(createElement(RedesSociales, {etiqueta: 'Redes'}));
-  assert.doesNotMatch(vacias, /<li\b|href=/);
+  const vacias = renderToStaticMarkup(
+    createElement(FormularioContacto, {
+      campos: negocio.contacto.campos,
+      textos: negocio.contacto.textos,
+      redes: {etiqueta: 'Redes', enlaces: []},
+    }),
+  );
+  assert.doesNotMatch(vacias, /<nav\b|<li\b|href=/);
+  assert.match(vacias, /data-introduccion="false"/);
   const minimo = renderToStaticMarkup(
     createElement(PiePagina, {nombre: 'Negocio', copyright: 'Ejemplo'}),
   );
   assert.doesNotMatch(minimo, /<a\b|Café Aurora/);
+});
+
+test('el contacto integra redes opcionales sin fijar cuentas ni requerir textos introductorios', () => {
+  const html = renderToStaticMarkup(
+    createElement(FormularioContacto, {
+      campos: negocio.contacto.campos,
+      textos: negocio.contacto.textos,
+      redes: {
+        etiqueta: 'Canales de contacto',
+        enlaces: [
+          {id: 'instagram', texto: 'Mi Instagram', href: 'https://instagram.com/ejemplo'},
+          {id: 'whatsapp', texto: 'Mi WhatsApp', href: 'https://wa.me/56912345678'},
+          {id: 'otro', texto: 'Otro canal', href: '/canal/'},
+        ],
+      },
+    }),
+  );
+  assert.match(html, /data-introduccion="true"/);
+  assert.match(html, /href="https:\/\/instagram.com\/ejemplo"/);
+  assert.match(html, /href="https:\/\/wa.me\/56912345678"/);
+  assert.match(html, /lucide-link/);
+  assert.equal((html.match(/<nav\b/g) ?? []).length, 1);
+  assert.equal((html.match(/<form\b/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /<h1\b|<h2\b/);
+  assert.equal(
+    registro.some(({slug}) => slug === 'redes-sociales'),
+    false,
+  );
 });
 
 test('el formulario valida vacios, correo, espacios y limites exactos', () => {
@@ -258,6 +332,7 @@ test('las imagenes del ejemplo existen y los colores de texto cumplen contraste 
     return canales[0] * 0.2126 + canales[1] * 0.7152 + canales[2] * 0.0722;
   }
   const colores = tailwindConfig.theme.extend.colors.seccion;
+  const marca = tailwindConfig.theme.extend.colors.brand;
   for (const [texto, fondo] of [
     [colores.tinta, colores.fondo],
     ['#FFFFFF', colores.acento],
@@ -265,6 +340,10 @@ test('las imagenes del ejemplo existen y los colores de texto cumplen contraste 
       tailwindConfig.theme.extend.colors.brand.ink,
       tailwindConfig.theme.extend.colors.canal.whatsapp,
     ],
+    [marca.light, marca.ink],
+    [marca.sky, marca.ink],
+    [marca.coral, marca.ink],
+    [marca.ink, marca['coral-dark']],
   ]) {
     const valores = [luminancia(texto), luminancia(fondo)].sort((a, b) => b - a);
     assert.ok((valores[0] + 0.05) / (valores[1] + 0.05) >= 4.5);
@@ -424,38 +503,103 @@ test('las instancias enlazan props tipadas y reflejan cambios sin alterar el reg
   assert.doesNotMatch(renderToStaticMarkup(portada.renderizar()), /Título editado de prueba/);
 });
 
-test('la biblioteca conserva piezas fragmentadas, Tailwind y contenido por props', () => {
-  function fuentes(directorio: string): string[] {
-    return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
-      const ruta = path.join(directorio, entrada.name);
-      return entrada.isDirectory() ? fuentes(ruta) : [ruta];
-    });
-  }
-  for (const carpeta of ['base', 'boveda', 'secciones']) {
-    for (const ruta of fuentes(path.join('src', 'infrastructure', 'componentes', carpeta))) {
-      assert.doesNotMatch(ruta, /\.(css|scss)$/);
-      if (!/\.(ts|tsx)$/.test(ruta)) continue;
-      const contenido = readFileSync(ruta, 'utf8');
-      assert.ok(contenido.split(/\r?\n/).length <= 150, `${ruta}: supera 150 lineas`);
-      assert.doesNotMatch(
-        contenido,
-        /\bany\b|style=\{|@apply|(?:bg|text|mt|p|rounded|shadow)-\[/,
-        ruta,
+function fuentes(directorio: string): string[] {
+  return readdirSync(directorio, {withFileTypes: true}).flatMap((entrada) => {
+    const ruta = path.join(directorio, entrada.name);
+    return entrada.isDirectory() ? fuentes(ruta) : [ruta];
+  });
+}
+
+test('Git conserva las mayusculas de las carpetas de la boveda para Linux', () => {
+  const prefijo = 'src/infrastructure/componentes/boveda/';
+  const versionados = execFileSync('git', ['ls-files', '-z', '--', prefijo], {
+    encoding: 'utf8',
+  })
+    .split('\0')
+    .filter(Boolean);
+  assert.ok(versionados.length > 0, 'No se encontraron archivos de la boveda en Git.');
+  for (const ruta of versionados) {
+    for (const carpeta of ruta.slice(prefijo.length).split('/').slice(0, -1)) {
+      assert.match(
+        carpeta,
+        /^[A-Z]/,
+        `${ruta}: Git conserva una carpeta en minuscula; renombrar con git mv`,
       );
-      if (!ruta.endsWith('.tsx') || carpeta === 'base') continue;
-      assert.doesNotMatch(contenido, /data\/|Café Aurora/, ruta);
-      const fuente = ts.createSourceFile(
-        ruta,
-        contenido,
-        ts.ScriptTarget.Latest,
-        true,
-        ts.ScriptKind.TSX,
-      );
-      function visitar(nodo: ts.Node) {
-        if (ts.isJsxText(nodo)) assert.equal(nodo.text.trim(), '', `${ruta}: texto en duro`);
-        ts.forEachChild(nodo, visitar);
-      }
-      visitar(fuente);
     }
+  }
+});
+
+test('los componentes separan portal y boveda sin dependencias hacia el portal', () => {
+  const componentes = path.join('src', 'infrastructure', 'componentes');
+  assert.deepEqual(readdirSync(componentes).sort(), ['boveda', 'portal']);
+  const configuracion = ts.readConfigFile('tsconfig.json', ts.sys.readFile);
+  assert.equal(configuracion.error, undefined);
+  const {options} = ts.parseJsonConfigFileContent(configuracion.config, ts.sys, process.cwd());
+  const portal = path.resolve(componentes, 'portal') + path.sep;
+  const biblioteca = path.resolve(componentes, 'boveda');
+  for (const ruta of fuentes(biblioteca)) {
+    for (const carpeta of path.relative(biblioteca, path.dirname(ruta)).split(path.sep)) {
+      if (carpeta) assert.match(carpeta, /^[A-Z]/, `${ruta}: carpeta sin inicial mayuscula`);
+    }
+    if (!/\.tsx?$/.test(ruta)) continue;
+    const fuente = ts.createSourceFile(
+      ruta,
+      readFileSync(ruta, 'utf8'),
+      ts.ScriptTarget.Latest,
+      true,
+    );
+    for (const nodo of fuente.statements) {
+      if (!ts.isImportDeclaration(nodo) && !ts.isExportDeclaration(nodo)) continue;
+      if (!nodo.moduleSpecifier || !ts.isStringLiteral(nodo.moduleSpecifier)) continue;
+      const modulo = nodo.moduleSpecifier.text;
+      if (!modulo.startsWith('.') && !modulo.startsWith('@/')) continue;
+      const resuelto = ts.resolveModuleName(modulo, ruta, options, ts.sys).resolvedModule;
+      assert.ok(resuelto, `${ruta}: no se encuentra ${modulo}`);
+      const destino = path.resolve(resuelto.resolvedFileName);
+      if (destino.startsWith(biblioteca + path.sep)) {
+        assert.equal(
+          destino.slice(biblioteca.length),
+          realpathSync.native(destino).slice(biblioteca.length),
+          `${ruta}: las mayusculas de ${modulo} no coinciden con la carpeta`,
+        );
+      }
+      assert.equal(
+        destino.startsWith(portal),
+        false,
+        `${ruta}: la boveda no debe depender del portal`,
+      );
+    }
+  }
+});
+
+test('la biblioteca conserva piezas fragmentadas, Tailwind y contenido por props', () => {
+  const biblioteca = path.join('src', 'infrastructure', 'componentes', 'boveda');
+  for (const ruta of fuentes(biblioteca)) {
+    const carpeta = path.relative(biblioteca, ruta).split(path.sep)[0];
+    assert.doesNotMatch(ruta, /\.(css|scss)$/);
+    if (!/\.(ts|tsx)$/.test(ruta)) continue;
+    const contenido = readFileSync(ruta, 'utf8');
+    assert.ok(contenido.split(/\r?\n/).length <= 150, `${ruta}: supera 150 lineas`);
+    assert.doesNotMatch(contenido, /\bany\b|style=\{|@apply/, ruta);
+    if (carpeta === 'Carousel') continue;
+    assert.doesNotMatch(contenido, /(?:bg|text|mt|p|rounded|shadow)-\[/, ruta);
+    if (
+      !ruta.endsWith('.tsx') ||
+      !['Secciones', 'Formulario-contacto', 'Cotizacion-pasos'].includes(carpeta)
+    )
+      continue;
+    assert.doesNotMatch(contenido, /data\/|Café Aurora/, ruta);
+    const fuente = ts.createSourceFile(
+      ruta,
+      contenido,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TSX,
+    );
+    function visitar(nodo: ts.Node) {
+      if (ts.isJsxText(nodo)) assert.equal(nodo.text.trim(), '', `${ruta}: texto en duro`);
+      ts.forEachChild(nodo, visitar);
+    }
+    visitar(fuente);
   }
 });

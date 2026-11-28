@@ -1,0 +1,43 @@
+import {
+  LayoutTemplate,
+  BriefcaseBusiness,
+  Store,
+  Images,
+  MessageSquareQuote,
+  CircleHelp,
+  MapPin,
+  MessageCircle,
+  Mail,
+  PanelBottom,
+  LayoutDashboard,
+  Newspaper,
+  LayoutGrid,
+  Megaphone,
+  Building2,
+  Users,
+  ListChecks,
+  Search,
+} from 'lucide-react';
+import type {LucideIcon} from 'lucide-react';
+import type {NombreIcono} from '../../../../domain/types/componentes';
+
+export const iconos: Record<NombreIcono, LucideIcon> = {
+  LayoutTemplate,
+  BriefcaseBusiness,
+  Store,
+  Images,
+  MessageSquareQuote,
+  CircleHelp,
+  MapPin,
+  MessageCircle,
+  Mail,
+  PanelBottom,
+  LayoutDashboard,
+  Newspaper,
+  LayoutGrid,
+  Megaphone,
+  Building2,
+  Users,
+  ListChecks,
+  Search,
+};

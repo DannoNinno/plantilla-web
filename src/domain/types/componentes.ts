@@ -6,7 +6,6 @@ export const nombresIconos = [
   'MessageSquareQuote',
   'CircleHelp',
   'MapPin',
-  'Share2',
   'MessageCircle',
   'Mail',
   'PanelBottom',

@@ -1,0 +1,5 @@
+NEXTJS_ENV=development
+IP_SALT=
+ADMIN_SECRET=
+# Solo desarrollo local; no usar en produccion.
+ADMIN_PASSWORD=Admin-local-2026!

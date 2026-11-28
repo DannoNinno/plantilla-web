@@ -34,7 +34,11 @@ export const viewport = {
 
 export default function RootLayout({children}: Readonly<LayoutProps>) {
   return (
-    <html lang="es" className="scroll-smooth motion-reduce:scroll-auto">
+    <html
+      lang="es"
+      data-scroll-behavior="smooth"
+      className="scroll-smooth motion-reduce:scroll-auto"
+    >
       <body className="flex min-h-screen flex-col bg-brand-light font-sans font-medium text-brand-ink selection:bg-brand-sky selection:text-brand-ink [&_:where(:focus-visible)]:outline [&_:where(:focus-visible)]:outline-foco [&_:where(:focus-visible)]:outline-offset-4 [&_:where(:focus-visible)]:outline-brand-sky-text motion-reduce:[&_*]:!animate-none motion-reduce:[&_*]:!transition-none motion-reduce:[&_*::before]:!animate-none motion-reduce:[&_*::after]:!animate-none motion-reduce:[&_*::before]:!transition-none motion-reduce:[&_*::after]:!transition-none">
         {children}
       </body>

@@ -1,10 +1,22 @@
-import {FlatCompat} from '@eslint/eslintrc';
-import {fileURLToPath} from 'node:url';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
-const compat = new FlatCompat({baseDirectory: fileURLToPath(new URL('.', import.meta.url))});
-
-export default [
-  {ignores: ['.next/**', '.next-validation/**', '.test-build/**', '.open-next/**']},
-  ...compat.extends('next/core-web-vitals', 'plugin:prettier/recommended'),
+const config = [
+  {
+    ignores: [
+      '.next/**',
+      '.next-validation/**',
+      '.test-build/**',
+      '.open-next/**',
+      '.wrangler/**',
+      'out/**',
+      'next-env.d.ts',
+      'cloudflare-env.d.ts',
+    ],
+  },
+  ...nextCoreWebVitals,
+  prettierRecommended,
   {rules: {'prettier/prettier': 'warn'}},
 ];
+
+export default config;

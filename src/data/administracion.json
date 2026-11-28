@@ -1,0 +1,6 @@
+{
+  "rutaPanel": "/admin",
+  "maximosFallos": 5,
+  "bloqueoMinutos": 15,
+  "inactividadMinutos": 30
+}

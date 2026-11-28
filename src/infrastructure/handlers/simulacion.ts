@@ -1,0 +1,596 @@
+import {z} from 'zod';
+import {compressToEncodedURIComponent, decompressFromEncodedURIComponent} from 'lz-string';
+import {registro} from '../componentes/boveda/registro';
+import type {CampoEditable} from '../componentes/boveda/Edicion/campos';
+import {getComponentes} from './datos';
+import {adminConfig} from '../../domain/configuracion/administracion';
+
+const excluidas = new Set(['whatsapp', 'pie-pagina', 'vista-google']);
+const fichas = getComponentes();
+interface RequisitoDato {
+  dato: string;
+  descripcion: string;
+  condicion?: string;
+}
+const requisitoNombreNegocio: RequisitoDato = {
+  dato: 'nombre-negocio',
+  descripcion: 'Nombre comercial del negocio, compartido por la portada, la navegación y el pie.',
+};
+const requisitosComponentes: Record<string, readonly RequisitoDato[]> = {
+  portada: [
+    requisitoNombreNegocio,
+    {
+      dato: 'imagen-portada',
+      descripcion: 'Imagen autorizada para la portada y su descripción accesible.',
+      condicion: 'Si la portada lleva imagen.',
+    },
+    {
+      dato: 'destino-accion',
+      descripcion: 'Sección, página o URL a la que debe llevar el botón principal.',
+      condicion: 'Si la portada lleva un botón.',
+    },
+  ],
+  servicios: [
+    {
+      dato: 'servicios',
+      descripcion: 'Servicios reales que ofrece el negocio y qué incluye cada uno.',
+    },
+  ],
+  'quienes-somos': [
+    {
+      dato: 'imagen-negocio',
+      descripcion: 'Fotografía autorizada del negocio o equipo y su descripción accesible.',
+      condicion: 'Si se incluye una imagen.',
+    },
+  ],
+  galeria: [
+    {
+      dato: 'imagenes',
+      descripcion:
+        'Imágenes autorizadas para la galería, orden y descripción accesible de cada una.',
+    },
+  ],
+  testimonios: [
+    {
+      dato: 'testimonios-reales',
+      descripcion:
+        'Opiniones reales y autorización para publicarlas; nombre del autor si se muestra. Si no hay testimonios reales autorizados, se omite la sección, sin inventar opiniones.',
+    },
+  ],
+  'preguntas-frecuentes': [
+    {dato: 'preguntas', descripcion: 'Lista de preguntas y respuestas reales del negocio.'},
+  ],
+  'ubicacion-horarios': [
+    {dato: 'direccion', descripcion: 'Dirección completa del negocio, con ciudad y comuna.'},
+    {dato: 'horarios', descripcion: 'Días y horas de atención, incluidos cierres o excepciones.'},
+  ],
+  'formulario-contacto': [
+    {
+      dato: 'correo-destinatario',
+      descripcion: 'Correo del negocio que recibirá las consultas reales.',
+    },
+    {
+      dato: 'privacidad',
+      descripcion: 'Responsable del tratamiento de los datos y URL de su política de privacidad.',
+      condicion: 'Al habilitar el envío real de datos personales.',
+    },
+    {
+      dato: 'instagram-url',
+      descripcion: 'URL del perfil oficial de Instagram del negocio.',
+      condicion: 'Si se incluye Instagram entre las redes de contacto.',
+    },
+    {
+      dato: 'whatsapp-numero',
+      descripcion: 'Número de WhatsApp del negocio con código de país.',
+      condicion: 'Si se incluye WhatsApp entre las redes de contacto.',
+    },
+    {
+      dato: 'otras-redes',
+      descripcion: 'Nombre de cada red adicional y URL de su perfil oficial.',
+      condicion: 'Si se incluyen otras redes de contacto.',
+    },
+  ],
+  novedades: [
+    {
+      dato: 'publicaciones',
+      descripcion: 'Noticias o novedades reales que se publicarán y sus fechas, si se muestran.',
+    },
+    {
+      dato: 'imagenes-publicaciones',
+      descripcion:
+        'Imagen autorizada y descripción accesible para cada publicación que lleve imagen.',
+      condicion: 'Si las publicaciones incluyen imágenes.',
+    },
+  ],
+  'catalogo-sin-compra': [
+    {dato: 'productos', descripcion: 'Productos reales del catálogo y sus características.'},
+    {
+      dato: 'precios',
+      descripcion: 'Precios vigentes, moneda e impuestos aplicables a cada producto.',
+      condicion: 'Si se muestran precios.',
+    },
+    {
+      dato: 'imagenes-productos',
+      descripcion: 'Imagen autorizada y descripción accesible de cada producto que lleve imagen.',
+      condicion: 'Si se muestran imágenes de productos.',
+    },
+    {dato: 'destino-consulta', descripcion: 'URL o sección donde se consultará por los productos.'},
+  ],
+  'cotizacion-pasos': [
+    {
+      dato: 'servicios-cotizables',
+      descripcion: 'Servicios reales que el visitante podrá seleccionar.',
+    },
+    {
+      dato: 'correo-destinatario',
+      descripcion: 'Correo del negocio que recibirá las cotizaciones reales.',
+    },
+    {
+      dato: 'privacidad',
+      descripcion: 'Responsable del tratamiento de los datos y URL de su política de privacidad.',
+      condicion: 'Al habilitar el envío real de datos personales.',
+    },
+  ],
+  sedes: [
+    {dato: 'sedes', descripcion: 'Nombre, dirección completa y horarios de atención de cada sede.'},
+    {
+      dato: 'imagenes-sedes',
+      descripcion: 'Fotografías autorizadas de las sedes y sus descripciones accesibles.',
+      condicion: 'Si las sedes llevan imágenes.',
+    },
+  ],
+  'promocion-destacada': [
+    {
+      dato: 'promocion',
+      descripcion: 'Oferta real, beneficio, vigencia y condiciones o restricciones aplicables.',
+    },
+    {
+      dato: 'destino-promocion',
+      descripcion: 'URL o sección donde se accederá a la promoción.',
+      condicion: 'Si se incluye un botón de acción.',
+    },
+    {
+      dato: 'imagen-promocion',
+      descripcion: 'Imagen autorizada de la promoción y su descripción accesible.',
+      condicion: 'Si la promoción lleva imagen.',
+    },
+  ],
+  equipo: [
+    {dato: 'integrantes', descripcion: 'Nombres y cargos reales de las personas que se mostrarán.'},
+    {
+      dato: 'fotografias-equipo',
+      descripcion: 'Fotografías de los integrantes y autorización para publicarlas.',
+      condicion: 'Si se muestran fotografías.',
+    },
+  ],
+};
+export const seccionesSimulacion = registro
+  .filter(({slug}) => !excluidas.has(slug))
+  .map(({slug, nombre, planMinimo, cuentaParaTope}) => {
+    const ficha = fichas.find(({id}) => id === slug);
+    if (!ficha) throw new Error(`Falta la ficha de la sección ${slug}.`);
+    const requisitos = requisitosComponentes[slug];
+    if (!requisitos) throw new Error(`Falta definir los requisitos de la sección ${slug}.`);
+    return {
+      key: slug,
+      nombre,
+      icono: ficha.icono,
+      descripcion: ficha.descripcion,
+      requisitos,
+      planMinimo,
+      cuentaParaTope,
+    };
+  });
+export type SeccionSimulacion = (typeof seccionesSimulacion)[number];
+export const getSeccionSimulacion = (key: string) => seccionesSimulacion.find((s) => s.key === key);
+export function seccionesNavegables(keys: readonly string[]) {
+  return keys.filter((key) => key !== 'portada');
+}
+function textoEjemploSimulacion(
+  campo: CampoEditable & {tipo: 'texto'},
+  seccion: SeccionSimulacion,
+) {
+  const {ruta} = campo;
+  const ultimo = ruta.at(-1);
+  const indice = Number(ruta.find((parte) => /^\d+$/.test(parte)) ?? 0) + 1;
+  if (
+    ruta[0] === 'textos' ||
+    (ruta[0] === 'campos' && !ruta.includes('opciones')) ||
+    ultimo === 'fecha' ||
+    ultimo === 'alt' ||
+    ultimo === 'etiquetaDireccion' ||
+    ultimo === 'etiquetaHorarios' ||
+    ruta[0] === 'enlaces' ||
+    ruta[0] === 'redes'
+  )
+    return campo.valor;
+  if (ruta.includes('parrafos'))
+    return 'Texto de ejemplo para presentar tu negocio, su historia y lo que lo hace diferente.';
+  if (ruta.includes('horarios')) return `Horario ${indice}: 09:00 a 18:00`;
+  switch (ultimo) {
+    case 'titulo':
+      return ruta.length === 1
+        ? seccion.key === 'portada'
+          ? 'Título principal de tu sitio'
+          : seccion.nombre
+        : `${seccion.key === 'servicios' ? 'Servicio' : 'Noticia'} de ejemplo ${indice}`;
+    case 'descripcion':
+      return ruta.length === 1
+        ? `Contenido de ejemplo para ${seccion.nombre.toLocaleLowerCase('es-CL')}. Aquí irá la información de tu negocio.`
+        : 'Descripción de ejemplo. Aquí irá la información de tu negocio.';
+    case 'nombre':
+      return ruta.includes('personas')
+        ? `Integrante ${indice}`
+        : ruta.includes('productos')
+          ? `Producto ${indice}`
+          : ruta.includes('sedes')
+            ? `Sede ${indice}`
+            : 'DannoTech';
+    case 'etiqueta':
+      return 'DannoTech · Sitio de ejemplo';
+    case 'texto':
+      return ruta.includes('opciones')
+        ? `Servicio de ejemplo ${indice}`
+        : ruta.includes('accion')
+          ? 'Ver más'
+          : 'Testimonio de ejemplo sobre la experiencia de un cliente.';
+    case 'autor':
+      return `Cliente ${indice}`;
+    case 'detalle':
+      return 'Detalle del testimonio';
+    case 'pregunta':
+      return `Pregunta frecuente ${indice}`;
+    case 'respuesta':
+      return 'Respuesta de ejemplo. Aquí puedes aclarar las dudas más comunes de tus clientes.';
+    case 'direccion':
+      return 'Dirección de ejemplo, ciudad';
+    case 'rol':
+      return 'Rol en el equipo';
+    case 'textoConsulta':
+      return 'Consultar por este producto';
+    default:
+      throw new Error(`Falta definir el texto de muestra para ${seccion.key}: ${ruta.join('.')}.`);
+  }
+}
+export function renderizarSeccionSimulacion(key: string) {
+  const seccion = getSeccionSimulacion(key);
+  const entrada = registro.find(({slug}) => slug === key);
+  if (!seccion || !entrada) return undefined;
+  let instancia = entrada.crearInstancia();
+  for (const campo of instancia.campos) {
+    if (campo.tipo === 'imagen') {
+      const logo = campo.ruta[0] === 'logo';
+      instancia = instancia.actualizar(campo.ruta, {
+        ...campo.valor,
+        ...('leyenda' in campo.valor ? {leyenda: 'Imagen de ejemplo'} : {}),
+        src: logo
+          ? '/dannotech-kit/svg/dannotech-isotipo-fondo-claro.svg'
+          : '/simulacion/imagen-ejemplo.svg',
+        alt: logo ? 'DannoTech' : 'Imagen de ejemplo',
+        width: logo ? 102 : campo.valor.width,
+        height: logo ? 88 : campo.valor.height,
+      });
+    } else if (campo.tipo === 'texto' && campo.ruta.at(-1) !== 'alt') {
+      instancia = instancia.actualizar(campo.ruta, textoEjemploSimulacion(campo, seccion));
+    }
+  }
+  return instancia.renderizar();
+}
+const MAX_CODIFICADO = 4096;
+
+export const paginaSimulacionSchema = z
+  .object({
+    esLanding: z.boolean().default(true),
+    navegacion: z.enum(['navbar', 'sidebar', 'ninguna']).default('navbar'),
+    fija: z.boolean().default(true),
+    transparenteSobreLanding: z.boolean().default(false),
+    logo: z
+      .enum(['izquierda', 'centro'])
+      .default('izquierda')
+      .transform(() => 'izquierda' as const),
+    menuMovil: z.enum(['hamburguesa', 'drawer']).default('hamburguesa'),
+    footer: z.enum(['simple', 'completo', 'ninguno']).default('simple'),
+    tema: z
+      .enum(['claro', 'oscuro'])
+      .default('oscuro')
+      .transform(() => 'oscuro' as const),
+    ancho: z
+      .enum(['completo', 'contenido'])
+      .default('completo')
+      .transform(() => 'completo' as const),
+    scrollSuave: z.boolean().default(true),
+    seccionActiva: z.boolean().default(true),
+    whatsapp: z.enum(['ninguno', 'abajo-derecha', 'abajo-izquierda']).default('ninguno'),
+    volverArriba: z.boolean().default(false),
+  })
+  .strict();
+export const simulacionSchema = z
+  .object({
+    v: z.literal(1).default(1),
+    plan: z.enum(['presencia-digital', 'captacion-clientes']).default('presencia-digital'),
+    pagina: paginaSimulacionSchema.default(() => paginaSimulacionSchema.parse({})),
+    secciones: z
+      .array(
+        z
+          .string()
+          .max(80)
+          .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+      )
+      .transform((keys) =>
+        keys.flatMap((key, indice) =>
+          key !== 'redes-sociales'
+            ? [key]
+            : keys.includes('formulario-contacto') || keys.indexOf(key) !== indice
+              ? []
+              : ['formulario-contacto'],
+        ),
+      )
+      .default(['portada']),
+  })
+  .strict()
+  .superRefine((config, contexto) => {
+    const error = (mensaje: string) => contexto.addIssue({code: 'custom', message: mensaje});
+    if (new Set(config.secciones).size !== config.secciones.length)
+      error('No se permiten secciones repetidas.');
+    if (config.pagina.esLanding && config.secciones[0] !== 'portada')
+      error('En vista landing, Portada debe estar en la primera posición.');
+    if (config.secciones.some((key) => excluidas.has(key)))
+      error(
+        'WhatsApp y el pie se configuran como opciones de página; la vista Google no es una sección.',
+      );
+  });
+export type ConfigSimulacion = z.infer<typeof simulacionSchema>;
+export type PaginaSimulacion = ConfigSimulacion['pagina'];
+export const valoresPorDefecto = simulacionSchema.parse({});
+function requisitosPagina(pagina: PaginaSimulacion) {
+  return {
+    esLanding: [],
+    navegacion: pagina.navegacion === 'ninguna' ? [] : [requisitoNombreNegocio],
+    fija: [],
+    transparenteSobreLanding: [],
+    logo:
+      pagina.navegacion === 'ninguna'
+        ? []
+        : [{dato: 'logo', descripcion: 'Archivo del logo del negocio y su nombre accesible.'}],
+    menuMovil: [],
+    footer:
+      pagina.footer === 'ninguno'
+        ? []
+        : [
+            requisitoNombreNegocio,
+            {
+              dato: 'titular-sitio',
+              descripcion:
+                'Nombre legal de la persona o empresa titular del copyright; puede ser distinto del nombre comercial del negocio.',
+              condicion:
+                'Solo si el titular del copyright es distinto del nombre comercial. En caso contrario, reutilizar nombre-negocio sin solicitar otro nombre.',
+            },
+          ],
+    tema: [],
+    ancho: [],
+    scrollSuave: [],
+    seccionActiva: [],
+    whatsapp:
+      pagina.whatsapp === 'ninguno'
+        ? []
+        : [
+            {
+              dato: 'whatsapp-numero',
+              descripcion: 'Número de WhatsApp del negocio con código de país.',
+            },
+          ],
+    volverArriba: [],
+  } satisfies Record<keyof PaginaSimulacion, RequisitoDato[]>;
+}
+export type ResultadoSimulacion<T> =
+  | {ok: true; valor: T}
+  | {
+      ok: false;
+      error: {codigo: 'formato' | 'limite' | 'configuracion' | 'portapapeles'; mensaje: string};
+    };
+function fallo(
+  codigo: 'formato' | 'limite' | 'configuracion' | 'portapapeles',
+  mensaje: string,
+): ResultadoSimulacion<never> {
+  return {ok: false, error: {codigo, mensaje}};
+}
+export function contarSecciones(keys: readonly string[]) {
+  return keys.filter((key) => getSeccionSimulacion(key)?.cuentaParaTope !== false).length;
+}
+export function validarSimulacion(config: unknown): ResultadoSimulacion<ConfigSimulacion> {
+  const resultado = simulacionSchema.safeParse(config);
+  if (resultado.success) return {ok: true, valor: resultado.data};
+  const problema = resultado.error.issues[0];
+  return fallo(
+    'configuracion',
+    problema?.code === 'custom'
+      ? problema.message
+      : `Configuración inválida en ${problema?.path.join('.') || 'el documento'}: usa la versión 1 y las opciones admitidas.`,
+  );
+}
+export function encodeConfig(config: ConfigSimulacion): string {
+  return compressToEncodedURIComponent(JSON.stringify(simulacionSchema.parse(config)));
+}
+export function decodeConfig(c: unknown): ResultadoSimulacion<ConfigSimulacion> {
+  if (typeof c !== 'string' || !c || !/^[A-Za-z0-9+$-]+$/.test(c))
+    return fallo('formato', 'El enlace no contiene una configuración comprimida válida.');
+  if (c.length > MAX_CODIFICADO)
+    return fallo('limite', 'La configuración del enlace es demasiado larga.');
+  let contenido: unknown;
+  try {
+    const texto = decompressFromEncodedURIComponent(c);
+    if (!texto) return fallo('formato', 'No pude descomprimir la configuración.');
+    if (texto.length > 16384)
+      return fallo('limite', 'La configuración descomprimida es demasiado larga.');
+    contenido = JSON.parse(texto);
+  } catch {
+    return fallo('formato', 'El enlace no contiene un JSON válido.');
+  }
+  return validarSimulacion(contenido);
+}
+export function agregarSeccion(
+  config: ConfigSimulacion,
+  key: string,
+  posicion = config.secciones.length,
+) {
+  if (config.secciones.includes(key))
+    return fallo('configuracion', 'Esa sección ya está en la plantilla.');
+  const secciones = [...config.secciones];
+  const destino = Math.min(secciones.length, Math.max(config.pagina.esLanding ? 1 : 0, posicion));
+  secciones.splice(destino, 0, key);
+  return validarSimulacion({...config, secciones});
+}
+export function quitarSeccion(config: ConfigSimulacion, key: string) {
+  if (!config.secciones.includes(key))
+    return fallo('configuracion', 'La sección no está en la plantilla.');
+  if (config.pagina.esLanding && key === 'portada')
+    return fallo('configuracion', 'Desactiva la vista landing para quitar Portada.');
+  return validarSimulacion({...config, secciones: config.secciones.filter((s) => s !== key)});
+}
+export function moverSeccion(config: ConfigSimulacion, key: string, posicion: number) {
+  if (config.pagina.esLanding && key === 'portada')
+    return fallo('configuracion', 'Portada está bloqueada al principio de la vista landing.');
+  if (!config.secciones.includes(key))
+    return fallo('configuracion', 'La sección no está en la plantilla.');
+  const secciones = config.secciones.filter((s) => s !== key);
+  const destino = Math.min(secciones.length, Math.max(config.pagina.esLanding ? 1 : 0, posicion));
+  secciones.splice(destino, 0, key);
+  return validarSimulacion({...config, secciones});
+}
+export function cambiarOpcion(
+  config: ConfigSimulacion,
+  key: keyof PaginaSimulacion,
+  valor: unknown,
+) {
+  let secciones = config.secciones;
+  if (key === 'esLanding' && valor === true)
+    secciones = ['portada', ...secciones.filter((s) => s !== 'portada')];
+  return validarSimulacion({...config, secciones, pagina: {...config.pagina, [key]: valor}});
+}
+export function cambiarPlan(config: ConfigSimulacion, plan: string) {
+  return validarSimulacion({...config, plan});
+}
+export const rutaSimulacion = `${adminConfig.rutaPanel}/simulacion/`;
+export const rutaEmulacion = `${rutaSimulacion}emular/`;
+export function urlSimulacion(config: ConfigSimulacion, emular = false) {
+  return `${emular ? rutaEmulacion : rutaSimulacion}?${new URLSearchParams({c: encodeConfig(config)})}`;
+}
+export function formatoJSON(config: ConfigSimulacion) {
+  return JSON.stringify(
+    {
+      v: config.v,
+      pagina: config.pagina,
+      secciones: config.secciones,
+      requisitosPagina: requisitosPagina(config.pagina),
+      componentes: config.secciones.map((key) => {
+        const seccion = getSeccionSimulacion(key);
+        return {
+          key,
+          nombre: seccion?.nombre ?? 'Sección no encontrada',
+          incluyePanelAdministracion: seccion?.planMinimo === 'captacion',
+          descripcion:
+            seccion?.descripcion ??
+            'Componente desconocido en esta bóveda. Requiere revisión antes de implementarlo.',
+          requisitos: seccion?.requisitos ?? [
+            {
+              dato: 'definicion-componente',
+              descripcion: 'Especificar el componente desconocido y los datos que necesita.',
+            },
+          ],
+        };
+      }),
+    },
+    null,
+    2,
+  );
+}
+export async function copiarJSON(config: ConfigSimulacion): Promise<ResultadoSimulacion<string>> {
+  try {
+    await navigator.clipboard.writeText(formatoJSON(config));
+    return {ok: true, valor: 'Copiado'};
+  } catch {
+    return fallo(
+      'portapapeles',
+      'No pude copiar el JSON. Revisa los permisos del portapapeles y usa HTTPS o localhost.',
+    );
+  }
+}
+export const opcionesSeleccion = [
+  {key: 'navegacion', nombre: 'Navegación', valores: ['navbar', 'sidebar', 'ninguna']},
+  {key: 'footer', nombre: 'Pie de página', valores: ['simple', 'completo', 'ninguno']},
+] as const;
+export const opcionesSwitch = [{key: 'esLanding', nombre: 'Portada fija al principio'}] as const;
+export const anclaSeccion = (key: string) => `seccion-${key}`;
+export function seguirEnlaceEjemplo(href: string, config: ConfigSimulacion) {
+  const destino = href.startsWith('#') ? document.getElementById(href.slice(1)) : null;
+  const key = destino?.closest('[data-seccion]')?.getAttribute('data-seccion');
+  if (key && config.secciones.includes(key)) {
+    irASeccion(key, config);
+    return '';
+  }
+  return 'Enlace de ejemplo: el destino no está en esta plantilla. No se abren sitios externos ni se envían mensajes.';
+}
+export function irASeccion(key: string, config: ConfigSimulacion) {
+  const elemento = document.getElementById(anclaSeccion(key));
+  if (!elemento) throw new Error(`No existe el anclaje de la sección ${key}.`);
+  const compensa = config.pagina.fija && config.pagina.navegacion !== 'ninguna';
+  window.scrollTo({
+    top: window.scrollY + elemento.getBoundingClientRect().top - (compensa ? 80 : 0),
+    behavior:
+      config.pagina.scrollSuave && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'smooth'
+        : 'instant',
+  });
+}
+export function volverArriba(config: ConfigSimulacion) {
+  window.scrollTo({
+    top: 0,
+    behavior:
+      config.pagina.scrollSuave && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'smooth'
+        : 'instant',
+  });
+}
+export interface VistaEmulacion {
+  activa: string;
+  sobrePortada: boolean;
+}
+export function observarEmulacion(
+  config: ConfigSimulacion,
+  actualizar: (vista: VistaEmulacion) => void,
+) {
+  let activa = config.secciones[0] ?? '';
+  const visibles = new Set<string>();
+  const publicar = () => {
+    const portada = document.getElementById(anclaSeccion('portada'))?.getBoundingClientRect();
+    actualizar({
+      activa,
+      sobrePortada: Boolean(
+        config.pagina.esLanding && portada && portada.top <= 80 && portada.bottom > 80,
+      ),
+    });
+  };
+  const observador = new IntersectionObserver(
+    (entradas) => {
+      for (const entrada of entradas) {
+        const key = entrada.target.getAttribute('data-seccion');
+        if (!key) continue;
+        if (entrada.isIntersecting) visibles.add(key);
+        else visibles.delete(key);
+      }
+      activa = config.secciones.find((key) => visibles.has(key)) ?? activa;
+      publicar();
+    },
+    {rootMargin: '-80px 0px -55% 0px'},
+  );
+  for (const key of config.secciones) {
+    const elemento = document.getElementById(anclaSeccion(key));
+    if (elemento) observador.observe(elemento);
+  }
+  window.addEventListener('scroll', publicar, {passive: true});
+  publicar();
+  return () => {
+    observador.disconnect();
+    window.removeEventListener('scroll', publicar);
+  };
+}

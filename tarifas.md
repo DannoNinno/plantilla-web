@@ -19,7 +19,7 @@ Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecn
 
 # Plan 1 - Presencia Digital
 
-## Desde $150.000 CLP
+## Desde $177.000 CLP — impuesto incluido, en dos pagos de 50 %
 
 ### Ideal para
 
@@ -31,21 +31,27 @@ Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecn
 ### Incluye
 
 * Landing Page responsive.
-* Hasta 5 vistas o secciones.
+* 1 página (vista), con hasta 6 secciones.
 * Formulario de contacto.
 * Integración WhatsApp.
 * Integración redes sociales.
 * Diseño adaptable a dispositivos móviles.
 * Configuración técnica básica.
+* Sitio, dominio y cuentas a tu nombre.
+* 1 hora de ajustes sin costo tras la entrega.
 
 ### Reuniones Incluidas
 
-* 1 reunión de levantamiento (máximo 2 horas).
-* 1 reunión de revisión y entrega (máximo 2 horas).
+* Día 1: reunión inicial (máximo 2 horas).
+* Día 7: reunión de revisión y entrega (máximo 2 horas).
 
 ### Plazo de entrega
 
-* Hasta 5 días hábiles.
+* 7 días hábiles desde la entrega de tus textos, logo y fotos.
+* Día 1: reunión inicial.
+* Día 4: primera versión.
+* Día 6: ajustes.
+* Día 7: entrega.
 * Las reuniones incluidas se realizan dentro de ese período.
 
 ### Capacitación
@@ -55,6 +61,7 @@ Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecn
 ### No Incluye
 
 * Panel de administración.
+* Correo con tu dominio.
 * Gestión de usuarios.
 * Base de datos.
 * Integraciones externas.
@@ -63,15 +70,35 @@ Mi objetivo es aportar valor a tu negocio, no solo entregarte una solución tecn
 
 ### Consideraciones
 
-* El dominio lo compras tú y queda a tu nombre.
-* Puedo ayudarte con la configuración del dominio.
-* Incluyo 1 ronda de ajustes posterior a la entrega.
+* El sitio, el dominio y las cuentas quedan siempre a tu nombre.
+* Las páginas adicionales se cotizan aparte.
+
+### Páginas y secciones
+
+* Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.
+* Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.
+* Las páginas que repiten el mismo diseño cuentan como una sola: el listado de noticias y el detalle de cada noticia cuentan como una página.
+* No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración.
+
+### Formas de pago
+
+* Desde $177.000 CLP en dos pagos de 50 %, impuesto incluido.
+* Pago 1: antes de la reunión inicial (día 1).
+* Pago 2: al aprobar la versión final, antes de publicar el sitio (día 7).
+* Pago completo al inicio: desde $150.000 CLP, impuesto incluido, con un descuento aproximado del 15 %.
+* No se publica el sitio hasta recibir el pago total.
+
+### Después de la entrega
+
+* No hay soporte incluido, salvo 1 hora de ajustes sin costo.
+* Para más cambios agendamos una reunión y acordamos el valor hora, por definir, antes del pago.
+* Los cambios adicionales se aplican en un máximo de 2 días hábiles después del pago.
 
 ---
 
 # Plan 2 - Captación de Clientes
 
-## Desde $350.000 CLP
+## Desde $413.000 CLP — impuesto incluido, en dos pagos de 50 %
 
 ### Ideal para
 
@@ -87,16 +114,19 @@ Incluyo todo lo del Plan Presencia Digital más:
 * Gestión de contenido.
 * Actualización de textos.
 * Actualización de imágenes.
-* Hasta 10 vistas o secciones.
+* Hasta 5 páginas (vistas), con hasta 6 secciones por página.
+* Correo con tu dominio.
 * Formularios avanzados.
 * Optimización básica para motores de búsqueda (SEO).
+* Sitio, dominio y cuentas a tu nombre.
+* 1 hora de ajustes sin costo tras la entrega.
 
 ### Reuniones Incluidas
 
-* Reunión de levantamiento.
-* Revisión intermedia.
-* Validación y pruebas.
-* Entrega final.
+* Día 1: reunión inicial.
+* Día 4: revisión de la primera versión.
+* Día 6: revisión de ajustes.
+* Día 7: entrega final.
 
 ### Capacitación
 
@@ -104,18 +134,44 @@ Incluyo todo lo del Plan Presencia Digital más:
 
 ### Plazo de entrega
 
-* Hasta 5 días hábiles.
+* 7 días hábiles desde la entrega de tus textos, logo y fotos.
+* Día 1: reunión inicial.
+* Día 4: primera versión.
+* Día 6: ajustes.
+* Día 7: entrega.
 * Las reuniones incluidas se realizan dentro de ese período.
 
 ### Ajustes
 
-* Hasta 2 rondas de correcciones.
+* 1 hora de ajustes sin costo tras la entrega.
 
 ### No Incluye
 
 * E-commerce.
 * Integraciones empresariales complejas.
 * Automatizaciones avanzadas.
+
+### Páginas y secciones
+
+* Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.
+* Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.
+* Las páginas que repiten el mismo diseño cuentan como una sola: el listado de noticias y el detalle de cada noticia cuentan como una página.
+* No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración.
+* Las páginas adicionales se cotizan aparte.
+
+### Formas de pago
+
+* Desde $413.000 CLP en dos pagos de 50 %, impuesto incluido.
+* Pago 1: antes de la reunión inicial (día 1).
+* Pago 2: al aprobar la versión final, antes de publicar el sitio (día 7).
+* Pago completo al inicio: desde $350.000 CLP, impuesto incluido, con un descuento aproximado del 15 %.
+* No se publica el sitio hasta recibir el pago total.
+
+### Después de la entrega
+
+* No hay soporte incluido, salvo 1 hora de ajustes sin costo.
+* Para más cambios agendamos una reunión y acordamos el valor hora, por definir, antes del pago.
+* Los cambios adicionales se aplican en un máximo de 2 días hábiles después del pago.
 
 ---
 
@@ -184,19 +240,19 @@ Evalúo cada tienda de forma individual, porque los requerimientos pueden variar
 
 ### Reuniones Adicionales
 
-* $25.000 CLP por hora.
+* Valor hora por definir; se acuerda antes del pago.
 
 ### Capacitación Adicional
 
-* $25.000 CLP por hora.
+* Valor hora por definir; se acuerda antes del pago.
 
 ### Desarrollo Fuera de Alcance
 
-* Desde $35.000 CLP por hora.
+* Valor hora por definir; se acuerda antes del pago.
 
-### Soporte Evolutivo
+### Cambios tras la entrega
 
-* Cotización según necesidad.
+* Máximo de 2 días hábiles después del pago.
 
 ---
 
@@ -204,9 +260,19 @@ Evalúo cada tienda de forma individual, porque los requerimientos pueden variar
 
 Para cuidar la calidad de mi trabajo y cumplir los plazos que acordamos:
 
-* Evalúo por separado cualquier requerimiento fuera del alcance que contrataste.
-* Si necesitas cambios significativos, puedo preparar una nueva cotización.
-* Te informo las horas adicionales y necesito tu aprobación antes de realizarlas.
+* Página (vista): una pantalla con su propia dirección, por ejemplo /contacto.
+* Sección: un bloque dentro de una página, por ejemplo testimonios o un mapa.
+* Las páginas que repiten el mismo diseño cuentan como una sola: el listado de noticias y el detalle de cada noticia cuentan como una página.
+* No cuentan la página de privacidad, la página de error ni las pantallas del panel de administración.
+* Las páginas adicionales y los requerimientos fuera del alcance se cotizan aparte.
+* Ambos planes se entregan en 7 días hábiles desde la entrega de tus textos, logo y fotos.
+* Hitos: día 1 reunión inicial, día 4 primera versión, día 6 ajustes y día 7 entrega.
+* En dos pagos de 50 %: el primero antes de la reunión inicial (día 1) y el segundo al aprobar la versión final, antes de publicar (día 7).
+* Puedes pagar todo al inicio con un descuento aproximado del 15 % y los montos finales publicados.
+* No publico el sitio hasta recibir el pago total.
+* No hay soporte incluido, salvo 1 hora de ajustes sin costo tras la entrega.
+* Para más cambios agendamos una reunión y acordamos el valor hora, por definir, antes del pago.
+* Aplico los cambios adicionales en un máximo de 2 días hábiles después del pago.
 
 ---
 
@@ -218,4 +284,4 @@ Para cuidar la calidad de mi trabajo y cumplir los plazos que acordamos:
 * Desarrollo soluciones que puedas mantener en el tiempo.
 * Me enfoco en lo que aporta valor a tu negocio.
 * Te entrego documentación básica cuando corresponde.
-* Tu dominio y tus activos digitales quedan siempre a tu nombre.
+* Tu sitio, dominio, cuentas y activos digitales quedan siempre a tu nombre.
